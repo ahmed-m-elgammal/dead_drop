@@ -27,7 +27,7 @@ Dead Drop is an asynchronous 1v1 hidden-movement deduction game: an **Investigat
 | [research/game-concept-research.md](research/game-concept-research.md) | Upstream concept-research report (superseded where it conflicts) | Reference (upstream) |
 | [tools/verification/](tools/verification/README.md) | Offline verification scripts + raw results (pure Python, no deps; verification, **not** simulation) | Reference (computation) |
 | [m2/](m2/M2-execution-plan.md) | M2 planning & analysis (execution plan, AUD-003 generator-constraint resolution, toolchain ADR) | See M2 section |
-| [packages/engine/](packages/engine/README.md) | `@dead-drop/engine` — pure deterministic engine package: verbatim type layer, map validation, pinned feasibility gate, seeded generator (C1/C5/C6), L1 fixtures | M2 W2 pre-flight (verified) |
+| [packages/engine/](packages/engine/README.md) | `@dead-drop/engine` — pure deterministic engine package: type layer (T12), map validation, pinned feasibility gate, seeded generator (C1/C5/C6), **`resolve()` — the full §2 day resolution** (ADR-002 DRAFT-UNFREEZE), L1 fixtures | M2 W2 **done** (63/63 green) |
 
 ### M1 — Requirements & design validation (in progress)
 
@@ -52,7 +52,7 @@ M1 status (2026-10-25): Weeks 1–3 tooling complete — ruleset at **`1.0.0-alp
 | [m2/aud003-constraint-analysis.md](m2/aud003-constraint-analysis.md) | AUD-003 resolution: C3 semantics **pinned** (min-cost), conjunction counted (8/960 base), lever adopted (drop pool 16→24 → **115/2208** pass, 4.8× ladder headroom), generator constraint spec v1.0 | Executed |
 | [m2/adr-001-toolchain.md](m2/adr-001-toolchain.md) | Toolchain decision: Node 24 + TS 5.9 strict/NodeNext, npm workspaces, vitest; zero runtime deps for the engine | Accepted 2026-10-25 |
 
-M2 status (2026-10-25): Week 1 (AUD-003) executed; **Week 2 pre-flight executed and verified** — toolchain per [ADR-001](m2/adr-001-toolchain.md), `packages/engine` scaffolded with the verbatim type lift, the pinned feasibility gate ported 1:1 from the Python oracle, L1 fixtures emitted + cross-asserted (115/115 identical to the independent recount), `tsc` strict green, vitest **21/21 green** including the full 2208-space dual-language reconciliation. The only remaining W2 task is `resolve()`, which stays freeze-gated per the plan. Sessions S1–S3 remain human-gated; M1 closes only on real transcript evidence.
+M2 status (2026-10-25): Week 1 (AUD-003) and **Week 2 executed** — toolchain per [ADR-001](m2/adr-001-toolchain.md); `packages/engine` ships the type layer (T12 amendment), the pinned feasibility gate (1:1 Python-oracle port), the seeded generator (C1/C5/C6) and **`resolve()`** — the §2 seven-step day resolution, unlocked ahead of the freeze tag by [ADR-002](m2/adr-002-resolve-unlock.md) with a DRAFT-UNFREEZE marker + a transcript-reconciliation gate in freeze-checklist §1 (the fabrication guard is untouched: S1–S3 remain human-gated, no session data exists). Verified: `tsc` strict green, vitest **63/63 green** — 115-config full-space reconciliation, the rules' own worked examples (W1/W2/W3) as golden tests, all four regression constants escaping end-to-end, §9.1–9.13 rulings on a synthetic micro map, and a seed→generator→verdict chain closing the W2 exit line. Next: W3 sim harness + 20-pair policy matrix. Sessions S1–S3 remain human-gated; M1 closes only on real transcript evidence.
 
 ## Conventions
 

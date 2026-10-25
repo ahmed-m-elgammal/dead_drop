@@ -18,7 +18,9 @@ recorded whoever "wins" the argument; nothing is argued past 3 minutes at the ta
 
 | ID | Session / leg | Day / step | What happened | Rules point | Class | Disposition | 03-rules change (→ version) | Status |
 |---|---|---|---|---|---|---|---|---|
-| *(none — populated only by triage after real sessions)* | | | | | | | | |
+| **M2-001** | M2 W2 engine work (ADR-002) — not a table dispute | n/a (analysis) | S1's AUD-004 engineered procedure ("Hold **on the pending** drop site", completion fires on the Hold day) is **structurally unreachable**: (1) arriving at a pending site collects it that same day (§2 step 4 checks the post-move position; W2 example confirms arrival-collection), and (2) the in-order rule means no legal route leaves the fugitive standing on a still-pending site at a day start (to be there with the site pending, they must have arrived while the *other* drop was pending, then left to collect it, then returned — collecting on that arrival). The clarified *rule* (position-based check, fires after Hold too) is correct and engine-tested via direct state construction. | §2 step 4 / §3.3 (AUD-004) | **(b)** wording — session TEMPLATE defect, not a rules defect | S1 template's engineering note rewritten to a reachable procedure (template is M1 tooling, not the frozen ruleset); white-box test pins the check; S1's checklist item stays satisfiable | none (rules text unchanged; still `1.0.0-alpha.1`) | **closed (2026-10-25)** |
+
+*(rows below this line are populated only by triage after real sessions)*
 
 ## Engineered-state ledger (not disputes — freeze-note evidence)
 

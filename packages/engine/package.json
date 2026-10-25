@@ -1,6 +1,6 @@
 {
   "name": "@dead-drop/engine",
-  "version": "0.1.0-alpha.0",
+  "version": "0.2.0-alpha.0",
   "private": true,
   "type": "module",
   "description": "Dead Drop rules engine — pure, deterministic, zero runtime dependencies. Implements ruleset 1.0.0-alpha.1 exactly as written (03-rules.md is the spec).",

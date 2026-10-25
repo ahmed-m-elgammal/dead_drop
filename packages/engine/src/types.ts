@@ -300,9 +300,25 @@ export type FugitiveView = Omit<CaseState, 'investigator' | 'private_log_investi
   investigator: HiddenBlock;
 };
 
+/** One resolved Fugitive day, as recorded by the engine for §8.6 disclosure.
+ *
+ * T12 (engine amendment over the M1 draft, registered in
+ * m1/engine-types/README.md — never silently patched): `edge_class` is
+ * `EdgeClass | null` — HOLD / FORCED_HOLD traverse no edge, so there is no
+ * honest EdgeClass value for them (the M1 draft demanded one). FORCED_HOLD
+ * carries `sp_cost: 0` (§9.13). */
+export interface FugitiveRouteEntry {
+  day: Day;
+  action: FugitiveResolvedAction;
+  from: NodeId;
+  to: NodeId;
+  edge_class: EdgeClass | null; // T12
+  sp_cost: number;
+}
+
 /** Case-end full disclosure (§8.6 ref): both logs plus the complete route. */
 export type CaseEndDisclosure = CaseState & {
-  fugitive_route: readonly { day: Day; action: FugitiveResolvedAction; from: NodeId; to: NodeId; edge_class: EdgeClass; sp_cost: number }[];
+  fugitive_route: readonly FugitiveRouteEntry[];
 };
 
 /* ---------------------------------------------------------------------------

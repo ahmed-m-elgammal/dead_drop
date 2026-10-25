@@ -19,11 +19,15 @@ logged on behalf of people who never sat down.
 
 ## 1. Session evidence gates (human — cannot be done by automation)
 
-- ☐ S1 transcript exists (`s1-transcript.md`) with **AUD-004 Hold-collect exercised** in ≥1 leg
+- ☐ S1 transcript exists (`s1-transcript.md`) with the **AUD-004 drop-check triple exercised** in ≥1 leg (arrival-collect / no-double-fire / in-order — procedure revised per triage-log M2-001, 2026-10-25)
 - ☐ S2 transcript exists (`s2-transcript.md`) with **§9.13 forced-Hold exercised** in ≥1 leg
 - ☐ S3 transcript exists (`s3-transcript.md`) — free play, natural-occurrence watch recorded
 - ☐ Every Sheet E row across S1–S3 appears in `triage-log.md` with class (a)/(b)/(c) — zero untriaged
 - ☐ Cumulative tally meets the acceptance line: **Player A ≥3 cases as Investigator AND ≥3 as Fugitive**
+- ☐ **Transcript reconciliation (ADR-002, added 2026-10-25):** golden fixtures derived from the real
+  S1–S3 transcripts pass against `packages/engine` `resolve()` (DRAFT-UNFREEZE), and any (a)/(b)-class
+  triage row that changes resolution behavior lands as a ruleset version bump + same-commit engine
+  change. The draft marker on `src/engine.ts` lifts only when this box is checked.
 
 ## 2. Freeze decision (pick exactly one branch)
 

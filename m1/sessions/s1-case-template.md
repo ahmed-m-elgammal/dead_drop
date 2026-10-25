@@ -5,8 +5,9 @@
 
 - **Session:** S1 · **Partner:** B · **Date:** ____________ · **Facilitator:** Player A
 - **Cases:** P1 ×2 (roles swapped between legs)
-- **Deliberately exercised:** **AUD-004** — the Fugitive **Holds on the pending drop site** at
-  least once across the session (Hold-collects-drop is legal per §2 step 4 / §3.3, position-based).
+- **Deliberately exercised:** **AUD-004** — the drop-check triple (arrival-collect / no-double-fire on a
+  Hold / in-order gating; see the engineering note and triage-log M2-001 for the 2026-10-25 revision)
+  at least once across the session (§2 step 4 / §3.3, position-based).
 - **Clocks:** 2 min per Fugitive action / per Investigator phase, timed by the opponent; expiry =
   auto-Hold (if affordable, else §9.13) / auto-wait — log every expiry in Notes (no forfeit bookkeeping on paper).
 
@@ -15,20 +16,29 @@
 - [ ] Kit printed (map, Card A, Card B, Sheets C/D/E/F per leg) — `m1/kit/README.md`
 - [ ] Public config read aloud; Fugitive takes hidden Sheet D
 - [ ] **Par data stays quarantined** (facilitator-only): P1 min completion **6 days**, cheapest drop-2 route **5 SP**
-- [ ] Fugitive (Player A in the leg where A plays F) has a written plan to trigger the AUD-004 Hold-collect
+- [ ] Fugitive (Player A in the leg where A plays Fugitive) has a written plan to run the AUD-004 drop-check triple (arrival-collect / no-double-fire / in-order)
 
-## Engineering note — how to guarantee AUD-004 occurs (facilitator, leg where A plays Fugitive)
+## Engineering note — how to exercise AUD-004 (facilitator, leg where A plays Fugitive)
 
-Arrive at the pending drop site with a *spare* day and ≥1 SP with `holds_used < 2`, then **Hold**
-on the site instead of moving off. Verify at that day's resolution:
+> **Patched 2026-10-25 (M2-001, triage-log):** the original note asked for a Hold *on the pending*
+> site with the completion firing on the Hold day — that state is structurally unreachable (arrival
+> at a pending site always collects; see M2-001 for the proof). The AUD-004 *rule* — the §2 step-4
+> check is purely position-based and action-independent — is unchanged and is what this revised
+> procedure exercises. Engine side is pinned by white-box test `l3-resolve-properties`.
 
-1. §2 step 4 fires the public event `Drop N completed at site X (day d)` **even though no Move happened**;
-2. SP decreases by exactly 1 (Hold cost, §3.3);
-3. if that day is Day 4, the transit reveal reports **"no movement"** (§9.7) — note the information price paid;
-4. the Fugitive does **not** get told about any stakeout that silently missed that day (§5.2).
+Run this three-step check on the drop mechanics (fits naturally inside the P1 route plan):
 
-If the Hold-collect did **not** happen in either leg (both raced through), record it as a *missed
-engineering* — the session still counts, but the S1 purpose is unmet and must be re-run.
+1. **Arrival-collect.** Move onto the pending drop site (P1: `D2-06` is adjacent to the safehouse
+   `D2-07`). Verify the public event `Drop 1 completed at site D2-06 (day d)` fires **that same day**.
+2. **No-double-fire.** With a spare day, **Hold** on the just-collected site (`holds_used < 2`, ≥1 SP).
+   Verify: **no** second drop event; SP decreases by exactly 1 (§3.3); if it is Day 4, the transit
+   reveal reports **"no movement"** (§9.7 — note the information price paid); the Fugitive is **not**
+   told about any stakeout that silently missed that day (§5.2).
+3. **In-order.** Visit the drop-2 site (`D1-10`) while drop 1 is still pending, at any point in the
+   leg. Verify **nothing fires** there until drop 1 has been collected (§2 step 4 in-order clause).
+
+If the arrival-collect did **not** happen in either leg (both raced past `D2-06`), record it as a
+*missed engineering* — the session still counts, but the S1 purpose is unmet and must be re-run.
 
 ---
 

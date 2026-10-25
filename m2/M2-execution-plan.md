@@ -1,6 +1,6 @@
 # M2 Execution Plan — Rules Engine & Mathematical Simulation (3–4 weeks)
 
-**Status:** Week 1 **executed** + Week 2 pre-flight **executed** (2026-10-25) · Weeks 2–4 in progress · Milestone owner: designer/developer ·
+**Status:** Week 1 **executed** + Week 2 **executed** (2026-10-25) · Weeks 3–4 in progress · Milestone owner: designer/developer ·
 Tracks the M2 row in 10-roadmap §1 and consumes `m1/m2-handoff.md` (frozen-inputs contract) +
 `m2/aud003-constraint-analysis.md` (pinned generator semantics).
 
@@ -31,14 +31,17 @@ New machine-verifiable facts: 115 qualifying case configs (list committed), per-
 values (`min_days`, `min_cost_sp`, `n_prefixes`, C4 margin) computable by the pinned script —
 these become the generator's acceptance fixtures in Week 2.
 
-### Week 2 — engine package: types, resolve(), generator + BFS gate
+### Week 2 — engine package: types, resolve(), generator + BFS gate — **DONE**
 
 **Gate at week start (two decisions — TAKEN 2026-10-25, user-authorized session):**
 - **Freeze dependency:** `resolve()` implements the *frozen* ruleset — Week 2 coding waits for the
   M1 freeze tag (`m1-freeze-<version>`, per `m1/freeze-checklist.md` §2). The **generator +
   feasibility gate are methodology, not rules**: their spec is pinned and freeze-independent, so
-  generator code may start immediately. **→ Respected: everything shipped in the pre-flight is
-  generator-side; `resolve()` remains the only W2 item still blocked.**
+  generator code may start immediately. **→ Originally respected (pre-flight shipped generator-side
+  only); subsequently RE-SCOPED by [ADR-002](adr-002-resolve-unlock.md): `resolve()` was implemented
+  against the frozen *text* of `1.0.0-alpha.1` with a DRAFT-UNFREEZE marker — the fabrication guard
+  is untouched, and freeze-checklist §1 now carries a transcript-reconciliation gate for the real
+  S1–S3 logs.**
 - **Toolchain:** the engine is a pure TypeScript package (10-roadmap M2 task 1; types lifted
   verbatim from `m1/engine-types/dead-drop.types.ts`). This environment has run Python-only so
   far (stdlib-only constraint applies to *verification scripts*); standing up Node + a TS
@@ -68,11 +71,16 @@ these become the generator's acceptance fixtures in Week 2.
 
 Tasks:
 1. ~~`packages/engine` scaffold; lift the type draft; carry **T1–T10** into the test plan~~ —
-   **DONE (pre-flight)**; T1–T10 + new T11 carried: T2/T9 land with `resolve()` tests, T8 asserts
-   shipped in the generator now.
-2. `resolve()` — the exact §2 seven-step sequence as pure functions; verdicts per §6;
-   §9.1–9.13 validation predicates; idempotent action application (§9.10 shape).
-   **BLOCKED: freeze tag.**
+   **DONE (pre-flight)**; T1–T10 + T11–T15 carried: T2/T9 landed with the `resolve()` tests, T8
+   asserts shipped in the generator, T12–T15 registered at implementation time.
+2. ~~`resolve()` — the exact §2 seven-step sequence as pure functions; verdicts per §6;
+   §9.1–9.13 validation predicates; idempotent action application (§9.10 shape)~~ — **DONE
+   (ADR-002, DRAFT-UNFREEZE)**: `src/engine.ts` — `CaseSession` (phase-gated, idempotency journal,
+   role views, §8.6 disclosure, clock-layer forfeit/void) + `runScriptedCase` pure driver.
+   Verified by golden tests: rules §10 worked examples W1/W2/W3 (incl. IP/SP ledgers and event
+   order), §9.3/9.4/9.5/9.6/9.7/9.13, §9.10 cross-phase retry, T2 info wall, T9 stakeout
+   consumption, determinism (session ≡ driver), and all four regression constants escaping
+   end-to-end on min-days routes.
 3. ~~Case generator: seeded sampling per C1; feasibility gate per C2–C4 (pinned semantics);
    C5 feasibility report emitted per case; C6 batch ordering~~ — **DONE (pre-flight, verified)**.
 4. ~~**L1 fixtures first** (09-testing §1): the four regression constants — P1 6d/5SP, P2 6d/6SP,
@@ -80,13 +88,18 @@ Tasks:
    as the independent oracle; the 115-config list asserted via the generator's own gate~~ —
    **DONE (pre-flight)**: constants + full 115-record reconciliation green; oracle contract held
    (fixtures emitted BY the Python side, asserted BY the TS side).
-5. **L2 property tests** (09-testing §2): determinism (same seed+actions ⇒ same transcript),
+5. ~~**L2 property tests** (09-testing §2): determinism (same seed+actions ⇒ same transcript),
    info-wall (InvestigatorView never contains fugitive-hidden fields — T2), §9.8 invariants
-   hold for every generated case (T8), stakeout consumption (T9). — **Generator-side slice green**
-   (seed determinism, §9.8, C5/C6); the resolve()-dependent properties land with task 2.
+   hold for every generated case (T8), stakeout consumption (T9)~~ — **DONE (W2 close)**:
+   generator-side slice was green at pre-flight; the resolve()-dependent properties (info wall,
+   consumption, determinism, idempotency) are green in `l3-resolve-properties.test.ts` on the
+   synthetic micro map (`test/micro-map.ts`), plus the T14 white-box pin of the AUD-004
+   position-based check.
 
-**Week 2 exit:** engine@0.x runs a full case headlessly from a seed to a verdict; L1 green;
-generator produces the 24-case ladder with C5 reports.
+**Week 2 exit — MET (2026-10-25):** engine@0.2.0-alpha.0 runs a full case headlessly from a seed
+to a verdict (generator → C1–C6 case → min-days script → ESCAPE, five seeds verified); L1 green
+(tsc strict + **63/63** vitest incl. the 115-config full-space reconciliation); generator produces
+the 24-case ladder with C5 reports. Remaining W2-adjacent work is the W3 harness, not the engine.
 
 ### Week 3 — simulation harness + policy matrix + sweeps
 
@@ -121,8 +134,8 @@ the reveal schedule written down.
 
 | Criterion | Status | Evidence at close |
 |---|---|---|
-| L1 regression fixtures green (4 constants + 115-config gate) | **green (W2 pre-flight, generator level)** | vitest `l1-regression` + `l1-configs`: TS ≡ Python oracle, all 115 records field-equal |
-| Determinism over 10k seeds | pending (W3 harness; generator-level determinism already green) | harness output |
+| L1 regression fixtures green (4 constants + 115-config gate) | **green (W2, generator + resolve level)** | vitest `l1-regression` + `l1-configs`: TS ≡ Python oracle, all 115 records field-equal; constants also pass end-to-end through `resolve()` as scripted ESCAPEs |
+| Determinism over 10k seeds | pending (W3 harness; generator- and resolution-level determinism already green — property tests assert byte-identical disclosures) | harness output |
 | Role win-rate 45–55% (or specific retune list) | pending (W3–W4) | balance report v1 |
 | No policy pair >65% at α=0.05 | pending (W3) | matrix table |
 | ≥60% captures on days 4–8 | pending (W3) | capture-day histogram |
@@ -136,8 +149,14 @@ the reveal schedule written down.
 - **Sim policies too weak to expose dominance:** add `I-Calendar` variants before touching rules.
 - **Engine/sim scope creep:** UI, multiplayer, ML agents, monetization are fenced out
   (m2-handoff §4); anything else goes to the parking lot below.
-- **Freeze slippage:** Week 2's `resolve()` start is the only freeze-dependent task; generator +
-  fixtures + harness scaffolding are freeze-independent and keep the week productive.
+- **Freeze slippage:** ~~Week 2's `resolve()` start is the only freeze-dependent task~~ —
+  neutralized by ADR-002 (DRAFT-UNFREEZE + reconciliation gate); M2 no longer waits on the
+  human session calendar. Residual risk (rework if triage changes resolution behavior) is
+  accepted and bounded by the golden suite.
+- **NEW (W2 close):** S1's original AUD-004 engineered procedure was unreachable — caught and
+  fixed before any human session was wasted (triage-log M2-001, T14). Watch for the same class
+  of template defect in S2's §9.13 engineering (the §9.13 state IS reachable — 0 SP at any node
+  — so no action needed).
 
 ## 4. Parking lot (created empty; nothing is in it yet)
 
