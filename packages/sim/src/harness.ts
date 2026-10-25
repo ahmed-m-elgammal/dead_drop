@@ -26,6 +26,7 @@
  */
 import {
   CaseSession,
+  PARAMETERS_V1_1_ALPHA_CANDIDATE,
   VERDICT_WINNER,
   generateCase,
   isStranded,
@@ -67,6 +68,21 @@ export function wilson95(k: number, n: number): [number, number] {
   const half = (z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n))) / denom;
   return [Math.max(0, center - half), Math.min(1, center + half)];
 }
+
+/* ------------------------------------------------------------ presets */
+
+/** Named override presets for recorded measurement runs. TABLE-DRIVEN: the
+ *  retuned value is read from PARAMETERS_V1_1_ALPHA_CANDIDATE (04 §2 v1.1-alpha) —
+ *  never hard-coded (m2-handoff §1.3 discipline). `resolveParams` merges the
+ *  override onto CANONICAL_PARAMS, so the effective result is exactly the
+ *  engine's RETUNED_CANDIDATE_P8_4 preset (equivalence pinned in
+ *  packages/engine/test/l3-params.test.ts). */
+export const RESOLUTION_PRESETS = {
+  /** M2 W4 retune measurement (ADR-004): alpha.1 + P8_stakeout_cost 4. */
+  candidateP8_4: {
+    P8_stakeout_cost: PARAMETERS_V1_1_ALPHA_CANDIDATE.P8_stakeout_cost,
+  } satisfies SimParamOverrides,
+} as const;
 
 /* ------------------------------------------------------------- case runner */
 

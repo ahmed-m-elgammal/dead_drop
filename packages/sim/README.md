@@ -1,8 +1,10 @@
 # @dead-drop/sim — Simulation Harness Package
 
-**Version:** 0.1.0-alpha.0 · **Status:** M2 W3 **executed** (2026-10-25) · **Ruleset:** `1.0.0-alpha.1`
+**Version:** 0.1.1-alpha.0 · **Status:** M2 W3 **executed** (2026-10-25) · W4 retune mode added
+(measured §5-rejected candidate — [../../m2/adr-004-params-v1.1.md](../../m2/adr-004-params-v1.1.md)) ·
+**Ruleset:** `1.0.0-alpha.1`
 (resolution defaults; sweep overrides per [../../m2/adr-003-sim-overrides.md](../../m2/adr-003-sim-overrides.md))
-· **Runtime deps:** `@dead-drop/engine` only · Plan: [../../m2/M2-execution-plan.md](../../m2/M2-execution-plan.md) §1 W3.
+· **Runtime deps:** `@dead-drop/engine` only · Plan: [../../m2/M2-execution-plan.md](../../m2/M2-execution-plan.md) §1 W3–W4.
 
 Headless simulation harness for Dead Drop (04-balance-sim §4): seeded case generation, scripted
 policy pairs, Wilson-CI aggregation, scenario sweeps S1–S7, and the determinism double-run. Pure
@@ -22,7 +24,7 @@ packages/sim/
   src/policies.ts    the 5×4 scripted roster (04-balance-sim §4.2) + exact rule documentation
   src/harness.ts     case runner · Wilson 95% CIs · matrix runner (CRN) · determinism digests
   src/sweeps.ts      S1–S7 cell definitions + conventions
-  src/cli.ts         matrix | sweeps | determinism | all  → JSON outputs
+  src/cli.ts         matrix | sweeps | determinism | retune | all  → JSON outputs
   test/              sim-belief (hand-computed posteriors) · sim-policies (legality/determinism)
                      · sim-harness (CRN, overrides, matrix smoke)
 ```
@@ -33,10 +35,14 @@ packages/sim/
 npm run build        # engine first (sim consumes its dist types), then sim
 npm test             # vitest: engine 63+6 + sim suites
 node packages/sim/dist/cli.js --mode all --n 1000 --sweep-n 500 --det-n 10000 --out m2/w3-results
+node packages/sim/dist/cli.js --mode retune --n 1000 --det-n 10000 --out m2/w4-results   # W4 measured candidate (ADR-004)
 ```
 
 Outputs (all with conventions echoed in `meta`): `matrix.json`, `sweeps.json`,
-`s7-camping.json` (CLI addendum), `determinism.json`, `performance.json`.
+`s7-camping.json` (CLI addendum), `determinism.json`, `performance.json`; `--mode retune`
+writes `retune-matrix.json` + `retune-determinism.json` under `RETUNED_CANDIDATE_P8_4`
+(table-driven from `PARAMETERS_V1_1_ALPHA_CANDIDATE` — never hard-coded), CRN-identical seeds
+to the W3 baseline for paired comparison.
 
 ## Policy contract (summary — full text in src/policies.ts)
 

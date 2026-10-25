@@ -1,0 +1,794 @@
+{
+  "meta": {
+    "baseline": "w3-results/matrix.json (canonical 1.0.0-alpha.1, P8=3, seeds 1..1000 CRN)",
+    "retuned": "w4-results/retune-matrix.json (v1.1-alpha CANDIDATE preset P8=4, same seeds \u2014 NOT adopted)",
+    "rule": "04-balance-sim \u00a75: adopt only if \u22652 metrics move desired direction without regressing a third; \"moved\" = retuned 95% CI excludes the baseline point estimate (or the move flips the metric line)"
+  },
+  "per_pair": [
+    {
+      "pair": "F-Beeline\u00d7I-GreedyProbe",
+      "inv_win_base": 65.3,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -1.4,
+      "base_ci": [
+        62.3,
+        68.2
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.49923547400611623,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-Beeline\u00d7I-Calendar",
+      "inv_win_base": 65.3,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -1.4,
+      "base_ci": [
+        62.3,
+        68.2
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.49923547400611623,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-Beeline\u00d7I-Aggressive",
+      "inv_win_base": 93.2,
+      "inv_win_retuned": 65.6,
+      "delta_pp": -27.6,
+      "base_ci": [
+        91.5,
+        94.6
+      ],
+      "retuned_ci": [
+        62.6,
+        68.5
+      ],
+      "cap_day_hist_base": {
+        "2": 193,
+        "3": 463,
+        "4": 276
+      },
+      "cap_day_hist_retuned": {
+        "2": 193,
+        "3": 463
+      },
+      "d48_share_base": 0.296137339055794,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.43328684332868433,
+        null
+      ],
+      "calib_retuned": [
+        0.36303265080243496,
+        null
+      ],
+      "mean_stakeouts_base": 2.15,
+      "mean_stakeouts_retuned": 1.81
+    },
+    {
+      "pair": "F-Beeline\u00d7I-Random",
+      "inv_win_base": 3.4,
+      "inv_win_retuned": 3.0,
+      "delta_pp": -0.4,
+      "base_ci": [
+        2.4,
+        4.7
+      ],
+      "retuned_ci": [
+        2.1,
+        4.3
+      ],
+      "cap_day_hist_base": {
+        "2": 11,
+        "3": 9,
+        "4": 8,
+        "5": 5,
+        "6": 1
+      },
+      "cap_day_hist_retuned": {
+        "2": 11,
+        "3": 8,
+        "4": 6,
+        "5": 4,
+        "6": 1
+      },
+      "d48_share_base": 0.4117647058823529,
+      "d48_share_retuned": 0.36666666666666664,
+      "calib_base": [
+        0.018712162905888827,
+        null
+      ],
+      "calib_retuned": [
+        0.020174848688634835,
+        null
+      ],
+      "mean_stakeouts_base": 1.82,
+      "mean_stakeouts_retuned": 1.49
+    },
+    {
+      "pair": "F-Random\u00d7I-GreedyProbe",
+      "inv_win_base": 100,
+      "inv_win_retuned": 100,
+      "delta_pp": 0,
+      "base_ci": [
+        99.6,
+        100
+      ],
+      "retuned_ci": [
+        99.6,
+        100
+      ],
+      "cap_day_hist_base": {
+        "2": 126,
+        "3": 87,
+        "4": 19,
+        "5": 8
+      },
+      "cap_day_hist_retuned": {
+        "2": 126,
+        "3": 20,
+        "4": 12,
+        "5": 3
+      },
+      "d48_share_base": 0.1125,
+      "d48_share_retuned": 0.09316770186335403,
+      "calib_base": [
+        0.19851116625310175,
+        0.2116261308478182
+      ],
+      "calib_retuned": [
+        0.18569780853517878,
+        0.1998826427008148
+      ],
+      "mean_stakeouts_base": 1.21,
+      "mean_stakeouts_retuned": 0.87
+    },
+    {
+      "pair": "F-Random\u00d7I-Calendar",
+      "inv_win_base": 100,
+      "inv_win_retuned": 100,
+      "delta_pp": 0,
+      "base_ci": [
+        99.6,
+        100
+      ],
+      "retuned_ci": [
+        99.6,
+        100
+      ],
+      "cap_day_hist_base": {
+        "2": 126,
+        "3": 87,
+        "4": 19,
+        "5": 8
+      },
+      "cap_day_hist_retuned": {
+        "2": 126,
+        "3": 20,
+        "4": 12,
+        "5": 3
+      },
+      "d48_share_base": 0.1125,
+      "d48_share_retuned": 0.09316770186335403,
+      "calib_base": [
+        0.19851116625310175,
+        0.2116261308478182
+      ],
+      "calib_retuned": [
+        0.18569780853517878,
+        0.1998826427008148
+      ],
+      "mean_stakeouts_base": 1.21,
+      "mean_stakeouts_retuned": 0.87
+    },
+    {
+      "pair": "F-Random\u00d7I-Aggressive",
+      "inv_win_base": 100,
+      "inv_win_retuned": 100,
+      "delta_pp": 0,
+      "base_ci": [
+        99.6,
+        100
+      ],
+      "retuned_ci": [
+        99.6,
+        100
+      ],
+      "cap_day_hist_base": {
+        "2": 10,
+        "3": 19,
+        "4": 15
+      },
+      "cap_day_hist_retuned": {
+        "2": 10,
+        "3": 19
+      },
+      "d48_share_base": 0.3409090909090909,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.01485984464707869,
+        null
+      ],
+      "calib_retuned": [
+        0.01457286432160804,
+        null
+      ],
+      "mean_stakeouts_base": 2.96,
+      "mean_stakeouts_retuned": 1.99
+    },
+    {
+      "pair": "F-Random\u00d7I-Random",
+      "inv_win_base": 100,
+      "inv_win_retuned": 100,
+      "delta_pp": 0,
+      "base_ci": [
+        99.6,
+        100
+      ],
+      "retuned_ci": [
+        99.6,
+        100
+      ],
+      "cap_day_hist_base": {
+        "2": 10,
+        "3": 5,
+        "4": 9,
+        "5": 3,
+        "6": 4
+      },
+      "cap_day_hist_retuned": {
+        "2": 10,
+        "3": 4,
+        "4": 6,
+        "5": 2,
+        "6": 3
+      },
+      "d48_share_base": 0.5161290322580645,
+      "d48_share_retuned": 0.44,
+      "calib_base": [
+        0.016045548654244308,
+        null
+      ],
+      "calib_retuned": [
+        0.01621271076523995,
+        null
+      ],
+      "mean_stakeouts_base": 1.93,
+      "mean_stakeouts_retuned": 1.54
+    },
+    {
+      "pair": "F-LeakAware\u00d7I-GreedyProbe",
+      "inv_win_base": 65.3,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -1.4,
+      "base_ci": [
+        62.3,
+        68.2
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.49923547400611623,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-LeakAware\u00d7I-Calendar",
+      "inv_win_base": 65.3,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -1.4,
+      "base_ci": [
+        62.3,
+        68.2
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.49923547400611623,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-LeakAware\u00d7I-Aggressive",
+      "inv_win_base": 93.2,
+      "inv_win_retuned": 65.6,
+      "delta_pp": -27.6,
+      "base_ci": [
+        91.5,
+        94.6
+      ],
+      "retuned_ci": [
+        62.6,
+        68.5
+      ],
+      "cap_day_hist_base": {
+        "2": 193,
+        "3": 463,
+        "4": 276
+      },
+      "cap_day_hist_retuned": {
+        "2": 193,
+        "3": 463
+      },
+      "d48_share_base": 0.296137339055794,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.43328684332868433,
+        null
+      ],
+      "calib_retuned": [
+        0.36303265080243496,
+        null
+      ],
+      "mean_stakeouts_base": 2.15,
+      "mean_stakeouts_retuned": 1.81
+    },
+    {
+      "pair": "F-LeakAware\u00d7I-Random",
+      "inv_win_base": 3.4,
+      "inv_win_retuned": 3.0,
+      "delta_pp": -0.4,
+      "base_ci": [
+        2.4,
+        4.7
+      ],
+      "retuned_ci": [
+        2.1,
+        4.3
+      ],
+      "cap_day_hist_base": {
+        "2": 11,
+        "3": 9,
+        "4": 8,
+        "5": 5,
+        "6": 1
+      },
+      "cap_day_hist_retuned": {
+        "2": 11,
+        "3": 8,
+        "4": 6,
+        "5": 4,
+        "6": 1
+      },
+      "d48_share_base": 0.4117647058823529,
+      "d48_share_retuned": 0.36666666666666664,
+      "calib_base": [
+        0.018712162905888827,
+        null
+      ],
+      "calib_retuned": [
+        0.020174848688634835,
+        null
+      ],
+      "mean_stakeouts_base": 1.82,
+      "mean_stakeouts_retuned": 1.49
+    },
+    {
+      "pair": "F-Deceptive\u00d7I-GreedyProbe",
+      "inv_win_base": 67.9,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -4.0,
+      "base_ci": [
+        64.9,
+        70.7
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20,
+        "4": 26
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.03829160530191458,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.5191131498470948,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-Deceptive\u00d7I-Calendar",
+      "inv_win_base": 67.9,
+      "inv_win_retuned": 63.9,
+      "delta_pp": -4.0,
+      "base_ci": [
+        64.9,
+        70.7
+      ],
+      "retuned_ci": [
+        60.9,
+        66.8
+      ],
+      "cap_day_hist_base": {
+        "2": 633,
+        "3": 20,
+        "4": 26
+      },
+      "cap_day_hist_retuned": {
+        "2": 633,
+        "3": 6
+      },
+      "d48_share_base": 0.03829160530191458,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.5191131498470948,
+        0.16228110892675068
+      ],
+      "calib_retuned": [
+        0.6351888667992047,
+        0.15621272365805156
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.01
+    },
+    {
+      "pair": "F-Deceptive\u00d7I-Aggressive",
+      "inv_win_base": 70.7,
+      "inv_win_retuned": 65.6,
+      "delta_pp": -5.1,
+      "base_ci": [
+        67.8,
+        73.4
+      ],
+      "retuned_ci": [
+        62.6,
+        68.5
+      ],
+      "cap_day_hist_base": {
+        "2": 193,
+        "3": 463,
+        "4": 51
+      },
+      "cap_day_hist_retuned": {
+        "2": 193,
+        "3": 463
+      },
+      "d48_share_base": 0.07213578500707214,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.3286843328684333,
+        null
+      ],
+      "calib_retuned": [
+        0.36303265080243496,
+        null
+      ],
+      "mean_stakeouts_base": 2.15,
+      "mean_stakeouts_retuned": 1.81
+    },
+    {
+      "pair": "F-Deceptive\u00d7I-Random",
+      "inv_win_base": 3.7,
+      "inv_win_retuned": 2.8,
+      "delta_pp": -0.9,
+      "base_ci": [
+        2.7,
+        5.1
+      ],
+      "retuned_ci": [
+        1.9,
+        4.0
+      ],
+      "cap_day_hist_base": {
+        "2": 11,
+        "3": 9,
+        "4": 5,
+        "5": 5,
+        "6": 1,
+        "7": 2,
+        "8": 4
+      },
+      "cap_day_hist_retuned": {
+        "2": 11,
+        "3": 8,
+        "4": 5,
+        "5": 2,
+        "8": 2
+      },
+      "d48_share_base": 0.4594594594594595,
+      "d48_share_retuned": 0.32142857142857145,
+      "calib_base": [
+        0.019576719576719578,
+        null
+      ],
+      "calib_retuned": [
+        0.018433179723502304,
+        null
+      ],
+      "mean_stakeouts_base": 1.89,
+      "mean_stakeouts_retuned": 1.52
+    },
+    {
+      "pair": "F-SlackBurner\u00d7I-GreedyProbe",
+      "inv_win_base": 53.6,
+      "inv_win_retuned": 53.6,
+      "delta_pp": 0.0,
+      "base_ci": [
+        50.5,
+        56.7
+      ],
+      "retuned_ci": [
+        50.5,
+        56.7
+      ],
+      "cap_day_hist_base": {
+        "2": 517,
+        "3": 19
+      },
+      "cap_day_hist_retuned": {
+        "2": 517,
+        "3": 19
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.41009946442234124,
+        0.1875575197725961
+      ],
+      "calib_retuned": [
+        0.536,
+        0.18265732119992653
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.0
+    },
+    {
+      "pair": "F-SlackBurner\u00d7I-Calendar",
+      "inv_win_base": 53.6,
+      "inv_win_retuned": 53.6,
+      "delta_pp": 0.0,
+      "base_ci": [
+        50.5,
+        56.7
+      ],
+      "retuned_ci": [
+        50.5,
+        56.7
+      ],
+      "cap_day_hist_base": {
+        "2": 517,
+        "3": 19
+      },
+      "cap_day_hist_retuned": {
+        "2": 517,
+        "3": 19
+      },
+      "d48_share_base": 0.0,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.41009946442234124,
+        0.1875575197725961
+      ],
+      "calib_retuned": [
+        0.536,
+        0.18265732119992653
+      ],
+      "mean_stakeouts_base": 1.31,
+      "mean_stakeouts_retuned": 1.0
+    },
+    {
+      "pair": "F-SlackBurner\u00d7I-Aggressive",
+      "inv_win_base": 72.3,
+      "inv_win_retuned": 41.4,
+      "delta_pp": -30.9,
+      "base_ci": [
+        69.4,
+        75.0
+      ],
+      "retuned_ci": [
+        38.4,
+        44.5
+      ],
+      "cap_day_hist_base": {
+        "2": 158,
+        "3": 256,
+        "4": 309
+      },
+      "cap_day_hist_retuned": {
+        "2": 158,
+        "3": 256
+      },
+      "d48_share_base": 0.42738589211618255,
+      "d48_share_retuned": 0.0,
+      "calib_base": [
+        0.29777594728171336,
+        null
+      ],
+      "calib_retuned": [
+        0.2247557003257329,
+        null
+      ],
+      "mean_stakeouts_base": 2.43,
+      "mean_stakeouts_retuned": 1.84
+    },
+    {
+      "pair": "F-SlackBurner\u00d7I-Random",
+      "inv_win_base": 3.5,
+      "inv_win_retuned": 2.7,
+      "delta_pp": -0.8,
+      "base_ci": [
+        2.5,
+        4.8
+      ],
+      "retuned_ci": [
+        1.9,
+        3.9
+      ],
+      "cap_day_hist_base": {
+        "2": 10,
+        "3": 9,
+        "4": 8,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 2
+      },
+      "cap_day_hist_retuned": {
+        "2": 10,
+        "3": 9,
+        "4": 5,
+        "5": 2,
+        "8": 1
+      },
+      "d48_share_base": 0.45714285714285713,
+      "d48_share_retuned": 0.2962962962962963,
+      "calib_base": [
+        0.01871657754010695,
+        null
+      ],
+      "calib_retuned": [
+        0.017857142857142856,
+        null
+      ],
+      "mean_stakeouts_base": 1.87,
+      "mean_stakeouts_retuned": 1.51
+    }
+  ],
+  "s5_check": {
+    "M1_camping_max_nonrandom": {
+      "base": 93.2,
+      "retuned": 65.6,
+      "desired": "DOWN",
+      "moved": true,
+      "moved_decisive": true,
+      "ci_note": "decisive: retuned CI disjoint from the baseline point estimate (93.2 [91.5,94.6] \u2192 65.6 [62.x, 68.x]) \u2014 the \u03b1=0.05 dominance read flips for non-random fugitives, though the F-Random floor rows keep the line FAIL in both worlds"
+    },
+    "M2_band_max": {
+      "base": 67.9,
+      "retuned": 63.9,
+      "desired": "DOWN",
+      "moved": true,
+      "moved_decisive": false,
+      "ci_note": "directional only \u2014 significant in the F-Deceptive cells (67.9 outside [60.9, 66.8]), not in the F-LeakAware cells (65.3 inside)"
+    },
+    "M2_watch_min_ge_45": {
+      "min": 63.9,
+      "ok": true
+    },
+    "M2_watch_slackburner_greedy": {
+      "base": 53.6,
+      "retuned": 53.6,
+      "ok": true
+    },
+    "M3_pacing_d48_pooled_belief": {
+      "base": 1.9,
+      "retuned": 0.6,
+      "desired": "UP",
+      "moved": false,
+      "regressed": true
+    },
+    "guard_calibration_smart_rows_pass": {
+      "ok": true
+    },
+    "guard_calibration_random_control_unchanged": {
+      "ok": true
+    },
+    "guard_floor_beeline_random": {
+      "base": 3.4,
+      "retuned": 3.0
+    },
+    "guard_random_random": {
+      "base": 100,
+      "retuned": 100
+    }
+  },
+  "verdict": {
+    "decisive_moves": 1,
+    "directional_moves": 2,
+    "regressions": 1,
+    "guards_ok": true,
+    "adopted_per_04_s5": false,
+    "reading": "\u00a75 rule NOT MET \u2014 1 decisive desired move (camping dominance), 1 directional-only (band, overlapping CIs), 1 regression (pacing 1.9%\u21920.6% days-4\u20138 share): ADOPTION REJECTED; candidate preserved for M4 re-evaluation with human data"
+  }
+}

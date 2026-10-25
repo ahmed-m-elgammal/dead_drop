@@ -1,6 +1,7 @@
 # M2 Execution Plan — Rules Engine & Mathematical Simulation (3–4 weeks)
 
-**Status:** Weeks 1–3 **executed** (2026-10-25) · Week 4 in progress · Milestone owner: designer/developer ·
+**Status:** Weeks 1–4 **executed** (2026-10-25) — **M2 exit condition MET (G1 signed off)** ·
+Milestone owner: designer/developer ·
 Tracks the M2 row in 10-roadmap §1 and consumes `m1/m2-handoff.md` (frozen-inputs contract) +
 `m2/aud003-constraint-analysis.md` (pinned generator semantics).
 
@@ -126,7 +127,7 @@ dominance (I-Aggressive camping 70.7–93.2%), and capture-pacing lines FAIL wit
 recorded run (registered in the policy header); zero rules churn; T16/ADR-003 override surface
 added to the engine (default path byte-identical).
 
-### Week 4 — balance report v1, retune, engine tag, G1
+### Week 4 — balance report v1, retune, engine tag, G1 — **DONE (2026-10-25)**
 
 - Balance report v1: one-page parameter verdict + retune list (§4.3 format).
 - Apply **≤1 parameter pass** (10-roadmap M2 task 5) only if §4.5 bands are violated; every
@@ -136,20 +137,39 @@ added to the engine (default path byte-identical).
   exits); B1 (no simulation results) closes here if the bands are met — B3 closes on the
   generator evidence from Week 1/2 (headroom 4.8×).
 
-**Week 4 exit / M2 exit condition (10-roadmap):** G1 signed off — L1 green; role win-rate in the
-45–55% band **or** a specific retune list; determinism green over 10k seeds.
+**Week 4 — EXECUTED:** the retune candidate (P8 3→4) was measured CRN-paired against the W3
+baseline (full 20-pair matrix N=1,000/pair + 10,000-seed determinism double-run under the
+candidate, 0 mismatches — `m2/w4-results/`). Outcome: camping dominance decisively fixed
+(93.2→65.6, CIs disjoint; SlackBurner matchup flips fugitive-favored 41.4) but capture pacing
+REGRESSED (1.9%→0.6% days-4–8 share) and the band moved directionally only (65.3–67.9→63.9,
+overlapping CIs) — **the pre-registered §5 adoption rule was NOT met, and the candidate was NOT
+adopted.** Parameter table stays v1.0-alpha (no bump; the pass is not consumed by a rejected
+candidate). Balance report v1 written ([`w4-balance-report-v1.md`](w4-balance-report-v1.md))
+with the measured conclusion: **at scripted competence the band and pacing lines are
+parameter-unreachable** — the specific retune list (report §2) carries the preserved candidate
+(M4 re-evaluation with human data) + the content lever (day-1 route diversity). Decision record:
+[`adr-004-params-v1.1.md`](adr-004-params-v1.1.md). Engine tagged **`engine@1.0.0-alpha.0`**
+(the roadmap's `engine@1.0.0-alpha` deliverable, semver form); G1 signed off in 14-readiness on
+the retune-list branch; B3 closed (generator headroom evidence); B1 narrowed (results exist;
+band validation is M4's). 148/148 tests green (5 new: candidate-preset equivalence +
+default-path pricing pins).
+
+**Week 4 exit / M2 exit condition (10-roadmap): MET (2026-10-25)** — G1 signed off: L1 green;
+role win-rate closed on the **"specific retune list"** branch (the band itself remains a
+human-play target, honestly carried as such); determinism green over 10k seeds (canonical AND
+candidate parameter worlds).
 
 ## 2. Exit-criteria tracking (G1, 01-prd §8)
 
 | Criterion | Status | Evidence at close |
 |---|---|---|
 | L1 regression fixtures green (4 constants + 115-config gate) | **green (W2, generator + resolve level)** | vitest `l1-regression` + `l1-configs`: TS ≡ Python oracle, all 115 records field-equal; constants also pass end-to-end through `resolve()` as scripted ESCAPEs |
-| Determinism over 10k seeds | **green (W3)** | `w3-results/determinism.json`: 10,000 seeds × 3 pairs, double-run, full-transcript digests — 0 mismatches |
-| Role win-rate 45–55% (or specific retune list) | **pending W4 — retune list now exists** | W3 matrix: focal pairs 65.3–67.9% (CIs >55); W3 report §6 names the measured levers (P8 3→4; P3/P4 insensitive) |
-| No policy pair >65% at α=0.05 | **measured: VIOLATED (W3)** — I-Aggressive camping 70.7–93.2% vs non-random fugitives | matrix table + `w3-results/s7-camping.json` (P8 pricing lever: 93.2% → 67.2% at P8=4) |
-| ≥60% captures on days 4–8 | **measured: VIOLATED (W3)** — 0–11% (opening decided by day 2) | capture-day histograms in `w3-results/matrix.json` |
-| Stakeout hit-rate > posterior mass at placement | **measured: PASS (W3)** — 49.9–52.6% vs 0.16–0.17 predictive mass (3× skill premium vs smart fugitives; calibrated vs noise) | calibration columns in `w3-results/matrix.json` |
-| ≤1 parameter pass, logged (if any) | pending (W4) | 04 §2 diff log |
+| Determinism over 10k seeds | **green (W3 canonical + W4 candidate)** | `w3-results/determinism.json` (canonical, 0 mismatches) + `w4-results/retune-determinism.json` (v1.1 candidate, 0 mismatches) — both worlds pinned |
+| Role win-rate 45–55% (or specific retune list) | **CLOSED on the retune-list branch (W4)** | Band measured 65.3–67.9% (W3) → 63.9% (W4 candidate); **parameter-unreachable at scripted competence** (S1+S4+W4). Specific retune list: [`w4-balance-report-v1.md`](w4-balance-report-v1.md) §2 — measured P8 candidate (M4) + day-1 route-diversity content lever |
+| No policy pair >65% at α=0.05 | **measured: VIOLATED (W3); candidate fixes the non-random half (W4)** — I-Aggressive 93.2→65.6 [62.6, 68.5] (no longer significantly >65) but F-Random floor rows stay 100% vs the designed floor in both worlds | `w3-results/matrix.json` + `w4-results/retune-matrix.json` + `adoption-check.json` |
+| ≥60% captures on days 4–8 | **measured: VIOLATED (W3, 1.9%); candidate regresses further (W4, 0.6%)** — the §5 rejection trigger; root cause is the opening-information structure (content lever named) | capture-day histograms in both matrix JSONs; report §1 |
+| Stakeout hit-rate > posterior mass at placement | **measured: PASS (W3); improved under candidate (W4: 63.5% vs 15.6%)** — scarcer stakes are higher-quality | calibration columns in both matrix JSONs |
+| ≤1 parameter pass, logged (if any) | **CLOSED (W4): none adopted — candidate measured and rejected under §5; pass budget intact for M4** | 04 §2 parameter-history note + `w4-results/adoption-check.json` |
 
 ## 3. Risks to M2 itself (from 12-risks, operationalized)
 
@@ -176,6 +196,13 @@ added to the engine (default path byte-identical).
 - **NEW (W3 close):** the sim's W3 verdicts are scripted-competence-level, not human-level — the
   45–55 band target is defined for rated HUMAN play (04 §1). W4's balance report must carry both
   readings; do not retune to scripted numbers alone (the report's honesty section says the same).
+  **→ Resolved (W4): the report carries both readings, and the §5 rejection is the operative
+  proof the discipline held — the strongest scripted-level lever was NOT adopted on a scripted
+  gate. The band question is now explicitly M4's (human data), with the candidate pre-measured.**
+- **NEW (W4 close):** the pacing root cause is the opening-information structure (public start +
+  same-day evidence + day-2 resolution), not any parameter — the M2-exit map revision and M3
+  content inherit the day-1 route-diversity brief (report §2). Watch that M3's tutorial/difficulty
+  work does not silently re-tune parameters against scripted numbers.
 
 ## 4. Parking lot (created empty; nothing is in it yet)
 
@@ -187,3 +214,6 @@ the ruleset without a new audit round)*
   preferences don't bind. Design decision for the W4 report (not a silent tweak).
 - 2026-10-25 (W3): cross-case route repetition (F-Beeline exploitability) is a MATCHMAKING/rating
   concern (M6), not a generator concern — C3's anti-scripting constraint is per-case.
+- 2026-10-25 (W4): the pacing metric may deserve a per-pair-family definition at M4 (the pooled
+  number mixes the designed floor rows with belief rows) — RECORDED, not acted on; the §5
+  rejection stands on the metric as written.

@@ -1,6 +1,6 @@
 # 14 — Readiness Report (Quality-Gate Results)
 
-**Date:** 2026-10-25 · **Scope:** documentation readiness for implementation start · **Verdict:**
+**Date:** 2026-10-25 (G1 signed off at M2 close, same day) · **Scope:** documentation readiness for implementation start · **Verdict:**
 
 > **CONDITIONALLY READY — implementation may begin at M1–M2. M3 (prototype build) is unblocked. M4/M5 are gated on simulation and playtest results. Three named blockers and one stop-line condition are active.**
 
@@ -22,9 +22,23 @@
 
 | ID | Blocker | Blocks | Clearing action |
 |---|---|---|---|
-| B1 | **No simulation results exist.** All balance values are hypotheses; the 45–55% role band is unvalidated | M2 exit (G1) | Build engine + sim harness (M2 tasks 1–4); produce the report with Wilson CIs |
-| B2 | **Ruleset v1.0-alpha is paper-only.** No human has played a full case with the final D1–D14 rulings | M1 exit | Paper-prototype 3 cases × both roles; log disputes; freeze tag |
-| B3 | **Map content headroom is thin-ish.** 55/480 configs qualify **[computed]**; if ladder diversity demands more, the drop pool needs widening (16→24) | M3 content | Generator QA during M2; widen pool if the diversity quota (04-balance-sim §6.6) fails |
+| B1 | **No simulation results exist.** All balance values are hypotheses; the 45–55% role band is unvalidated | M2 exit (G1) | Build engine + sim harness (M2 tasks 1–4); produce the report with Wilson CIs — **NARROWED at M2 close (W4): simulation results now exist ([w3 report](m2/w3-simulation-report.md), [w4 balance report v1](m2/w4-balance-report-v1.md), Wilson CIs throughout). The blocker's original subject ("no results") is cleared; the band validation itself is measured parameter-unreachable at scripted competence and is M4's question with human data — the specific retune list is signed into G1. What remains of B1 rides G3 (M4 playtest), not M2.** |
+| B2 | **Ruleset v1.0-alpha is paper-only.** No human has played a full case with the final D1–D14 rulings | M1 exit | Paper-prototype 3 cases × both roles; log disputes; freeze tag — **untouched (human-gated; fabrication guard intact)** |
+| B3 | **Map content headroom is thin-ish.** 55/480 configs qualify **[computed]**; if ladder diversity demands more, the drop pool needs widening (16→24) | M3 content | Generator QA during M2; widen pool if the diversity quota (04-balance-sim §6.6) fails — **CLOSED at M2 (W1/W2 evidence): pool widened to 24 with a documented 8-node selection; full conjunction 115/2208 ordered configs pass (4.8× the 24-case ladder need); the ladder produces with C6 diversity green — `m2/aud003-constraint-analysis.md`** |
+
+## 2.1 G1 sign-off (M2 exit — 01-prd §8; signed 2026-10-25)
+
+> **G1 — engine + simulation gates — SIGNED OFF (retune-list branch).** L1 green (tsc strict;
+> vitest 148/148: 115-config full-space reconciliation, worked-example goldens, regression
+> constants end-to-end, §9.1–9.13 rulings, T16 override + v1.1-candidate tests, sim suites).
+> Determinism green over 10,000 seeds in BOTH parameter worlds (canonical `w3-results/determinism.json`
+> and the measured v1.1 candidate `w4-results/retune-determinism.json` — 0 mismatches each).
+> Role win-rate: the 45–55% band is NOT met at scripted competence (65.3–67.9% W3; 63.9% under
+> the measured candidate) and is measured **parameter-unreachable** (S1 + S4 + W4) — closing per
+> the exit condition's explicit alternative: **a specific retune list** ([w4-balance-report-v1.md §2](m2/w4-balance-report-v1.md)):
+> the measured P8 3→4 candidate (§5-rejected, preserved for M4 with its pacing trade-off
+> quantified) + the day-1 route-diversity content lever. The band itself remains a rated-HUMAN
+> target, honestly carried to M4. Engine tagged `engine@1.0.0-alpha.0`.
 
 ## 3. Stop-line condition
 

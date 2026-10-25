@@ -93,3 +93,9 @@ Consequences: solo dev operates a small server from M5; runbook required (R6).
 Decision: player-model tiers computed and stored locally; no server-side player profiles; ranked uses only match outcomes.
 Rationale: privacy posture + the model is a convenience, not a competitive input.
 Consequences: cross-device skill continuity needs an explicit opt-in sync later (open question Q10).
+
+**D16 · M2 W4 retune: measure, obey the pre-registered §5 rule, adopt nothing.** *Adopted (M2 W4).*
+Context: W3 measured band/dominance/pacing FAIL and named P8 3→4 as the headline lever; 04 §5 requires ≥2 desired metric moves without regressing a third.
+Decision: the candidate was measured CRN-paired (20-pair matrix + 10k-seed determinism, `m2/w4-results/`) — camping dominance decisively fixed (93.2→65.6) but pacing regressed (1.9→0.6%) — **not adopted**; parameter table stays v1.0-alpha; the candidate is preserved as data (`RETUNED_CANDIDATE_P8_4`) for M4 re-evaluation with human play.
+Rationale: the pre-registered rule exists to stop headline-fix adoption pressure; rules churn before any human session is the freeze discipline's last resort.
+Consequences: M4 inherits a pre-measured decision (including the pacing trade-off); the band/pacing root cause is the opening-information structure — M2-exit map revision inherits the day-1 route-diversity brief. Full record: ADR-004, w4-balance-report-v1.md.

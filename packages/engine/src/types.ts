@@ -346,3 +346,29 @@ export const PARAMETERS_V1_0_0_ALPHA_1 = {
   P13_matchmaking_rating_band: 100,       // [design judgment]
   P14_clocks: { casual_hours: 24, ranked_hours: 12 }, // [design judgment]
 } as const;
+
+/**
+ * Parameter table v1.1-alpha (04-balance-sim §2) — the ONE authorized M2 W4
+ * retune pass (10-roadmap M2 task 5; 04 §5 adoption rule), measured in
+ * `m2/w4-results/` and recorded in [ADR-004](../../../m2/adr-004-params-v1.1.md).
+ *
+ * Sole diff vs v1.0.0-alpha.1: P8_stakeout_cost 3→4 — the measured anti-camping
+ * lever (I-Aggressive camping 93.2%→67.2% vs route-optimal fugitives;
+ * SlackBurner matchup flips fugitive-favored 42.8%, restoring archetype
+ * viability). Every other VALUE is byte-identical. Status downgrades recorded
+ * in 04 §2 v1.1-alpha: P3/P4 [hypothesis]→[computed-insensitive at scripted
+ * level] (W3 S1: ≥12 SP saturates; IP dead in [8,12]) — values unchanged.
+ * The v1.0.0-alpha.1 table above stays VERBATIM (historical record; its
+ * header's "labels copied verbatim" discipline is intact).
+ *
+ * VERSIONING (deliberate): this is a PARAMETER-table version, not a ruleset
+ * version. The ruleset text stays frozen at 1.0.0-alpha.1 until the M1 freeze
+ * (m1/freeze-checklist.md §2); the canonical engine default (CANONICAL_PARAMS)
+ * therefore remains the alpha.1 snapshot, and the retuned values ride the
+ * ADR-003 override surface via RETUNED_CANDIDATE_P8_4 until the freeze sync
+ * lands the text + canonical flip in one commit.
+ */
+export const PARAMETERS_V1_1_ALPHA_CANDIDATE = {
+  ...PARAMETERS_V1_0_0_ALPHA_1,
+  P8_stakeout_cost: 4,                    // [computed: M2 W4 retune — camping 93.2→67.2%, §5 rule met; ADR-004]
+} as const;

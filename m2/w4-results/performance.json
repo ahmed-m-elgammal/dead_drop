@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "generated_by": "@dead-drop/sim cli (M2 W3)",
+    "map_id": "map_alpha",
+    "map_version": "1.2.0",
+    "ruleset": "1.0.0-alpha.1 (resolution defaults; sweep overrides echoed per cell — ADR-003/T16)",
+    "matrix_pairs": [
+      "F-Beeline×I-GreedyProbe",
+      "F-Beeline×I-Calendar",
+      "F-Beeline×I-Aggressive",
+      "F-Beeline×I-Random",
+      "F-Random×I-GreedyProbe",
+      "F-Random×I-Calendar",
+      "F-Random×I-Aggressive",
+      "F-Random×I-Random",
+      "F-LeakAware×I-GreedyProbe",
+      "F-LeakAware×I-Calendar",
+      "F-LeakAware×I-Aggressive",
+      "F-LeakAware×I-Random",
+      "F-Deceptive×I-GreedyProbe",
+      "F-Deceptive×I-Calendar",
+      "F-Deceptive×I-Aggressive",
+      "F-Deceptive×I-Random",
+      "F-SlackBurner×I-GreedyProbe",
+      "F-SlackBurner×I-Calendar",
+      "F-SlackBurner×I-Aggressive",
+      "F-SlackBurner×I-Random"
+    ],
+    "conventions": [
+      "CRN: all pairs share the same seeded case list per cell (seeds 1..N).",
+      "Wilson score 95% CIs on role win-rates.",
+      "Probe chance baseline = 1/|nodes| = 1/48 (uniform posterior, 04 §3.2).",
+      "Stakeout calibration = hit-rate vs PREDICTIVE posterior mass at placement (one unobserved day ahead).",
+      "Fugitive/investigator policies: exact rules in packages/sim/src/policies.ts header; NOT rules — submission-only."
+    ]
+  },
+  "rows": [
+    {
+      "label": "retune matrix (20 pairs @ v1.1-alpha, belief + random policies)",
+      "cases": 20000,
+      "seconds": 20.309497111,
+      "casesPerSecond": 984.7609662953018
+    },
+    {
+      "label": "retune determinism double-run @ v1.1-alpha",
+      "cases": 60000,
+      "seconds": 346.20406636,
+      "casesPerSecond": 173.3081896779602
+    }
+  ],
+  "note": "04-balance-sim §4.1 target: ≥1,000 cases/second order-of-magnitude (est.). The engine-level driver (runScriptedCase, no policy layer) is faster; these numbers include the full policy + belief-filter layer."
+}

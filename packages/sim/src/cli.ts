@@ -1,17 +1,23 @@
 #!/usr/bin/env node
 /**
  * ============================================================================
- * Sim CLI — matrix | sweeps | determinism | all  (M2 W3)
+ * Sim CLI — matrix | sweeps | determinism | retune | all  (M2 W3; retune M2 W4)
  * ============================================================================
  *
  * Run (from the repo root, after `npm run build`):
  *   node packages/sim/dist/cli.js --mode all --n 1000 --sweep-n 500 \
  *        --det-n 10000 --out m2/w3-results
+ *   node packages/sim/dist/cli.js --mode retune --n 1000 \
+ *        --det-n 10000 --out m2/w4-results
  *
  * Writes:
- *   matrix.json        20-pair balance matrix (Wilson 95% CIs, histograms…)
- *   sweeps.json        S1–S7 cells + conventions
- *   determinism.json   double-run transcript digest comparison
+ *   matrix.json           20-pair balance matrix (Wilson 95% CIs, histograms…)
+ *   sweeps.json           S1–S7 cells + conventions
+ *   determinism.json      double-run transcript digest comparison
+ *   retune-matrix.json    W4: the SAME 20-pair matrix under the v1.1-alpha
+ *                         retuned preset (P8_stakeout_cost 4, ADR-004) — CRN
+ *                         seeds 1..N, directly comparable to the W3 baseline
+ *   retune-determinism.json  W4: double-run determinism under the retuned preset
  * All outputs echo map/ruleset identity, effective parameters, seed lists and
  * the named conventions (04-balance-sim §4.3 "conventions named in outputs").
  *
@@ -28,6 +34,7 @@ import {
   type ValidatedMap,
 } from '@dead-drop/engine';
 import {
+  RESOLUTION_PRESETS,
   determinismCheck,
   generateCaseList,
   runMatrix,
@@ -42,7 +49,7 @@ import {
 /* ------------------------------------------------------------------ args */
 
 interface Args {
-  mode: 'matrix' | 'sweeps' | 'determinism' | 'all';
+  mode: 'matrix' | 'sweeps' | 'determinism' | 'retune' | 'all';
   n: number;
   sweepN: number;
   detN: number;
@@ -55,7 +62,7 @@ function parseArgs(argv: readonly string[]): Args {
     return i >= 0 && i + 1 < argv.length ? argv[i + 1]! : def;
   };
   const mode = get('--mode', 'all');
-  if (!['matrix', 'sweeps', 'determinism', 'all'].includes(mode)) {
+  if (!['matrix', 'sweeps', 'determinism', 'retune', 'all'].includes(mode)) {
     throw new Error(`unknown --mode ${mode}`);
   }
   return {
@@ -134,6 +141,58 @@ function main(): void {
     };
     writeFileSync(path.join(outDir, 'matrix.json'), JSON.stringify(payload, null, 2));
     process.stderr.write(`[matrix] done in ${cell.seconds.toFixed(1)}s\n`);
+  }
+
+  if (args.mode === 'retune') {
+    // M2 W4 retune measurement (ADR-004): the §5 adoption-rule evidence.
+    // Same CRN case list as the W3 baseline (seeds 1..N) → the ONLY delta vs
+    // w3-results/matrix.json is the parameter preset (P8_stakeout_cost 4).
+    process.stderr.write(`[retune] generating ${args.n} cases (CRN, seeds 1..${args.n})…\n`);
+    const cases: GeneratedCase[] = generateCaseList(vm, args.n);
+    process.stderr.write(`[retune] running ${ALL_PAIRS.length} pairs × ${args.n} cases under RETUNED_CANDIDATE_P8_4…\n`);
+    const cell = runMatrix(vm, cases, ALL_PAIRS, { params: RESOLUTION_PRESETS.candidateP8_4 });
+    perfRows.push(perf('retune matrix (20 pairs @ v1.1-alpha, belief + random policies)', cell.casesRun, cell.seconds));
+    const payload = {
+      meta: {
+        ...baseMeta(),
+        n: args.n,
+        seeds: `1..${args.n}`,
+        seconds: cell.seconds,
+        param_preset: 'RETUNED_CANDIDATE_P8_4 (04-balance-sim §2 v1.1-alpha; ADR-004)',
+        effective_params: { ...RESOLUTION_PRESETS.candidateP8_4 },
+        baseline: 'w3-results/matrix.json (same seeds, canonical params) — the §5 adoption check is the paired diff',
+        focal_note: 'I-GreedyProbe/I-Calendar rows carry belief-based calibration stats; I-Aggressive/I-Random do not (no tracker).',
+      },
+      rows: cell.rows,
+    };
+    writeFileSync(path.join(outDir, 'retune-matrix.json'), JSON.stringify(payload, null, 2));
+    process.stderr.write(`[retune] matrix done in ${cell.seconds.toFixed(1)}s\n`);
+
+    const detPairs: readonly PolicyPair[] = [
+      ['F-Beeline', 'I-Random'],
+      ['F-Random', 'I-Random'],
+      ['F-Random', 'I-GreedyProbe'],
+    ];
+    process.stderr.write(`[retune] determinism ${args.detN} seeds × ${detPairs.length} pairs, double-run @ v1.1-alpha…\n`);
+    const det = determinismCheck(vm, args.detN, detPairs, { params: RESOLUTION_PRESETS.candidateP8_4 });
+    perfRows.push(perf('retune determinism double-run @ v1.1-alpha', det.casesRun, det.seconds));
+    const detPayload = {
+      meta: {
+        ...baseMeta(),
+        seeds: `1..${args.detN}`,
+        digest: 'fnv1a32 over full transcript (verdict, ledgers, both logs, §8.6 route)',
+        param_preset: 'RETUNED_CANDIDATE_P8_4 (04-balance-sim §2 v1.1-alpha; ADR-004)',
+        effective_params: { ...RESOLUTION_PRESETS.candidateP8_4 },
+      },
+      ...det,
+      pass: det.mismatches.length === 0,
+    };
+    writeFileSync(path.join(outDir, 'retune-determinism.json'), JSON.stringify(detPayload, null, 2));
+    process.stderr.write(`[retune] determinism ${det.mismatches.length} mismatches in ${det.seconds.toFixed(1)}s\n`);
+    if (det.mismatches.length > 0) {
+      console.error('[retune] FAIL — transcripts diverged under the retuned preset; engine determinism broken');
+      process.exitCode = 1;
+    }
   }
 
   if (args.mode === 'sweeps' || args.mode === 'all') {

@@ -2,7 +2,10 @@
 
 **Status:** methodology + analytical checks **[computed]** + first simulation results **[simulated,
 M2 W3]** (20-pair matrix + S1–S7 sweeps, 2026-10-25 — [`m2/w3-simulation-report.md`](m2/w3-simulation-report.md);
-§4.5 scorecard there: calibration PASS, band/dominance/pacing FAIL with a measured W4 retune list).
+§4.5 scorecard there: calibration PASS, band/dominance/pacing FAIL with a measured W4 retune list)
++ W4 retune measurement **[simulated, M2 W4]** — the one authorized retune pass (P8 3→4) was
+measured and **REJECTED** under the §5 rule; the table below stays v1.0-alpha ([`m2/w4-balance-report-v1.md`](m2/w4-balance-report-v1.md),
+[`m2/adr-004-params-v1.1.md`](m2/adr-004-params-v1.1.md)).
 [computed] claims are closed-form or exhaustive-search calculations (see `tools/verification/`),
 **[hypothesis]** claims need more simulation/M4 playtest, **[design judgment]** is taste.
 
@@ -14,24 +17,32 @@ M2 W3]** (20-pair matrix + S1–S7 sweeps, 2026-10-25 — [`m2/w3-simulation-rep
 4. **Decision richness:** budgets should bind (players should *want* more IP and more SP), but not starve (never forced into meaningless turns).
 5. **Pacing:** capture days distributed across the case (not all Day-2 spikes or all Day-8 coin flips).
 
-## 2. Parameter table (v1.0-alpha)
+## 2. Parameter table (v1.0-alpha — still in force at M2 close; the W4 candidate was measured, not adopted)
 
 | ID | Parameter | Value | Status |
 |---|---|---|---|
 | P1 | Days per case | 8 | [hypothesis] |
 | P2 | Drops (ordered, public) | 2 | [computed: 3-drop shape infeasible in 8 days — 0/480 configs; min found 12 days] |
-| P3 | Fugitive stamina (SP) | 12 | [hypothesis; sweep shows feasibility insensitive in 8–14 — role is ambiguity slack] |
-| P4 | Investigator intel (IP) | 10 | [hypothesis] |
+| P3 | Fugitive stamina (SP) | 12 | [computed-insensitive at scripted level: feasibility geometry-bound (W1); S1 shows ≥12 saturates — role is ambiguity slack] |
+| P4 | Investigator intel (IP) | 10 | [computed-insensitive at scripted level: S1 shows dead in [8,12]] |
 | P5 | Transit costs F/T/M | 1/2/3 | [design judgment; geometry-derived] |
 | P6 | Hold cost / max | 1 SP / 2 per case | [hypothesis] |
 | P7 | Probe cost / daily cap | 1 IP / 2 | [hypothesis] |
-| P8 | Stakeout cost / daily cap | 3 IP / 1 | [hypothesis] |
-| P9 | District reveal days | 3, 6 | [hypothesis] |
-| P10 | Transit reveal days | 4 | [hypothesis] |
+| P8 | Stakeout cost / daily cap | 3 IP / 1 | [hypothesis; W4 measured candidate 3→4 REJECTED per §5 — camping fix decisive (93.2→65.6) but pacing regresses 1.9→0.6%; preserved for M4 — ADR-004] |
+| P9 | District reveal days | 3, 6 | [hypothesis; S2: adequate, ≤4pp effect — not the lever] |
+| P10 | Transit reveal days | 4 | [hypothesis; S2: no effect] |
 | P11 | Stakeout window | armed day d → resolves day d+1; forbidden on day 8 | fixed by rules logic |
 | P12 | Generator feasibility band | min completion days ∈ [5,7] | [computed: C2-only 55/480 on the 16-pool; full C2∧C3∧C4 = **115/2208** on the widened 24-pool — see m2/aud003-constraint-analysis.md] |
 | P13 | Matchmaking rating band | ±100 (launch) | [design judgment] |
 | P14 | Clocks | casual 24 h / ranked 12 h | [design judgment] |
+
+**Parameter history:** v1.0-alpha (current — unchanged since publication). M2 W4: the ≤1
+retune pass was measured (P8 3→4 via ADR-003 overrides, CRN-paired) and **rejected** under the
+§5 adoption rule — no value changed, no version bump; the pass is not consumed by a rejected
+candidate (adoption consumes it; the explicit rejection prevents pass-shopping). Evidence:
+`m2/w4-results/` + [`m2/w4-balance-report-v1.md`](../m2/w4-balance-report-v1.md) +
+[`m2/adr-004-params-v1.1.md`](../m2/adr-004-params-v1.1.md). P3/P4 status downgrades above are
+measurements at scripted level; values unchanged.
 
 ## 3. Computed analytical results (performed)
 
@@ -54,7 +65,7 @@ Under a uniform 48-node posterior:
 
 They do not establish: role win-rates, fun, optimal strategies, reveal-schedule adequacy, or budget adequacy. Those require the simulation (§4) and playtests (§7). **No balance claim is proven.**
 
-## 4. Simulation methodology (run at M2 W3 — results: m2/w3-simulation-report.md)
+## 4. Simulation methodology (run at M2 W3 — results: m2/w3-simulation-report.md; W4 retune measurement: m2/w4-balance-report-v1.md)
 
 > **Executed 2026-10-25.** The harness is `packages/sim` (pure TS on the engine; zero rules
 > churn); policies + conventions are documented in the package README and the report §1. Raw
@@ -109,9 +120,23 @@ Per pair × configuration: win-rate per role with **Wilson 95% CIs**; capture-da
 - Capture-day distribution: ≥60% of captures in days 4–8 (opening-day coin-flip captures indicate information poverty).
 - Stakeout hit-rate must exceed the posterior mass at placement by a margin consistent with skill (if stakeouts hit ≈ chance, prediction is meaningless → retune P8 or reveal schedule).
 
+**Measured at M2 W3** (report §6): calibration PASS; band, dominance, pacing FAIL → W4 retune
+list. **Measured at M2 W4** ([`m2/w4-balance-report-v1.md`](../m2/w4-balance-report-v1.md) §1):
+the P8 3→4 candidate fixes the dominance line decisively (93.2→65.6, CIs disjoint) but
+regresses pacing (1.9→0.6%) — §5 rule NOT met, not adopted. **M2 exit verdict: the band and
+pacing lines are parameter-unreachable at scripted competence** (S1 + S4 + W4 agree); the
+retune list (report §2) carries the measured candidate (M4 re-evaluation with human data) and
+the content lever (day-1 route diversity). G1 closes on the "specific retune list" branch.
+
 ## 5. Sensitivity plan (run at M2/M4)
 
 Prioritized sweeps (each ±1 step around v1.0-alpha): P4 (IP) → P8 (stakeout cost) → P9/P10 (reveal schedule) → P3 (SP) → P1 (days) → P6 (Holds). For each: effect size on role win-rate and capture-day distribution; a change is adopted only if it moves ≥2 metrics in the desired direction without regressing a third. Parameter history is recorded in §2 (version bump per adopted change).
+
+**M2 W4 outcome (recorded):** the P8 3→4 candidate was measured CRN-paired against the W3
+baseline (1 decisive desired move, 1 directional, 1 regression — pacing 1.9→0.6%) and **not
+adopted**; "moves in the desired direction" was scored significance-aware (retuned 95% CI must
+exclude the baseline point estimate). The ≤1 pass budget is intact for M4 (10-roadmap M4 task 4
+has its own pass); this rejection does not spend it. Full accounting: `m2/w4-results/adoption-check.json`.
 
 ## 6. Case-generator constraints (normative for M2)
 

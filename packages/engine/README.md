@@ -1,10 +1,12 @@
 # @dead-drop/engine — Rules Engine Package
 
-**Version:** 0.3.0-alpha.0 · **Status:** M2 W2 **functionally complete** — `resolve()` implemented
+**Version:** 1.0.0-alpha.0 (the M2-exit tag `engine@1.0.0-alpha.0` — the roadmap's
+`engine@1.0.0-alpha` deliverable) · **Status:** M2 **closed** — `resolve()` implemented
 (DRAFT-UNFREEZE per ADR-002, `../../m2/adr-002-resolve-unlock.md`), pending M1-freeze transcript
-reconciliation · M2 W3 additive: **T16/ADR-003 simulation override surface** (`../../m2/adr-003-sim-overrides.md`)
-· **Ruleset:** `1.0.0-alpha.1` · **Runtime deps: none** · Toolchain: ADR-001
-(`../../m2/adr-001-toolchain.md`) · Plan: `../../m2/M2-execution-plan.md` §1 W2–W3.
+reconciliation · T16/ADR-003 simulation override surface · **M2 W4 additive:** the measured
+v1.1-alpha retune **CANDIDATE** as data (ADR-004, `../../m2/adr-004-params-v1.1.md` — NOT the
+canonical default) · **Ruleset:** `1.0.0-alpha.1` · **Runtime deps: none** · Toolchain: ADR-001
+(`../../m2/adr-001-toolchain.md`) · Plan: `../../m2/M2-execution-plan.md` §1 W2–W4.
 
 Pure, deterministic TypeScript engine for Dead Drop. The rules text
 (`../../03-rules.md`) is the spec: if code and text disagree, the text wins and the
@@ -21,6 +23,7 @@ generator. This package never reads the network, the clock, or the filesystem at
 | Seeded case generator: C1 sampling, C5 reports, C6 batching, §9.8 asserts (`src/generator.ts`) | Simulation harness + scripted policies — now its own workspace package: [`packages/sim`](../sim/README.md) (W3, executed) |
 | **`resolve()` — the §2 seven-step day resolution** (`src/engine.ts`): phases, §3 legality, §4 evidence, §5 actions, §6 verdicts via `VERDICT_WINNER`, §9.1–9.13 predicates, §9.10 idempotency, §8.6 disclosure, scripted driver | |
 | **T16/ADR-003 sim override surface** — `resolveParams`/`SimParamOverrides`/`CANONICAL_PARAMS`, session-level opt-in (P1/P6/P7/P8) + generator `shape` option for S6; default path byte-identical to 1.0.0-alpha.1 | |
+| **v1.1-alpha retune CANDIDATE (ADR-004, W4)** — `PARAMETERS_V1_1_ALPHA_CANDIDATE` (table-driven) + frozen `RETUNED_CANDIDATE_P8_4` preset: the measured P8 3→4 candidate, §5-REJECTED as an adoption, preserved for M4; canonical default UNCHANGED (stakeout 3 IP) until the M1-freeze sync | |
 | L1 fixtures emitted by the Python oracle (`fixtures/`) | |
 
 ## Layout

@@ -58,7 +58,7 @@ import type {
   PublicEvent,
   Verdict,
 } from './types.js';
-import { PARAMETERS_V1_0_0_ALPHA_1 as P, RULESET_VERSION, VERDICT_WINNER } from './types.js';
+import { PARAMETERS_V1_0_0_ALPHA_1 as P, PARAMETERS_V1_1_ALPHA_CANDIDATE as P11, RULESET_VERSION, VERDICT_WINNER } from './types.js';
 import { edgeCost, type ValidatedMap } from './map.js';
 
 /* ------------------------------------------------------------ errors */
@@ -140,6 +140,25 @@ export function resolveParams(overrides?: SimParamOverrides): EffectiveParams {
   }
   return merged;
 }
+
+/** Retuned parameter preset — 04-balance-sim §2 v1.1-alpha, adopted at M2 W4
+ *  (the ONE authorized retune pass, 10-roadmap M2 task 5; [ADR-004](../../../m2/adr-004-params-v1.1.md)).
+ *  Value source is the parameter TABLE (never hard-coded): alpha.1 snapshot
+ *  + P8_stakeout_cost from PARAMETERS_V1_1_ALPHA_CANDIDATE.
+ *
+ *  NOT the engine default: the ruleset text is frozen at 1.0.0-alpha.1 until
+ *  the M1 freeze (m1/freeze-checklist.md §2), so CANONICAL_PARAMS stays the
+ *  alpha.1 snapshot and this preset rides the T16/ADR-003 override surface:
+ *    new CaseSession(vm, config, { params: RETUNED_CANDIDATE_P8_4 })
+ *  The M1-freeze commit flips CANONICAL_PARAMS to this preset + bumps the
+ *  ruleset text in the same change (freeze-checklist §2 Branch-B pattern).
+ *  Until then, resolutions under this preset differ from canonical ONLY in
+ *  stakeout pricing (identical code path to the S4 sweep — byte-identity of
+ *  the default path is unaffected and stays pinned by the L1/L3 suites). */
+export const RETUNED_CANDIDATE_P8_4: EffectiveParams = Object.freeze({
+  ...CANONICAL_PARAMS,
+  P8_stakeout_cost: P11.P8_stakeout_cost,
+});
 
 /* ------------------------------------------------------- config validation */
 
