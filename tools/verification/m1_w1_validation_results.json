@@ -1,0 +1,105 @@
+{
+ "checks": {
+  "structure": {
+   "nodes": 48,
+   "edges": 84,
+   "edge_types": {
+    "F": 56,
+    "T": 16,
+    "M": 12
+   },
+   "connected": true,
+   "degree_min": 2,
+   "degree_max": 7,
+   "district_sizes_ok": true
+  },
+  "worked_examples": {
+   "edges_checked": 14,
+   "edges_missing": [],
+   "w3_stamina_total": 12,
+   "w3_ledger_ok": true,
+   "w4_safehouse_is_D3_06": true,
+   "canonical_gate_D1_08": true,
+   "canonical_drops_in_pool": true
+  },
+  "canonical_case": {
+   "safehouse": "D2-07",
+   "drops": [
+    "D2-09",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days_computed": 7,
+   "doc_claim": 7,
+   "match": true
+  }
+ },
+ "configs": {
+  "ordered": {
+   "total": 960,
+   "in_band": 113
+  },
+  "either": {
+   "total": 480,
+   "in_band": 99
+  },
+  "poolorder": {
+   "total": 480,
+   "in_band": 55
+  },
+  "doc_claim": "55/480",
+  "reconciliation": "doc claim matches 'poolorder' convention (unordered enumeration, drop order fixed by pool position); generator-relevant ordered space is 113/960 (~11.8%, same rate)"
+ },
+ "playtest_cases": [
+  {
+   "safehouse": "D2-07",
+   "drops": [
+    "D2-06",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days": 6,
+   "min_routes": 3,
+   "distinct_first3_prefixes": 3,
+   "cheapest_drop2_sp": 5,
+   "endgame_3day_gate_ok": true,
+   "passes": true
+  },
+  {
+   "safehouse": "D3-06",
+   "drops": [
+    "D3-05",
+    "D4-03"
+   ],
+   "gate": "D4-02",
+   "min_days": 6,
+   "min_routes": 3,
+   "distinct_first3_prefixes": 3,
+   "cheapest_drop2_sp": 6,
+   "endgame_3day_gate_ok": true,
+   "passes": true
+  },
+  {
+   "safehouse": "D3-06",
+   "drops": [
+    "D2-06",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days": 6,
+   "min_routes": 3,
+   "distinct_first3_prefixes": 3,
+   "cheapest_drop2_sp": 7,
+   "endgame_3day_gate_ok": true,
+   "passes": true
+  }
+ ],
+ "stranding": {
+  "nodes_without_foot_edge": [],
+  "min_incident_cost_range": [
+   1,
+   1
+  ],
+  "sp0_reachable_note": "SP=0 is reachable by legal play (12 SP, costs >= 1); at SP=0 no Move and no Hold is affordable -> DIS-001 forced-strand gap is real regardless of map."
+ }
+}

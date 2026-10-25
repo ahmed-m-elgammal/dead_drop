@@ -1,0 +1,95 @@
+{
+ "graph_checks": {
+  "node_count": 48,
+  "edge_count": 84,
+  "connected": true,
+  "edge_type_counts": {
+   "F": 56,
+   "T": 16,
+   "M": 12
+  },
+  "min_degree": 2,
+  "max_degree": 7
+ },
+ "case_checks": {
+  "extreme_case_found": {
+   "drops_ordered": [
+    "D3-02",
+    "D3-09",
+    "D4-08"
+   ],
+   "gate": "D4-02",
+   "safehouse_start": "D3-06",
+   "minimal_completion_days": 13
+  },
+  "loose_example_min_days_at_SP14": 12,
+  "stamina_sweep_min_days_canonical_case": {
+   "drops": [
+    "D1-03",
+    "D1-01",
+    "D2-04"
+   ],
+   "gate": "D1-08",
+   "start": "D2-07",
+   "results_by_sp": {
+    "12": null,
+    "14": null,
+    "16": null,
+    "18": 14,
+    "20": 14,
+    "22": 14
+   }
+  },
+  "generator_headroom_SP16": {
+   "total_candidate_cases": 2240,
+   "qualifying_min_days_6_to_8": 48,
+   "example_qualifying": {
+    "drops": [
+     "D1-07",
+     "D2-06",
+     "D3-02"
+    ],
+    "gate": "D4-02",
+    "start": "D2-07",
+    "min_days": 8
+   }
+  },
+  "generator_headroom_2drops_SP12": {
+   "total_candidate_cases": 480,
+   "qualifying_min_days_5_to_7": 55,
+   "example_qualifying": {
+    "drops": [
+     "D1-01",
+     "D1-07"
+    ],
+    "gate": "D1-08",
+    "start": "D2-07",
+    "min_days": 6
+   }
+  },
+  "stamina_sweep_2drop_case": {
+   "drops": [
+    "D1-07",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "start": "D2-07",
+   "results_by_sp": {
+    "8": 7,
+    "10": 7,
+    "12": 7,
+    "14": 7
+   }
+  }
+ },
+ "info_calcs": {
+  "H0_bits_uniform_48": 5.585,
+  "probe_hit_prob_uniform": 0.0208,
+  "probe_hit_prob_after_district": 0.0833,
+  "bits_removed_by_district_reveal": 2.0,
+  "max_bits_removed_by_transit_reveal": 1.585,
+  "blind_probes_needed_expected": 24,
+  "stakeout_capture_prob_at_max_posterior_0p5": 0.5,
+  "stakeout_vs_probes_tradeoff": "1 stakeout = 3 IP = 3 probes; capture needs posterior mass p* at predicted node; info-first play raises p* before committing"
+ }
+}
