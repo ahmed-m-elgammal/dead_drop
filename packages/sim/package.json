@@ -1,0 +1,15 @@
+{
+  "name": "@dead-drop/sim",
+  "version": "0.1.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "description": "Dead Drop simulation harness (M2 W3) — scripted policies, the 20-pair balance matrix, scenario sweeps S1–S7 and the determinism check (04-balance-sim §4). Deterministic; zero runtime deps beyond @dead-drop/engine. Policies are NOT rules: they never alter resolution semantics.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@dead-drop/engine": "*"
+  }
+}

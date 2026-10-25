@@ -14,7 +14,7 @@
 import type { CaseConfig, NodeId } from './types.js';
 import { MAP_ID_ALPHA, PARAMETERS_V1_0_0_ALPHA_1 as P, RULESET_VERSION } from './types.js';
 import type { ValidatedMap } from './map.js';
-import { evaluateConfig, type EvaluatedConfig } from './feasibility.js';
+import { evaluateConfig, type ConfigShape, type EvaluatedConfig } from './feasibility.js';
 
 export class GeneratorError extends Error {
   constructor(message: string) {
@@ -63,6 +63,9 @@ export interface FeasibilityReport {
     gate_not_in_drops: true;
     pools_disjoint: true;
   };
+  /** Present ONLY when the case was generated under a non-canonical shape
+   *  (T16/ADR-003 — scenario S6). Canonical cases omit it. */
+  shape?: { days: number; band: [number, number] };
 }
 
 function assertSection98(vm: ValidatedMap, safehouse: NodeId, d1: NodeId, d2: NodeId, gate: NodeId): void {
@@ -117,8 +120,10 @@ function memosFor(vm: ValidatedMap) {
 /** Seed-rejected sampling per C1: draw (safehouse, ordered drops, gate) from
  *  the full space with the seeded PRNG, evaluate under the pinned gate, and
  *  return the first passing draw together with its C5 report. Deterministic:
- *  the same seed yields the same case. */
-export function generateCase(vm: ValidatedMap, seed: number): GeneratedCase {
+ *  the same seed yields the same case. `shape` (T16/ADR-003) sweeps the
+ *  P1/P12 pair for scenario S6; stamina stays P3 (S1 sweeps the PLAYED budget
+ *  over a fixed case-shape pool — see m2/w3-simulation-report.md conventions). */
+export function generateCase(vm: ValidatedMap, seed: number, shape: ConfigShape = {}): GeneratedCase {
   const space = enumerateSpace(vm);
   if (space.length === 0) throw new GeneratorError('empty case space');
   const rng = mulberry32(seed);
@@ -127,7 +132,7 @@ export function generateCase(vm: ValidatedMap, seed: number): GeneratedCase {
   for (let draw = 0; draw < maxDraws; draw++) {
     const [sh, d1, d2, g] = space[rngInt(rng, space.length)]!;
     assertSection98(vm, sh, d1, d2, g);
-    const ev = evaluateConfig(vm, sh, d1, d2, g, memos);
+    const ev = evaluateConfig(vm, sh, d1, d2, g, memos, shape);
     if (ev !== null && ev.passes) {
       const config: CaseConfig = {
         map_id: vm.map.map_id,
@@ -156,6 +161,9 @@ export function generateCase(vm: ValidatedMap, seed: number): GeneratedCase {
           c4_margin_days: ev.c4MarginDays,
         },
         structural_asserts: { drops_distinct: true, gate_not_in_drops: true, pools_disjoint: true },
+        ...(shape.days !== undefined || shape.band !== undefined
+          ? { shape: { days: shape.days ?? P.P1_days_per_case, band: [...(shape.band ?? P.P12_feasibility_band)] as [number, number] } }
+          : {}),
       };
       return { config, report, evaluation: ev };
     }

@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "purpose": "S7 addendum — does stakeout PRICING (P8) counter I-Aggressive objective-camping?",
+    "n": 500,
+    "seeds": "1..500 (CRN across p8)",
+    "conventions": [
+      "ADR-003/T16 param override P8_stakeout_cost; all else canonical"
+    ]
+  },
+  "rows": [
+    {
+      "p8": 2,
+      "pair": "F-Beeline×I-Aggressive",
+      "inv": 100,
+      "ci": [
+        99.2,
+        100
+      ],
+      "cap": 500,
+      "capDay": 3.188,
+      "stakeHR": 45.7
+    },
+    {
+      "p8": 2,
+      "pair": "F-LeakAware×I-Aggressive",
+      "inv": 100,
+      "ci": [
+        99.2,
+        100
+      ],
+      "cap": 500,
+      "capDay": 3.188,
+      "stakeHR": 45.7
+    },
+    {
+      "p8": 2,
+      "pair": "F-Deceptive×I-Aggressive",
+      "inv": 96,
+      "ci": [
+        93.9,
+        97.4
+      ],
+      "cap": 480,
+      "capDay": 3.46875,
+      "stakeHR": 37.4
+    },
+    {
+      "p8": 2,
+      "pair": "F-SlackBurner×I-Aggressive",
+      "inv": 99.4,
+      "ci": [
+        98.3,
+        99.8
+      ],
+      "cap": 497,
+      "capDay": 3.670020120724346,
+      "stakeHR": 37
+    },
+    {
+      "p8": 3,
+      "pair": "F-Beeline×I-Aggressive",
+      "inv": 93.2,
+      "ci": [
+        90.6,
+        95.1
+      ],
+      "cap": 466,
+      "capDay": 3.055793991416309,
+      "stakeHR": 44
+    },
+    {
+      "p8": 3,
+      "pair": "F-LeakAware×I-Aggressive",
+      "inv": 93.2,
+      "ci": [
+        90.6,
+        95.1
+      ],
+      "cap": 466,
+      "capDay": 3.055793991416309,
+      "stakeHR": 44
+    },
+    {
+      "p8": 3,
+      "pair": "F-Deceptive×I-Aggressive",
+      "inv": 71.2,
+      "ci": [
+        67.1,
+        75
+      ],
+      "cap": 356,
+      "capDay": 2.764044943820225,
+      "stakeHR": 33.6
+    },
+    {
+      "p8": 3,
+      "pair": "F-SlackBurner×I-Aggressive",
+      "inv": 74.6,
+      "ci": [
+        70.6,
+        78.2
+      ],
+      "cap": 373,
+      "capDay": 3.1849865951742626,
+      "stakeHR": 31.2
+    },
+    {
+      "p8": 4,
+      "pair": "F-Beeline×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 4,
+      "pair": "F-LeakAware×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 4,
+      "pair": "F-Deceptive×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 4,
+      "pair": "F-SlackBurner×I-Aggressive",
+      "inv": 42.8,
+      "ci": [
+        38.5,
+        47.2
+      ],
+      "cap": 214,
+      "capDay": 2.5794392523364484,
+      "stakeHR": 23.5
+    },
+    {
+      "p8": 5,
+      "pair": "F-Beeline×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 5,
+      "pair": "F-LeakAware×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 5,
+      "pair": "F-Deceptive×I-Aggressive",
+      "inv": 67.2,
+      "ci": [
+        63,
+        71.2
+      ],
+      "cap": 336,
+      "capDay": 2.6904761904761907,
+      "stakeHR": 37.5
+    },
+    {
+      "p8": 5,
+      "pair": "F-SlackBurner×I-Aggressive",
+      "inv": 42.8,
+      "ci": [
+        38.5,
+        47.2
+      ],
+      "cap": 214,
+      "capDay": 2.5794392523364484,
+      "stakeHR": 23.5
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 # @dead-drop/engine — Rules Engine Package
 
-**Version:** 0.2.0-alpha.0 · **Status:** M2 W2 **functionally complete** — `resolve()` implemented
+**Version:** 0.3.0-alpha.0 · **Status:** M2 W2 **functionally complete** — `resolve()` implemented
 (DRAFT-UNFREEZE per ADR-002, `../../m2/adr-002-resolve-unlock.md`), pending M1-freeze transcript
-reconciliation · **Ruleset:** `1.0.0-alpha.1` · **Runtime deps: none** · Toolchain: ADR-001
-(`../../m2/adr-001-toolchain.md`) · Plan: `../../m2/M2-execution-plan.md` §1 W2.
+reconciliation · M2 W3 additive: **T16/ADR-003 simulation override surface** (`../../m2/adr-003-sim-overrides.md`)
+· **Ruleset:** `1.0.0-alpha.1` · **Runtime deps: none** · Toolchain: ADR-001
+(`../../m2/adr-001-toolchain.md`) · Plan: `../../m2/M2-execution-plan.md` §1 W2–W3.
 
 Pure, deterministic TypeScript engine for Dead Drop. The rules text
 (`../../03-rules.md`) is the spec: if code and text disagree, the text wins and the
@@ -17,8 +18,9 @@ generator. This package never reads the network, the clock, or the filesystem at
 | Type layer lifted from the M1 spec + **T12 amendment** (`src/types.ts`) | UI, networking, persistence (M3+; fenced out by `m1/m2-handoff.md` §4) |
 | Map loading + structural validation (`src/map.ts`) | Belief/heatmap — UI/AI layer by design (T10) |
 | The PINNED case-config feasibility gate, 1:1 port of the Python oracle (`src/feasibility.ts`) | Async-clock/forfeit layer — §7 is server territory; the engine exposes `forfeit()`/`voidCase()` only for §6 totality |
-| Seeded case generator: C1 sampling, C5 reports, C6 batching, §9.8 asserts (`src/generator.ts`) | Simulation harness + scripted policies (W3, `m2/M2-execution-plan.md` §1 W3) |
+| Seeded case generator: C1 sampling, C5 reports, C6 batching, §9.8 asserts (`src/generator.ts`) | Simulation harness + scripted policies — now its own workspace package: [`packages/sim`](../sim/README.md) (W3, executed) |
 | **`resolve()` — the §2 seven-step day resolution** (`src/engine.ts`): phases, §3 legality, §4 evidence, §5 actions, §6 verdicts via `VERDICT_WINNER`, §9.1–9.13 predicates, §9.10 idempotency, §8.6 disclosure, scripted driver | |
+| **T16/ADR-003 sim override surface** — `resolveParams`/`SimParamOverrides`/`CANONICAL_PARAMS`, session-level opt-in (P1/P6/P7/P8) + generator `shape` option for S6; default path byte-identical to 1.0.0-alpha.1 | |
 | L1 fixtures emitted by the Python oracle (`fixtures/`) | |
 
 ## Layout
@@ -71,13 +73,13 @@ Two independent languages, one answer — the same reconciliation discipline as 
 
 ```bash
 npm install          # workspace root (devDeps only; engine itself has zero deps)
-npm run typecheck    # tsc --noEmit, strict + noUncheckedIndexedAccess
-npm test             # vitest: 63 tests — L1 map/constants/115-reconciliation · L2 generator · L3 resolve
+npm run typecheck    # builds engine+sim dist, then noEmit checks both packages (src + tests)
+npm test             # vitest: engine (L1/L2/L3 + T16) + sim (belief/policies/harness) suites
 ```
 
-Latest recorded run (2026-10-25, W2 closure): **typecheck green · 63/63 green** (the 115-config
-reconciliation evaluates the whole 2,208-space in <1s; the W2-exit chain runs five generated
-seeds through generator → min-days route → scripted verdict).
+Latest recorded run (2026-10-25, W3 closure): **typecheck green · 143/143 green** (engine W2 63 +
+T16 tests; sim belief/policies/harness suites). The 115-config full-space reconciliation evaluates
+the whole 2,208-space in <1s.
 
 ## Documented divergences (never silently patched)
 
@@ -99,3 +101,8 @@ seeds through generator → min-days route → scripted verdict).
 6. **ADR-002 DRAFT-UNFREEZE:** `resolve()` implements the committed rules text but is not
    play-validated until the M1 freeze reconciliation gate (freeze-checklist §1) passes on real
    S1–S3 transcripts. No session data exists in this package.
+7. **T16/ADR-003:** the engine accepts opt-in session-level parameter overrides
+   (`P1_days_per_case`, `P6_hold_cost/max`, `P7_probe_cost/cap`, `P8_stakeout_cost`) and a
+   generator `shape` option (`days`/`band`). Omitted ⇒ canonical 1.0.0-alpha.1 resolution,
+   byte-identical (asserted by the unchanged W2 suite + 115-config reconciliation).
+   `CaseConfig` never carries overrides. Consumer: `packages/sim` (S1–S7).

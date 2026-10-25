@@ -1,6 +1,10 @@
 # 04 — Balance & Simulation Specification
 
-**Status:** methodology + computed analytical checks. **No simulations have been run.** Every claim below is labeled **[computed]** (closed-form or exhaustive-search calculation actually performed — see `scripts/dd_map_and_calcs.py`, output `scripts/balance_calc_results.json`), **[hypothesis]** (needs M2 simulation / M4 playtest), or **[design judgment]**.
+**Status:** methodology + analytical checks **[computed]** + first simulation results **[simulated,
+M2 W3]** (20-pair matrix + S1–S7 sweeps, 2026-10-25 — [`m2/w3-simulation-report.md`](m2/w3-simulation-report.md);
+§4.5 scorecard there: calibration PASS, band/dominance/pacing FAIL with a measured W4 retune list).
+[computed] claims are closed-form or exhaustive-search calculations (see `tools/verification/`),
+**[hypothesis]** claims need more simulation/M4 playtest, **[design judgment]** is taste.
 
 ## 1. What "balanced" means for Dead Drop
 
@@ -50,7 +54,12 @@ Under a uniform 48-node posterior:
 
 They do not establish: role win-rates, fun, optimal strategies, reveal-schedule adequacy, or budget adequacy. Those require the simulation (§4) and playtests (§7). **No balance claim is proven.**
 
-## 4. Simulation methodology (to run at M2 — not yet run)
+## 4. Simulation methodology (run at M2 W3 — results: m2/w3-simulation-report.md)
+
+> **Executed 2026-10-25.** The harness is `packages/sim` (pure TS on the engine; zero rules
+> churn); policies + conventions are documented in the package README and the report §1. Raw
+> outputs: `m2/w3-results/*.json`. Everything below remains the methodology spec; the §4.5
+> acceptance lines now have first measured values (scorecard in the report §6).
 
 ### 4.1 Harness
 

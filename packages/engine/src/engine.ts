@@ -85,12 +85,73 @@ export class EngineError extends Error {
   }
 }
 
+/* ------------------------------------------- simulation parameter overrides --
+ *
+ * T16 / ADR-003 (m2/adr-003-sim-overrides.md). Scenarios S1–S7 (04-balance-sim
+ * §4.4) sweep P1/P6/P7/P8 — all [hypothesis] parameters, which is exactly what
+ * M2 simulation exists to test. The RESOLUTION side therefore accepts explicit,
+ * validated, opt-in overrides at session construction. Guardrails:
+ *   - CaseConfig stays PURE rules-facing (§1.2) — overrides are never carried
+ *     in it; P3/P4 (budgets) and P9/P10 (schedule) were already per-case config.
+ *   - Default path: no overrides ⇒ CANONICAL_PARAMS (frozen snapshot of the
+ *     parameter table) — byte-identical behavior to ruleset 1.0.0-alpha.1.
+ *   - Overrides are validated (integers, sane ranges) and fail loudly.
+ *   - P2/P5/P11/P12 are structural/computed — NOT overridable. P8's daily cap
+ *     (1) is enforced structurally via the armed stakeout slot, so only the
+ *     stakeout COST is overridable (S4 sweeps cost, per 04 §4.4).
+ * Every sim output row echoes the effective parameters it ran under.
+ */
+
+export interface SimParamOverrides {
+  P1_days_per_case?: number;
+  P6_hold_cost?: number;
+  P6_hold_max?: number;
+  P7_probe_cost?: number;
+  P7_probe_daily_cap?: number;
+  P8_stakeout_cost?: number;
+}
+
+export type EffectiveParams = Required<SimParamOverrides>;
+
+/** Frozen canonical snapshot (1.0.0-alpha.1). Never mutated. */
+export const CANONICAL_PARAMS: EffectiveParams = Object.freeze({
+  P1_days_per_case: P.P1_days_per_case,
+  P6_hold_cost: P.P6_hold_cost,
+  P6_hold_max: P.P6_hold_max,
+  P7_probe_cost: P.P7_probe_cost,
+  P7_probe_daily_cap: P.P7_probe_daily_cap,
+  P8_stakeout_cost: P.P8_stakeout_cost,
+});
+
+/** Validate overrides and merge onto the canonical table. Throws
+ *  EngineError('CONFIG_INVALID') on any malformed value (fail loudly). */
+export function resolveParams(overrides?: SimParamOverrides): EffectiveParams {
+  if (overrides === undefined) return CANONICAL_PARAMS;
+  const merged: EffectiveParams = { ...CANONICAL_PARAMS };
+  for (const [k, v] of Object.entries(overrides) as Array<[keyof SimParamOverrides, number | undefined]>) {
+    if (v === undefined) continue;
+    if (!Number.isInteger(v) || v < 0) {
+      throw new EngineError('CONFIG_INVALID', `parameter override ${k} must be a non-negative integer, got ${v}`);
+    }
+    merged[k] = v;
+  }
+  if (merged.P1_days_per_case < 1) {
+    throw new EngineError('CONFIG_INVALID', 'P1_days_per_case override must be ≥ 1');
+  }
+  return merged;
+}
+
 /* ------------------------------------------------------- config validation */
 
 /** §1.2 + §9.8 structural validation at case creation. Feasibility (C2–C4)
  *  is deliberately NOT re-checked here: it is a GENERATOR obligation; the
- *  resolver accepts any structurally valid config (S-sweeps play variants). */
-export function validateCaseConfig(vm: ValidatedMap, config: CaseConfig): void {
+ *  resolver accepts any structurally valid config (S-sweeps play variants).
+ *  `params` overrides (T16/ADR-003) bound the reveal-day validation. */
+export function validateCaseConfig(
+  vm: ValidatedMap,
+  config: CaseConfig,
+  params: EffectiveParams = CANONICAL_PARAMS,
+): void {
   const fail = (why: string): never => {
     throw new EngineError('CONFIG_INVALID', why);
   };
@@ -118,7 +179,7 @@ export function validateCaseConfig(vm: ValidatedMap, config: CaseConfig): void {
   if (!Number.isInteger(config.intel_budget) || config.intel_budget < 0) {
     fail('intel_budget must be a non-negative integer');
   }
-  const maxDay = P.P1_days_per_case;
+  const maxDay = params.P1_days_per_case;
   for (const day of config.reveal_schedule.district_days) {
     if (!Number.isInteger(day) || day < 1 || day > maxDay) {
       fail(`district reveal day ${day} outside 1..${maxDay}`);
@@ -135,8 +196,12 @@ export function validateCaseConfig(vm: ValidatedMap, config: CaseConfig): void {
 
 /** Initial §1.3 CaseState. DAY_MARKER convention: day d's marker is emitted
  *  when day d begins — day 1 here, day d+1 in step 7's clock advance. */
-export function createCaseState(vm: ValidatedMap, config: CaseConfig): CaseState {
-  validateCaseConfig(vm, config);
+export function createCaseState(
+  vm: ValidatedMap,
+  config: CaseConfig,
+  params: EffectiveParams = CANONICAL_PARAMS,
+): CaseState {
+  validateCaseConfig(vm, config, params);
   return {
     day: 1,
     phase: 'FUGITIVE_MOVE',
@@ -181,7 +246,13 @@ export interface FugitiveLegality {
   hold: boolean;
 }
 
-export function fugitiveLegality(vm: ValidatedMap, state: CaseState): FugitiveLegality {
+/** Reads only the fugitive block — an InvestigatorView can never pass here
+ *  (structurally), while CaseState and FugitiveView both do. */
+export function fugitiveLegality(
+  vm: ValidatedMap,
+  state: Pick<CaseState, 'fugitive'>,
+  params: EffectiveParams = CANONICAL_PARAMS,
+): FugitiveLegality {
   const moves: NodeId[] = [];
   for (const e of vm.adjacency.get(state.fugitive.position)!) {
     if (edgeCost(e.cls) <= state.fugitive.stamina && !moves.includes(e.node)) {
@@ -189,16 +260,20 @@ export function fugitiveLegality(vm: ValidatedMap, state: CaseState): FugitiveLe
     }
   }
   const hold =
-    state.fugitive.holds_used < P.P6_hold_max &&
-    state.fugitive.stamina >= P.P6_hold_cost;
+    state.fugitive.holds_used < params.P6_hold_max &&
+    state.fugitive.stamina >= params.P6_hold_cost;
   return { moves, hold };
 }
 
 /** §9.13 predicate: no legal submission exists at all. On map_alpha every
  *  node has ≥1 incident F edge (L1-tested), so this reduces to 0 SP there;
  *  the general condition is implemented regardless. */
-export function isStranded(vm: ValidatedMap, state: CaseState): boolean {
-  const leg = fugitiveLegality(vm, state);
+export function isStranded(
+  vm: ValidatedMap,
+  state: Pick<CaseState, 'fugitive'>,
+  params: EffectiveParams = CANONICAL_PARAMS,
+): boolean {
+  const leg = fugitiveLegality(vm, state, params);
   return leg.moves.length === 0 && !leg.hold;
 }
 
@@ -207,14 +282,19 @@ export interface InvestigatorLegality {
   stakeout: boolean; // day < P1 ∧ intel ≥ P8_stakeout_cost ∧ none armed (§5.2/§9.3; cap=1 via the armed slot)
 }
 
-export function investigatorLegality(state: CaseState): InvestigatorLegality {
+/** Reads only day + investigator — an InvestigatorView satisfies this (its
+ *  use is legal for the investigator-side sim policies), CaseState does too. */
+export function investigatorLegality(
+  state: Pick<CaseState, 'day' | 'investigator'>,
+  params: EffectiveParams = CANONICAL_PARAMS,
+): InvestigatorLegality {
   return {
     probe:
-      state.investigator.intel >= P.P7_probe_cost &&
-      state.investigator.probes_today < P.P7_probe_daily_cap,
+      state.investigator.intel >= params.P7_probe_cost &&
+      state.investigator.probes_today < params.P7_probe_daily_cap,
     stakeout:
-      state.day < P.P1_days_per_case &&
-      state.investigator.intel >= P.P8_stakeout_cost &&
+      state.day < params.P1_days_per_case &&
+      state.investigator.intel >= params.P8_stakeout_cost &&
       state.investigator.stakeout_armed === null,
   };
 }
@@ -229,17 +309,24 @@ interface JournalRecord {
 /** Interactive case carrier: owns the live CaseState, the §9.10 idempotency
  *  journal, and the §8.6 route record. All mutations flow through the
  *  step-ordered private methods below; the seven-step sequence lives in
- *  `resolveSteps2to5` + `endInvestigatorPhase`, mirroring §2 exactly. */
+ *  `resolveSteps2to5` + `endInvestigatorPhase`, mirroring §2 exactly.
+ *
+ *  T16/ADR-003: `opts.params` carries OPT-IN simulation overrides (S1–S7);
+ *  omitted ⇒ canonical 1.0.0-alpha.1 resolution, byte-identical. */
 export class CaseSession {
   state: CaseState;
+  /** Effective resolution parameters (canonical unless overridden). */
+  readonly p: EffectiveParams;
   private readonly journal = new Map<string, JournalRecord>();
   private readonly route: import('./types.js').FugitiveRouteEntry[] = [];
 
   constructor(
     readonly vm: ValidatedMap,
     readonly config: CaseConfig,
+    opts: { params?: SimParamOverrides } = {},
   ) {
-    this.state = createCaseState(vm, config);
+    this.p = resolveParams(opts.params);
+    this.state = createCaseState(vm, config, this.p);
   }
 
   /* ---- views (§1.3 information boundary; T2 property tests pin this) ---- */
@@ -324,7 +411,7 @@ export class CaseSession {
     if (this.isDuplicate(env, desc)) return;
     this.requireLive('FUGITIVE_MOVE');
 
-    if (isStranded(this.vm, this.state)) {
+    if (isStranded(this.vm, this.state, this.p)) {
       // §9.13: nothing is affordable — the day is ENGINE-resolved (T4:
       // FORCED_HOLD is never a legal client submission). Reject without
       // journaling so the server layer can call resolveStranded().
@@ -355,15 +442,15 @@ export class CaseSession {
         sp_cost: edge.cost,
       });
     } else {
-      const leg = fugitiveLegality(this.vm, this.state);
+      const leg = fugitiveLegality(this.vm, this.state, this.p);
       if (!leg.hold) {
         throw new EngineError(
           'ILLEGAL_SUBMISSION',
-          `§3.3: Hold illegal (holds_used ${this.state.fugitive.holds_used}/${P.P6_hold_max}, stamina ${this.state.fugitive.stamina})`,
+          `§3.3: Hold illegal (holds_used ${this.state.fugitive.holds_used}/${this.p.P6_hold_max}, stamina ${this.state.fugitive.stamina})`,
         );
       }
       this.journalRecord(env, desc);
-      this.state.fugitive.stamina -= P.P6_hold_cost;
+      this.state.fugitive.stamina -= this.p.P6_hold_cost;
       this.state.fugitive.holds_used += 1;
       this.route.push({
         day: this.state.day,
@@ -371,7 +458,7 @@ export class CaseSession {
         from,
         to: from,
         edge_class: null, // T12
-        sp_cost: P.P6_hold_cost,
+        sp_cost: this.p.P6_hold_cost,
       });
     }
     this.resolveSteps2to5();
@@ -382,7 +469,7 @@ export class CaseSession {
    *  "no movement". Engine-produced — never a submission (T4). */
   resolveStranded(): void {
     this.requireLive('FUGITIVE_MOVE');
-    if (!isStranded(this.vm, this.state)) {
+    if (!isStranded(this.vm, this.state, this.p)) {
       throw new EngineError('NOT_STRANDED', 'legal actions remain — resolveStranded() is §9.13-only');
     }
     const from = this.state.fugitive.position;
@@ -481,14 +568,14 @@ export class CaseSession {
       if (!this.nodeExists(env.action.target)) {
         throw new EngineError('UNKNOWN_NODE', `probe target ${env.action.target} not on map`);
       }
-      const leg = investigatorLegality(this.state);
+      const leg = investigatorLegality(this.state, this.p);
       if (!leg.probe) {
         throw new EngineError(
           'ILLEGAL_SUBMISSION',
           `§5.1/§5.3: probe illegal (intel ${this.state.investigator.intel}, probes_today ${this.state.investigator.probes_today})`,
         );
       }
-      this.state.investigator.intel -= P.P7_probe_cost;
+      this.state.investigator.intel -= this.p.P7_probe_cost;
       this.state.investigator.probes_today += 1;
       this.journalRecord(env, desc);
       this.pushPrivate({
@@ -504,16 +591,16 @@ export class CaseSession {
       if (!this.nodeExists(env.action.target)) {
         throw new EngineError('UNKNOWN_NODE', `stakeout target ${env.action.target} not on map`);
       }
-      const leg = investigatorLegality(this.state);
+      const leg = investigatorLegality(this.state, this.p);
       if (!leg.stakeout) {
         throw new EngineError(
           'ILLEGAL_SUBMISSION',
-          this.state.day >= P.P1_days_per_case
+          this.state.day >= this.p.P1_days_per_case
             ? '§5.2/§9.3: stakeout forbidden on the final day'
             : `§5.2/§5.3: stakeout illegal (intel ${this.state.investigator.intel}, slot ${this.state.investigator.stakeout_armed === null ? 'free' : 'occupied'})`,
         );
       }
-      this.state.investigator.intel -= P.P8_stakeout_cost;
+      this.state.investigator.intel -= this.p.P8_stakeout_cost;
       this.state.investigator.stakeout_armed = env.action.target;
       this.journalRecord(env, desc);
       this.pushPrivate({ day: this.state.day, kind: 'STAKEOUT_PLACED', target: env.action.target });
@@ -530,7 +617,7 @@ export class CaseSession {
    *  any) persists — it resolves at tomorrow's step 2. */
   endInvestigatorPhase(): void {
     this.requireLive('INVESTIGATOR_ACTIONS');
-    if (this.state.day >= P.P1_days_per_case) {
+    if (this.state.day >= this.p.P1_days_per_case) {
       this.finish('EXPIRY');
       return;
     }
@@ -584,19 +671,21 @@ export interface ScriptedResult {
 
 /** Pure deterministic driver: config + script ⇒ outcome (03-rules header's
  *  determinism guarantee, executable). This is the W3 sim harness's entry
- *  point and the golden-test workhorse. No envelopes/journal overhead. */
+ *  point and the golden-test workhorse. No envelopes/journal overhead.
+ *  T16/ADR-003: `opts.params` = opt-in simulation overrides. */
 export function runScriptedCase(
   vm: ValidatedMap,
   config: CaseConfig,
   script: readonly DayScript[],
+  opts: { params?: SimParamOverrides } = {},
 ): ScriptedResult {
-  const session = new CaseSession(vm, config);
-  for (let day = 1; day <= P.P1_days_per_case; day++) {
+  const session = new CaseSession(vm, config, opts);
+  for (let day = 1; day <= session.p.P1_days_per_case; day++) {
     if (session.state.verdict !== null) break;
     if (session.state.phase !== 'FUGITIVE_MOVE') {
       throw new EngineError('SCRIPT_ERROR', `day ${day}: expected FUGITIVE_MOVE, got ${session.state.phase}`);
     }
-    if (isStranded(vm, session.state)) {
+    if (isStranded(vm, session.state, session.p)) {
       if (script[day - 1]?.fugitive !== undefined) {
         throw new EngineError('SCRIPT_ERROR', `day ${day}: fugitive action supplied but the day is stranded (§9.13)`);
       }

@@ -1,0 +1,879 @@
+{
+  "meta": {
+    "generated_by": "@dead-drop/sim cli (M2 W3)",
+    "map_id": "map_alpha",
+    "map_version": "1.2.0",
+    "ruleset": "1.0.0-alpha.1 (resolution defaults; sweep overrides echoed per cell — ADR-003/T16)",
+    "matrix_pairs": [
+      "F-Beeline×I-GreedyProbe",
+      "F-Beeline×I-Calendar",
+      "F-Beeline×I-Aggressive",
+      "F-Beeline×I-Random",
+      "F-Random×I-GreedyProbe",
+      "F-Random×I-Calendar",
+      "F-Random×I-Aggressive",
+      "F-Random×I-Random",
+      "F-LeakAware×I-GreedyProbe",
+      "F-LeakAware×I-Calendar",
+      "F-LeakAware×I-Aggressive",
+      "F-LeakAware×I-Random",
+      "F-Deceptive×I-GreedyProbe",
+      "F-Deceptive×I-Calendar",
+      "F-Deceptive×I-Aggressive",
+      "F-Deceptive×I-Random",
+      "F-SlackBurner×I-GreedyProbe",
+      "F-SlackBurner×I-Calendar",
+      "F-SlackBurner×I-Aggressive",
+      "F-SlackBurner×I-Random"
+    ],
+    "conventions": [
+      "CRN: all pairs share the same seeded case list per cell (seeds 1..N).",
+      "Wilson score 95% CIs on role win-rates.",
+      "Probe chance baseline = 1/|nodes| = 1/48 (uniform posterior, 04 §3.2).",
+      "Stakeout calibration = hit-rate vs PREDICTIVE posterior mass at placement (one unobserved day ahead).",
+      "Fugitive/investigator policies: exact rules in packages/sim/src/policies.ts header; NOT rules — submission-only."
+    ],
+    "n": 1000,
+    "seeds": "1..1000",
+    "seconds": 20.104950025,
+    "focal_note": "I-GreedyProbe/I-Calendar rows carry belief-based calibration stats; I-Aggressive/I-Random do not (no tracker)."
+  },
+  "rows": [
+    {
+      "pair": "F-Beeline×I-GreedyProbe",
+      "n": 1000,
+      "invWins": 653,
+      "captureWins": 653,
+      "expiryWins": 0,
+      "fugWins": 347,
+      "invWinRate": 0.653,
+      "invWilson95": [
+        0.6229619706570872,
+        0.681867041246333
+      ],
+      "fugWinRate": 0.347,
+      "fugWilson95": [
+        0.3181329587536671,
+        0.37703802934291275
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20
+      },
+      "escapeDayHist": {
+        "5": 22,
+        "6": 184,
+        "7": 141
+      },
+      "meanCaptureDay": 2.0306278713629404,
+      "meanEscapeDay": 6.3429394812680115,
+      "meanEndDay": 3.527,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.52,
+      "probes": 2911,
+      "probeHits": 2205,
+      "probeHitRate": 0.7574716592236345,
+      "probeMassAtTarget": 0.6350031080793683,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.49923547400611623,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-Beeline×I-Calendar",
+      "n": 1000,
+      "invWins": 653,
+      "captureWins": 653,
+      "expiryWins": 0,
+      "fugWins": 347,
+      "invWinRate": 0.653,
+      "invWilson95": [
+        0.6229619706570872,
+        0.681867041246333
+      ],
+      "fugWinRate": 0.347,
+      "fugWilson95": [
+        0.3181329587536671,
+        0.37703802934291275
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20
+      },
+      "escapeDayHist": {
+        "5": 22,
+        "6": 184,
+        "7": 141
+      },
+      "meanCaptureDay": 2.0306278713629404,
+      "meanEscapeDay": 6.3429394812680115,
+      "meanEndDay": 3.527,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.52,
+      "probes": 2911,
+      "probeHits": 2205,
+      "probeHitRate": 0.7574716592236345,
+      "probeMassAtTarget": 0.6350031080793683,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.49923547400611623,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-Beeline×I-Aggressive",
+      "n": 1000,
+      "invWins": 932,
+      "captureWins": 932,
+      "expiryWins": 0,
+      "fugWins": 68,
+      "invWinRate": 0.932,
+      "invWilson95": [
+        0.9146861384770105,
+        0.9460075421914699
+      ],
+      "fugWinRate": 0.068,
+      "fugWilson95": [
+        0.05399245780853015,
+        0.08531386152298948
+      ],
+      "captureDayHist": {
+        "2": 193,
+        "3": 463,
+        "4": 276
+      },
+      "escapeDayHist": {
+        "6": 48,
+        "7": 20
+      },
+      "meanCaptureDay": 3.0890557939914163,
+      "meanEscapeDay": 6.294117647058823,
+      "meanEndDay": 3.307,
+      "meanIpUnspent": 3.547,
+      "meanSpUnspent": 5.738,
+      "probes": 0,
+      "probeHits": 0,
+      "probeHitRate": null,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 2151,
+      "stakeoutHitRate": 0.43328684332868433,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-Beeline×I-Random",
+      "n": 1000,
+      "invWins": 34,
+      "captureWins": 34,
+      "expiryWins": 0,
+      "fugWins": 966,
+      "invWinRate": 0.034,
+      "invWilson95": [
+        0.024431348663226313,
+        0.04713519024531107
+      ],
+      "fugWinRate": 0.966,
+      "fugWilson95": [
+        0.9528648097546889,
+        0.9755686513367737
+      ],
+      "captureDayHist": {
+        "2": 11,
+        "3": 9,
+        "4": 8,
+        "5": 5,
+        "6": 1
+      },
+      "escapeDayHist": {
+        "5": 141,
+        "6": 402,
+        "7": 423
+      },
+      "meanCaptureDay": 3.2941176470588234,
+      "meanEscapeDay": 6.291925465838509,
+      "meanEndDay": 6.19,
+      "meanIpUnspent": 1.343,
+      "meanSpUnspent": 1.701,
+      "probes": 3206,
+      "probeHits": 67,
+      "probeHitRate": 0.020898315658140987,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1817,
+      "stakeoutHitRate": 0.018712162905888827,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-Random×I-GreedyProbe",
+      "n": 1000,
+      "invWins": 1000,
+      "captureWins": 240,
+      "expiryWins": 760,
+      "fugWins": 0,
+      "invWinRate": 1,
+      "invWilson95": [
+        0.996173241514445,
+        1
+      ],
+      "fugWinRate": 0,
+      "fugWilson95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "captureDayHist": {
+        "2": 126,
+        "3": 87,
+        "4": 19,
+        "5": 8
+      },
+      "escapeDayHist": {},
+      "meanCaptureDay": 2.620833333333333,
+      "meanEscapeDay": null,
+      "meanEndDay": 6.709,
+      "meanIpUnspent": 0.702,
+      "meanSpUnspent": 2.889,
+      "probes": 5671,
+      "probeHits": 1735,
+      "probeHitRate": 0.30594251454769883,
+      "probeMassAtTarget": 0.31889252504006604,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1209,
+      "stakeoutHitRate": 0.19851116625310175,
+      "stakeoutMassAtPlacement": 0.2116261308478182,
+      "capBlocksPerCase": 2.342
+    },
+    {
+      "pair": "F-Random×I-Calendar",
+      "n": 1000,
+      "invWins": 1000,
+      "captureWins": 240,
+      "expiryWins": 760,
+      "fugWins": 0,
+      "invWinRate": 1,
+      "invWilson95": [
+        0.996173241514445,
+        1
+      ],
+      "fugWinRate": 0,
+      "fugWilson95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "captureDayHist": {
+        "2": 126,
+        "3": 87,
+        "4": 19,
+        "5": 8
+      },
+      "escapeDayHist": {},
+      "meanCaptureDay": 2.620833333333333,
+      "meanEscapeDay": null,
+      "meanEndDay": 6.709,
+      "meanIpUnspent": 0.91,
+      "meanSpUnspent": 2.889,
+      "probes": 5463,
+      "probeHits": 1701,
+      "probeHitRate": 0.3113673805601318,
+      "probeMassAtTarget": 0.3234685498470915,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1209,
+      "stakeoutHitRate": 0.19851116625310175,
+      "stakeoutMassAtPlacement": 0.2116261308478182,
+      "capBlocksPerCase": 2.342
+    },
+    {
+      "pair": "F-Random×I-Aggressive",
+      "n": 1000,
+      "invWins": 1000,
+      "captureWins": 44,
+      "expiryWins": 956,
+      "fugWins": 0,
+      "invWinRate": 1,
+      "invWilson95": [
+        0.996173241514445,
+        1
+      ],
+      "fugWinRate": 0,
+      "fugWilson95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "captureDayHist": {
+        "2": 10,
+        "3": 19,
+        "4": 15
+      },
+      "escapeDayHist": {},
+      "meanCaptureDay": 3.1136363636363638,
+      "meanEscapeDay": null,
+      "meanEndDay": 7.785,
+      "meanIpUnspent": 1.117,
+      "meanSpUnspent": 1.518,
+      "probes": 0,
+      "probeHits": 0,
+      "probeHitRate": null,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 2961,
+      "stakeoutHitRate": 0.01485984464707869,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-Random×I-Random",
+      "n": 1000,
+      "invWins": 1000,
+      "captureWins": 31,
+      "expiryWins": 969,
+      "fugWins": 0,
+      "invWinRate": 1,
+      "invWilson95": [
+        0.996173241514445,
+        1
+      ],
+      "fugWinRate": 0,
+      "fugWilson95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "captureDayHist": {
+        "2": 10,
+        "3": 5,
+        "4": 9,
+        "5": 3,
+        "6": 4
+      },
+      "escapeDayHist": {},
+      "meanCaptureDay": 3.5483870967741935,
+      "meanEscapeDay": null,
+      "meanEndDay": 7.862,
+      "meanIpUnspent": 0.406,
+      "meanSpUnspent": 1.406,
+      "probes": 3798,
+      "probeHits": 77,
+      "probeHitRate": 0.020273828330700367,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1932,
+      "stakeoutHitRate": 0.016045548654244308,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-LeakAware×I-GreedyProbe",
+      "n": 1000,
+      "invWins": 653,
+      "captureWins": 653,
+      "expiryWins": 0,
+      "fugWins": 347,
+      "invWinRate": 0.653,
+      "invWilson95": [
+        0.6229619706570872,
+        0.681867041246333
+      ],
+      "fugWinRate": 0.347,
+      "fugWilson95": [
+        0.3181329587536671,
+        0.37703802934291275
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20
+      },
+      "escapeDayHist": {
+        "5": 22,
+        "6": 184,
+        "7": 141
+      },
+      "meanCaptureDay": 2.0306278713629404,
+      "meanEscapeDay": 6.3429394812680115,
+      "meanEndDay": 3.527,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.52,
+      "probes": 2911,
+      "probeHits": 2205,
+      "probeHitRate": 0.7574716592236345,
+      "probeMassAtTarget": 0.6350031080793683,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.49923547400611623,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-LeakAware×I-Calendar",
+      "n": 1000,
+      "invWins": 653,
+      "captureWins": 653,
+      "expiryWins": 0,
+      "fugWins": 347,
+      "invWinRate": 0.653,
+      "invWilson95": [
+        0.6229619706570872,
+        0.681867041246333
+      ],
+      "fugWinRate": 0.347,
+      "fugWilson95": [
+        0.3181329587536671,
+        0.37703802934291275
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20
+      },
+      "escapeDayHist": {
+        "5": 22,
+        "6": 184,
+        "7": 141
+      },
+      "meanCaptureDay": 2.0306278713629404,
+      "meanEscapeDay": 6.3429394812680115,
+      "meanEndDay": 3.527,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.52,
+      "probes": 2911,
+      "probeHits": 2205,
+      "probeHitRate": 0.7574716592236345,
+      "probeMassAtTarget": 0.6350031080793683,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.49923547400611623,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-LeakAware×I-Aggressive",
+      "n": 1000,
+      "invWins": 932,
+      "captureWins": 932,
+      "expiryWins": 0,
+      "fugWins": 68,
+      "invWinRate": 0.932,
+      "invWilson95": [
+        0.9146861384770105,
+        0.9460075421914699
+      ],
+      "fugWinRate": 0.068,
+      "fugWilson95": [
+        0.05399245780853015,
+        0.08531386152298948
+      ],
+      "captureDayHist": {
+        "2": 193,
+        "3": 463,
+        "4": 276
+      },
+      "escapeDayHist": {
+        "6": 48,
+        "7": 20
+      },
+      "meanCaptureDay": 3.0890557939914163,
+      "meanEscapeDay": 6.294117647058823,
+      "meanEndDay": 3.307,
+      "meanIpUnspent": 3.547,
+      "meanSpUnspent": 5.738,
+      "probes": 0,
+      "probeHits": 0,
+      "probeHitRate": null,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 2151,
+      "stakeoutHitRate": 0.43328684332868433,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-LeakAware×I-Random",
+      "n": 1000,
+      "invWins": 34,
+      "captureWins": 34,
+      "expiryWins": 0,
+      "fugWins": 966,
+      "invWinRate": 0.034,
+      "invWilson95": [
+        0.024431348663226313,
+        0.04713519024531107
+      ],
+      "fugWinRate": 0.966,
+      "fugWilson95": [
+        0.9528648097546889,
+        0.9755686513367737
+      ],
+      "captureDayHist": {
+        "2": 11,
+        "3": 9,
+        "4": 8,
+        "5": 5,
+        "6": 1
+      },
+      "escapeDayHist": {
+        "5": 141,
+        "6": 402,
+        "7": 423
+      },
+      "meanCaptureDay": 3.2941176470588234,
+      "meanEscapeDay": 6.291925465838509,
+      "meanEndDay": 6.19,
+      "meanIpUnspent": 1.343,
+      "meanSpUnspent": 1.701,
+      "probes": 3206,
+      "probeHits": 67,
+      "probeHitRate": 0.020898315658140987,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1817,
+      "stakeoutHitRate": 0.018712162905888827,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-Deceptive×I-GreedyProbe",
+      "n": 1000,
+      "invWins": 679,
+      "captureWins": 679,
+      "expiryWins": 0,
+      "fugWins": 321,
+      "invWinRate": 0.679,
+      "invWilson95": [
+        0.6494265062245327,
+        0.7072035142376386
+      ],
+      "fugWinRate": 0.321,
+      "fugWilson95": [
+        0.2927964857623614,
+        0.3505734937754673
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20,
+        "4": 26
+      },
+      "escapeDayHist": {
+        "6": 52,
+        "7": 70,
+        "8": 199
+      },
+      "meanCaptureDay": 2.106038291605302,
+      "meanEscapeDay": 7.457943925233645,
+      "meanEndDay": 3.824,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.255,
+      "probes": 2911,
+      "probeHits": 2203,
+      "probeHitRate": 0.7567846100996222,
+      "probeMassAtTarget": 0.6422639681399537,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.5191131498470948,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-Deceptive×I-Calendar",
+      "n": 1000,
+      "invWins": 679,
+      "captureWins": 679,
+      "expiryWins": 0,
+      "fugWins": 321,
+      "invWinRate": 0.679,
+      "invWilson95": [
+        0.6494265062245327,
+        0.7072035142376386
+      ],
+      "fugWinRate": 0.321,
+      "fugWilson95": [
+        0.2927964857623614,
+        0.3505734937754673
+      ],
+      "captureDayHist": {
+        "2": 633,
+        "3": 20,
+        "4": 26
+      },
+      "escapeDayHist": {
+        "6": 52,
+        "7": 70,
+        "8": 199
+      },
+      "meanCaptureDay": 2.106038291605302,
+      "meanEscapeDay": 7.457943925233645,
+      "meanEndDay": 3.824,
+      "meanIpUnspent": 3.165,
+      "meanSpUnspent": 5.255,
+      "probes": 2911,
+      "probeHits": 2203,
+      "probeHitRate": 0.7567846100996222,
+      "probeMassAtTarget": 0.6422639681399537,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1308,
+      "stakeoutHitRate": 0.5191131498470948,
+      "stakeoutMassAtPlacement": 0.16228110892675068,
+      "capBlocksPerCase": 1.285
+    },
+    {
+      "pair": "F-Deceptive×I-Aggressive",
+      "n": 1000,
+      "invWins": 707,
+      "captureWins": 707,
+      "expiryWins": 0,
+      "fugWins": 293,
+      "invWinRate": 0.707,
+      "invWilson95": [
+        0.6780414921958111,
+        0.7343742297911691
+      ],
+      "fugWinRate": 0.293,
+      "fugWilson95": [
+        0.26562577020883094,
+        0.3219585078041889
+      ],
+      "captureDayHist": {
+        "2": 193,
+        "3": 463,
+        "4": 51
+      },
+      "escapeDayHist": {
+        "6": 7,
+        "7": 63,
+        "8": 223
+      },
+      "meanCaptureDay": 2.799151343705799,
+      "meanEscapeDay": 7.737201365187714,
+      "meanEndDay": 4.246,
+      "meanIpUnspent": 3.547,
+      "meanSpUnspent": 4.688,
+      "probes": 0,
+      "probeHits": 0,
+      "probeHitRate": null,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 2151,
+      "stakeoutHitRate": 0.3286843328684333,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-Deceptive×I-Random",
+      "n": 1000,
+      "invWins": 37,
+      "captureWins": 37,
+      "expiryWins": 0,
+      "fugWins": 963,
+      "invWinRate": 0.037,
+      "invWilson95": [
+        0.026961180875554734,
+        0.05058239748206931
+      ],
+      "fugWinRate": 0.963,
+      "fugWilson95": [
+        0.9494176025179306,
+        0.9730388191244452
+      ],
+      "captureDayHist": {
+        "2": 11,
+        "3": 9,
+        "4": 5,
+        "5": 5,
+        "6": 1,
+        "7": 2,
+        "8": 4
+      },
+      "escapeDayHist": {
+        "5": 54,
+        "6": 88,
+        "7": 280,
+        "8": 541
+      },
+      "meanCaptureDay": 3.945945945945946,
+      "meanEscapeDay": 7.358255451713395,
+      "meanEndDay": 7.232,
+      "meanIpUnspent": 0.851,
+      "meanSpUnspent": 0.662,
+      "probes": 3479,
+      "probeHits": 82,
+      "probeHitRate": 0.02356999137683242,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1890,
+      "stakeoutHitRate": 0.019576719576719578,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-SlackBurner×I-GreedyProbe",
+      "n": 1000,
+      "invWins": 536,
+      "captureWins": 536,
+      "expiryWins": 0,
+      "fugWins": 464,
+      "invWinRate": 0.536,
+      "invWilson95": [
+        0.5050118052369239,
+        0.5667126681521162
+      ],
+      "fugWinRate": 0.464,
+      "fugWilson95": [
+        0.43328733184788387,
+        0.49498819476307615
+      ],
+      "captureDayHist": {
+        "2": 517,
+        "3": 19
+      },
+      "escapeDayHist": {
+        "5": 28,
+        "6": 76,
+        "7": 54,
+        "8": 306
+      },
+      "meanCaptureDay": 2.03544776119403,
+      "meanEscapeDay": 7.375,
+      "meanEndDay": 4.513,
+      "meanIpUnspent": 2.642,
+      "meanSpUnspent": 4.317,
+      "probes": 3437,
+      "probeHits": 1827,
+      "probeHitRate": 0.5315682281059063,
+      "probeMassAtTarget": 0.5153747993456421,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1307,
+      "stakeoutHitRate": 0.41009946442234124,
+      "stakeoutMassAtPlacement": 0.1875575197725961,
+      "capBlocksPerCase": 1.547
+    },
+    {
+      "pair": "F-SlackBurner×I-Calendar",
+      "n": 1000,
+      "invWins": 536,
+      "captureWins": 536,
+      "expiryWins": 0,
+      "fugWins": 464,
+      "invWinRate": 0.536,
+      "invWilson95": [
+        0.5050118052369239,
+        0.5667126681521162
+      ],
+      "fugWinRate": 0.464,
+      "fugWilson95": [
+        0.43328733184788387,
+        0.49498819476307615
+      ],
+      "captureDayHist": {
+        "2": 517,
+        "3": 19
+      },
+      "escapeDayHist": {
+        "5": 28,
+        "6": 76,
+        "7": 54,
+        "8": 306
+      },
+      "meanCaptureDay": 2.03544776119403,
+      "meanEscapeDay": 7.375,
+      "meanEndDay": 4.513,
+      "meanIpUnspent": 2.642,
+      "meanSpUnspent": 4.317,
+      "probes": 3437,
+      "probeHits": 1827,
+      "probeHitRate": 0.5315682281059063,
+      "probeMassAtTarget": 0.5153747993456421,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1307,
+      "stakeoutHitRate": 0.41009946442234124,
+      "stakeoutMassAtPlacement": 0.1875575197725961,
+      "capBlocksPerCase": 1.547
+    },
+    {
+      "pair": "F-SlackBurner×I-Aggressive",
+      "n": 1000,
+      "invWins": 723,
+      "captureWins": 723,
+      "expiryWins": 0,
+      "fugWins": 277,
+      "invWinRate": 0.723,
+      "invWilson95": [
+        0.6944497560637553,
+        0.7498435096516871
+      ],
+      "fugWinRate": 0.277,
+      "fugWilson95": [
+        0.25015649034831283,
+        0.3055502439362448
+      ],
+      "captureDayHist": {
+        "2": 158,
+        "3": 256,
+        "4": 309
+      },
+      "escapeDayHist": {
+        "6": 18,
+        "7": 31,
+        "8": 228
+      },
+      "meanCaptureDay": 3.2088520055325036,
+      "meanEscapeDay": 7.758122743682311,
+      "meanEndDay": 4.469,
+      "meanIpUnspent": 2.716,
+      "meanSpUnspent": 4.559,
+      "probes": 0,
+      "probeHits": 0,
+      "probeHitRate": null,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 2428,
+      "stakeoutHitRate": 0.29777594728171336,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    },
+    {
+      "pair": "F-SlackBurner×I-Random",
+      "n": 1000,
+      "invWins": 35,
+      "captureWins": 35,
+      "expiryWins": 0,
+      "fugWins": 965,
+      "invWinRate": 0.035,
+      "invWilson95": [
+        0.02527226301711295,
+        0.04828662237445333
+      ],
+      "fugWinRate": 0.965,
+      "fugWilson95": [
+        0.9517133776255466,
+        0.9747277369828871
+      ],
+      "captureDayHist": {
+        "2": 10,
+        "3": 9,
+        "4": 8,
+        "5": 3,
+        "6": 2,
+        "7": 1,
+        "8": 2
+      },
+      "escapeDayHist": {
+        "5": 92,
+        "6": 146,
+        "7": 258,
+        "8": 469
+      },
+      "meanCaptureDay": 3.6857142857142855,
+      "meanEscapeDay": 7.144041450777202,
+      "meanEndDay": 7.023,
+      "meanIpUnspent": 0.964,
+      "meanSpUnspent": 0.914,
+      "probes": 3426,
+      "probeHits": 60,
+      "probeHitRate": 0.017513134851138354,
+      "probeMassAtTarget": null,
+      "uniformProbeChance": 0.020833333333333332,
+      "stakeouts": 1870,
+      "stakeoutHitRate": 0.01871657754010695,
+      "stakeoutMassAtPlacement": null,
+      "capBlocksPerCase": 0
+    }
+  ]
+}

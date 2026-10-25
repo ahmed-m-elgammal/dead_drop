@@ -10,10 +10,11 @@
     "node": ">=22.14"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p packages/engine",
-    "build": "tsc -p packages/engine",
+    "typecheck": "npm run -s build && tsc --noEmit -p packages/engine && tsc --noEmit -p packages/sim",
+    "build": "tsc -p packages/engine/tsconfig.build.json && tsc -p packages/sim/tsconfig.build.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "sim": "npm run build && node packages/sim/dist/cli.js"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

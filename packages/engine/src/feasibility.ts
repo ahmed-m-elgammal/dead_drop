@@ -277,15 +277,30 @@ export interface EvaluatedConfig {
   passes: boolean;
 }
 
+export interface ConfigShape {
+  /** P1 sweep value (S6). Default: parameter table's P1_days_per_case. */
+  days?: number;
+  /** P12 band override, shifted with P1 per 04-balance-sim §4.4 S6.
+   *  Default: parameter table's P12_feasibility_band. */
+  band?: readonly [number, number];
+}
+
+/** The full per-config evaluation under the pinned reading (C3-A + case-gate
+ *  C4). Returns null when C2 fails; otherwise the C5-shaped measured record.
+ *  `shape` (T16/ADR-003) sweeps the P1/P12 pair for scenario S6; omitted ⇒
+ *  canonical 8-day / [5,7] behavior, byte-identical to the M2-W1 oracle. */
 export function evaluateConfig(
   vm: ValidatedMap, sh: NodeId, d1: NodeId, d2: NodeId, gate: NodeId,
   memos: { drop2?: Map<string, number | null>; openings?: Map<string, Map<string, Opening>> } = {},
+  shape: ConfigShape = {},
 ): EvaluatedConfig | null {
-  const md = minDays(vm, sh, d1, d2, gate);
-  if (md === null || md < C2_BAND[0] || md > C2_BAND[1]) return null;
+  const days = shape.days ?? CASE_DAYS;
+  const band = shape.band ?? C2_BAND;
+  const md = minDays(vm, sh, d1, d2, gate, days);
+  if (md === null || md < band[0] || md > band[1]) return null;
 
-  const layers = backwardLayers(vm, d1, d2, gate);
-  const mdays = forwardCosts(vm, sh, d1, d2, gate);
+  const layers = backwardLayers(vm, d1, d2, gate, days - 3);
+  const mdays = forwardCosts(vm, sh, d1, d2, gate, days);
   // Internal consistency: BFS min-days must equal the forward DP's first
   // completion day (Python oracle: fail() on disagreement).
   const firstFinite = mdays.findIndex((v, i) => i >= 1 && v < INF);
@@ -297,7 +312,7 @@ export function evaluateConfig(
   const mStar = Math.min(...mdays.slice(1));
 
   const openFactory = openings3(vm, d1, d2, memos.openings ?? new Map());
-  const c3a = countPrefixes(vm, layers, d1, d2, gate, sh, openFactory(sh), mStar);
+  const c3a = countPrefixes(vm, layers, d1, d2, gate, sh, openFactory(sh), mStar, days);
 
   const c2cost = cheapestDrop2(vm, sh, d1, d2, memos.drop2);
   if (c2cost === null) {
@@ -329,13 +344,14 @@ export function evaluateConfig(
 
 /** C3-A count: distinct hold-free opening position-triples that sit on some
  *  globally min-cost completing route (opening spent + cheapest k-move
- *  completion == M*, k = 0..CASE_DAYS-3, i.e. total ≤ CASE_DAYS moves). */
+ *  completion == M*, k = 0..days-3, i.e. total ≤ days moves). */
 function countPrefixes(
   vm: ValidatedMap,
   layers: Array<Map<string, number>>,
   d1: NodeId, d2: NodeId, gate: NodeId, sh: NodeId,
   open: Map<string, Opening>,
   mStar: number,
+  days: number,
 ): number {
   let count = 0;
   for (const [tri, rec] of open) {
@@ -351,7 +367,7 @@ function countPrefixes(
     }
     const v3 = pos;
     const drops3 = d;
-    for (let k = 0; k <= CASE_DAYS - 3; k++) {
+    for (let k = 0; k <= days - 3; k++) {
       const b = layers[k]!.get(key(v3, drops3));
       if (b !== undefined && rec.spent + b === mStar) {
         count += 1;

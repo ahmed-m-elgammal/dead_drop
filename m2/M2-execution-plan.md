@@ -1,6 +1,6 @@
 # M2 Execution Plan — Rules Engine & Mathematical Simulation (3–4 weeks)
 
-**Status:** Week 1 **executed** + Week 2 **executed** (2026-10-25) · Weeks 3–4 in progress · Milestone owner: designer/developer ·
+**Status:** Weeks 1–3 **executed** (2026-10-25) · Week 4 in progress · Milestone owner: designer/developer ·
 Tracks the M2 row in 10-roadmap §1 and consumes `m1/m2-handoff.md` (frozen-inputs contract) +
 `m2/aud003-constraint-analysis.md` (pinned generator semantics).
 
@@ -101,7 +101,7 @@ to a verdict (generator → C1–C6 case → min-days script → ESCAPE, five se
 (tsc strict + **63/63** vitest incl. the 115-config full-space reconciliation); generator produces
 the 24-case ladder with C5 reports. Remaining W2-adjacent work is the W3 harness, not the engine.
 
-### Week 3 — simulation harness + policy matrix + sweeps
+### Week 3 — simulation harness + policy matrix + sweeps — **DONE (2026-10-25)**
 
 - Headless driver (04-balance-sim §4.1): ≥1,000 cases/sec/order-of-magnitude target (est.).
 - Scripted policies (§4.2): fugitive F-Beeline / F-Random / F-LeakAware / F-Deceptive /
@@ -114,8 +114,17 @@ the 24-case ladder with C5 reports. Remaining W2-adjacent work is the W3 harness
   S7 (degenerate-strategy probes). Q1 (EXPIRY direction) and Q4 (2-probe cap binding?) get their
   first real readouts here (m2-handoff §5).
 
-**Week 3 exit:** full matrix + sweeps recorded with conventions named in outputs; S2 verdict on
-the reveal schedule written down.
+**Week 3 exit — MET (2026-10-25):** full matrix + sweeps recorded with conventions named in
+outputs; S2 verdict written down. Evidence: [`w3-simulation-report.md`](w3-simulation-report.md)
+(+ raw JSONs in [`w3-results/`](w3-results/), engine package [`packages/sim`](../packages/sim/README.md)).
+Recorded run: 20,000 matrix cases (20 pairs × N=1,000, CRN) + 52,000 sweep cases (26 cells ×
+N=500) + 1,500 S7 camping-pricing addendum cases + 60,000 determinism double-runs (10,000 seeds ×
+3 pairs, full-transcript digests, **0 mismatches**). Throughput 995 cases/s full-policy layer /
+831 cases/s engine-level (§4.1 order-of-magnitude met). §4.5 scorecard: calibration PASS; band,
+dominance (I-Aggressive camping 70.7–93.2%), and capture-pacing lines FAIL with measured evidence
+→ W4 retune list (headline candidate: P8 3→4). Three pilot-phase policy defects fixed before the
+recorded run (registered in the policy header); zero rules churn; T16/ADR-003 override surface
+added to the engine (default path byte-identical).
 
 ### Week 4 — balance report v1, retune, engine tag, G1
 
@@ -135,18 +144,25 @@ the reveal schedule written down.
 | Criterion | Status | Evidence at close |
 |---|---|---|
 | L1 regression fixtures green (4 constants + 115-config gate) | **green (W2, generator + resolve level)** | vitest `l1-regression` + `l1-configs`: TS ≡ Python oracle, all 115 records field-equal; constants also pass end-to-end through `resolve()` as scripted ESCAPEs |
-| Determinism over 10k seeds | pending (W3 harness; generator- and resolution-level determinism already green — property tests assert byte-identical disclosures) | harness output |
-| Role win-rate 45–55% (or specific retune list) | pending (W3–W4) | balance report v1 |
-| No policy pair >65% at α=0.05 | pending (W3) | matrix table |
-| ≥60% captures on days 4–8 | pending (W3) | capture-day histogram |
-| Stakeout hit-rate > posterior mass at placement | pending (W3) | calibration table |
+| Determinism over 10k seeds | **green (W3)** | `w3-results/determinism.json`: 10,000 seeds × 3 pairs, double-run, full-transcript digests — 0 mismatches |
+| Role win-rate 45–55% (or specific retune list) | **pending W4 — retune list now exists** | W3 matrix: focal pairs 65.3–67.9% (CIs >55); W3 report §6 names the measured levers (P8 3→4; P3/P4 insensitive) |
+| No policy pair >65% at α=0.05 | **measured: VIOLATED (W3)** — I-Aggressive camping 70.7–93.2% vs non-random fugitives | matrix table + `w3-results/s7-camping.json` (P8 pricing lever: 93.2% → 67.2% at P8=4) |
+| ≥60% captures on days 4–8 | **measured: VIOLATED (W3)** — 0–11% (opening decided by day 2) | capture-day histograms in `w3-results/matrix.json` |
+| Stakeout hit-rate > posterior mass at placement | **measured: PASS (W3)** — 49.9–52.6% vs 0.16–0.17 predictive mass (3× skill premium vs smart fugitives; calibrated vs noise) | calibration columns in `w3-results/matrix.json` |
 | ≤1 parameter pass, logged (if any) | pending (W4) | 04 §2 diff log |
 
 ## 3. Risks to M2 itself (from 12-risks, operationalized)
 
-- **Reveal schedule wrong** (named M2 risk): S2 is the readout; the fix ladder is content-ish
-  first (P9/P10 variants), rules last (10-roadmap §3).
-- **Sim policies too weak to expose dominance:** add `I-Calendar` variants before touching rules.
+- **Reveal schedule wrong** (named M2 risk): ~~S2 is the readout~~ — **S2 read: NOT confirmed.**
+  The reveal schedule moved win-rates ≤4pp in its swept neighborhood ({3,6}/{4} vs {2,5,7}/{4} vs
+  {3,6}/{4,7}); the case is decided before most reveals fire. Keep {3,6}/{4} into M4
+  (`w3-simulation-report.md` §3 S2 verdict). The fix ladder stays content-first (P9/P10 variants),
+  rules last.
+- **Sim policies too weak to expose dominance:** ~~add `I-Calendar` variants before touching rules~~
+  — superseded: the W3 matrix DID expose dominance (I-Aggressive camping), and the pilot loop
+  surfaced/patched three policy defects (no objective seeking; delay-costing tier filters; a
+  terminal-state blindness in the route helpers) with registrations in the policy header. Policy
+  quality is now the recorded baseline for W4.
 - **Engine/sim scope creep:** UI, multiplayer, ML agents, monetization are fenced out
   (m2-handoff §4); anything else goes to the parking lot below.
 - **Freeze slippage:** ~~Week 2's `resolve()` start is the only freeze-dependent task~~ —
@@ -157,8 +173,17 @@ the reveal schedule written down.
   fixed before any human session was wasted (triage-log M2-001, T14). Watch for the same class
   of template defect in S2's §9.13 engineering (the §9.13 state IS reachable — 0 SP at any node
   — so no action needed).
+- **NEW (W3 close):** the sim's W3 verdicts are scripted-competence-level, not human-level — the
+  45–55 band target is defined for rated HUMAN play (04 §1). W4's balance report must carry both
+  readings; do not retune to scripted numbers alone (the report's honesty section says the same).
 
 ## 4. Parking lot (created empty; nothing is in it yet)
 
 *(populated from M2 work notes; each entry: one line + date; reviewed at M2 close — none enter
 the ruleset without a new audit round)*
+
+- 2026-10-25 (W3): F-LeakAware ≡ F-Beeline outcome-identical on map_alpha — if the calendar game
+  is wanted, it must be priced (holds) or made structural (map content); tie-level leak
+  preferences don't bind. Design decision for the W4 report (not a silent tweak).
+- 2026-10-25 (W3): cross-case route repetition (F-Beeline exploitability) is a MATCHMAKING/rating
+  concern (M6), not a generator concern — C3's anti-scripting constraint is per-case.
