@@ -1,6 +1,6 @@
 # M1 Execution Plan — Requirements & Design Validation (3 weeks)
 
-**Status:** Week 1 **executed** (2026-10-25) · Week 2 tooling pre-built (sessions human-gated) · Week 3 scheduled · Milestone owner: designer/developer (+ 2 playtest partners) · Tracks the M1 row in 10-roadmap §1.
+**Status:** Week 1 **executed** (2026-10-25) · Weeks 2–3 tooling pre-built (sessions + freeze evidence-gated) · Milestone owner: designer/developer (+ 2 playtest partners) · Tracks the M1 row in 10-roadmap §1.
 
 ## 0. What M1 is for (and what it must not become)
 
@@ -35,11 +35,18 @@ README). Remaining human work is exactly the two session runs + transcriptions +
 
 ### Week 3 — session S3, freeze, handoff
 
+**Status (2026-10-25): W3 tooling pre-built and pushed to the repo; the session and the freeze
+itself remain evidence-gated.** Ready and waiting: `m1/sessions/s3-case-template.md` (free-play
+watch list instead of engineered states), `m1/freeze-checklist.md` (§0 mechanical checks already
+run — no-TBD grep clean; §1 session evidence gates; §2 freeze Branch A/B with ready-to-paste tag
+texts; §3 14-readiness B2 closure paste-text), and `m1/m2-handoff.md` (pre-written; two `[AT FREEZE]`
+fields). `w1-rules-audit.md` §7 close-out registry skeleton is in place.
+
 - Run S3 (Case P3 ×2 with partner C; free play + optional repeat).
 - Re-run the no-TBD grep on 03-rules.md; confirm the §9.13 and AUD-004 states were actually exercised at the table (protocol §1 table).
 - **Freeze:** tag the ruleset as `1.0.0-alpha` final (or `1.0.0-beta` if S3 triage forced a patch) in 03-rules §11; write the tally table (cases per role per partner) into the audit's registry section.
 - Update 14-readiness: blocker **B2 closed** (with session-file evidence); B1/B3 unchanged; note AUD-003 into the M2 task list.
-- Produce the **M2 handoff note** (`m1/m2-handoff.md`, half a page): frozen version tag; the four regression constants (P1 6d/5SP, P2 6d/6SP, P3 6d/7SP, canonical 7d/6SP); the C3-semantics question (AUD-003) as the *first* M2 generator task; the type-definition draft from Week 2.
+- Produce the **M2 handoff note** (`m1/m2-handoff.md`, half a page): frozen version tag; the four regression constants (P1 6d/5SP, P2 6d/6SP, P3 6d/7SP, canonical 7d/6SP); the C3-semantics question (AUD-003) as the *first* M2 generator task; the type-definition draft from Week 2. → **Pre-written:** all freeze-independent content is in place; only the two `[AT FREEZE]` fields remain.
 
 **Week 3 exit / M1 exit condition (10-roadmap):** ruleset frozen + paper findings logged. Both acceptance lines met: every §9 ruling confirmed at the table or patched; no TBD; both roles ≥3 paper cases.
 

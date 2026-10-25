@@ -31,14 +31,16 @@ Dead Drop is an asynchronous 1v1 hidden-movement deduction game: an **Investigat
 
 | File | Contents | Status |
 |---|---|---|
-| [m1/M1-execution-plan.md](m1/M1-execution-plan.md) | Week-by-week M1 plan, exit tracking, M2 handoff | W1 done; W2 tooling done, sessions pending |
+| [m1/M1-execution-plan.md](m1/M1-execution-plan.md) | Week-by-week M1 plan, exit tracking, M2 handoff | W1 done; W2–W3 tooling done, sessions+freeze pending |
 | [m1/w1-rules-audit.md](m1/w1-rules-audit.md) | Week-1 rules-completeness audit + dispute log (DIS-001, AUD-002..005) | Executed |
 | [m1/playtest-protocol.md](m1/playtest-protocol.md) | W2–W3 paper-playtest protocol with 3 verified cases (P1–P3) | Ready |
 | [m1/kit/](m1/kit/README.md) | Paper-prototype kit: print map, reference cards, log sheets | v1.0 (ruleset 1.0.0-alpha.1) |
-| [m1/sessions/](m1/sessions/README.md) | Session-transcription templates (S1/S2), triage registry, engineered-state ledger | Tooling ready — **no session data may be fabricated** |
+| [m1/sessions/](m1/sessions/README.md) | Session-transcription templates (S1/S2/S3), triage registry, engineered-state ledger | Tooling ready — **no session data may be fabricated** |
 | [m1/engine-types/](m1/engine-types/README.md) | W2 engine type-spec draft (types only) + 10 drafting findings T1–T10 | Draft v0.1 |
+| [m1/freeze-checklist.md](m1/freeze-checklist.md) | W3 close-out pre-flight: evidence gates, freeze Branch A/B, ready-to-paste gate texts | Pre-flight built |
+| [m1/m2-handoff.md](m1/m2-handoff.md) | M2 handoff: constants, AUD-003 first task, type-layer contract | Pre-written (two `[AT FREEZE]` fields) |
 
-M1 status (2026-10-25): Week 1 executed — ruleset patched to **`1.0.0-alpha.1`** (audit: +§9.13 stranding ruling, Hold-completes-drop clarification); all [computed] claims re-verified against the canonical JSON. Week 2 tooling pre-built (session templates, triage registry, engine type-spec draft with findings T1–T10); the S1–S3 paper sessions themselves are human-gated and produce `m1/sessions/s{n}-transcript.md` files only when actually played. Blocker B2 closes at M1 exit.
+M1 status (2026-10-25): Weeks 1–3 tooling complete — ruleset at **`1.0.0-alpha.1`** (no-TBD grep clean, re-verified), session kit ready for S1–S3, freeze pre-flight + M2 handoff pre-written with `[AT FREEZE]` fields. M1 *closes* only when the human-run sessions produce transcript evidence (audit §7 tally) — then: freeze tag, B2 closure, handoff finalization.
 
 ## Conventions
 

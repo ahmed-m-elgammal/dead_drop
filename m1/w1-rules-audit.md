@@ -84,3 +84,25 @@ Nothing here proves balance, fun, or teachability — those are M2 (simulation) 
 | 04-balance-sim.md | + counting-convention parenthetical in §3.1 | AUD-002 |
 | m1/* (this directory) | M1 execution plan, this audit, playtest protocol, paper-prototype kit | M1 tasks 2–4 |
 | scripts/dd_m1_w1_validation.py | independent verification harness (kept for M2 regression reuse) | method |
+| m1/sessions/*, m1/engine-types/*, m1/freeze-checklist.md, m1/m2-handoff.md | Week-2/3 tooling (transcription kit, type-spec draft T1–T10, freeze pre-flight, M2 handoff draft) — see README doc map | M1 plan W2–W3 |
+
+## 7. M1 close-out registry (added Week 3; filled ONLY at freeze from real session artifacts)
+
+**Status:** skeleton (2026-10-25). Rows are filled exclusively from `m1/sessions/s{n}-transcript.md` and `m1/sessions/triage-log.md` evidence per `m1/freeze-checklist.md` — never anticipated. Empty rows at freeze mean M1 does not close.
+
+### 7.1 Tally (acceptance line: Player A ≥3 cases as Investigator AND ≥3 as Fugitive)
+
+| Session | Partner | Case | Leg | A's role | Verdict | Engineered/watch state exercised | Notes |
+|---|---|---|---|---|---|---|---|
+| S1 | B | P1 | 1 | | | AUD-004 (engineered): Y/N | |
+| S1 | B | P1 | 2 | | | AUD-004 (engineered): Y/N | |
+| S2 | B | P2 | 1 | | | §9.13 (engineered): Y/N | |
+| S2 | B | P2 | 2 | | | §9.13 (engineered): Y/N | |
+| S3 | C | P3 | 1 | | | watch (natural): | |
+| S3 | C | P3 | 2 | | | watch (natural): | |
+
+**Totals at freeze:** A as Investigator ___/3 · A as Fugitive ___/3 · partners: B, C · disputes triaged ___/___
+
+### 7.2 Ruling-confirmation line for the freeze note (10-roadmap acceptance)
+
+Every §9 ruling carries its W1 textual verification (§1 above); the two engineered states carry table confirmation iff their S1/S2 checklist rows are checked. Freeze wording (Branch A/B per `m1/freeze-checklist.md` §2): *"every §9 ruling confirmed in text (W1 audit §1) and the two audited-unplayed states confirmed at the table (S1 AUD-004, S2 §9.13) — or patched and re-ruled (`1.0.0-beta`)."*
