@@ -1,0 +1,661 @@
+{
+ "map_id": "map_alpha",
+ "version": "1.2.0",
+ "districts": {
+  "D1": "Harbor",
+  "D2": "Old Town",
+  "D3": "Market",
+  "D4": "Rail Yard"
+ },
+ "nodes": [
+  {
+   "id": "D1-01",
+   "district": "D1"
+  },
+  {
+   "id": "D1-02",
+   "district": "D1"
+  },
+  {
+   "id": "D1-03",
+   "district": "D1"
+  },
+  {
+   "id": "D1-04",
+   "district": "D1"
+  },
+  {
+   "id": "D1-05",
+   "district": "D1"
+  },
+  {
+   "id": "D1-06",
+   "district": "D1"
+  },
+  {
+   "id": "D1-07",
+   "district": "D1"
+  },
+  {
+   "id": "D1-08",
+   "district": "D1"
+  },
+  {
+   "id": "D1-09",
+   "district": "D1"
+  },
+  {
+   "id": "D1-10",
+   "district": "D1"
+  },
+  {
+   "id": "D1-11",
+   "district": "D1"
+  },
+  {
+   "id": "D1-12",
+   "district": "D1"
+  },
+  {
+   "id": "D2-01",
+   "district": "D2"
+  },
+  {
+   "id": "D2-02",
+   "district": "D2"
+  },
+  {
+   "id": "D2-03",
+   "district": "D2"
+  },
+  {
+   "id": "D2-04",
+   "district": "D2"
+  },
+  {
+   "id": "D2-05",
+   "district": "D2"
+  },
+  {
+   "id": "D2-06",
+   "district": "D2"
+  },
+  {
+   "id": "D2-07",
+   "district": "D2"
+  },
+  {
+   "id": "D2-08",
+   "district": "D2"
+  },
+  {
+   "id": "D2-09",
+   "district": "D2"
+  },
+  {
+   "id": "D2-10",
+   "district": "D2"
+  },
+  {
+   "id": "D2-11",
+   "district": "D2"
+  },
+  {
+   "id": "D2-12",
+   "district": "D2"
+  },
+  {
+   "id": "D3-01",
+   "district": "D3"
+  },
+  {
+   "id": "D3-02",
+   "district": "D3"
+  },
+  {
+   "id": "D3-03",
+   "district": "D3"
+  },
+  {
+   "id": "D3-04",
+   "district": "D3"
+  },
+  {
+   "id": "D3-05",
+   "district": "D3"
+  },
+  {
+   "id": "D3-06",
+   "district": "D3"
+  },
+  {
+   "id": "D3-07",
+   "district": "D3"
+  },
+  {
+   "id": "D3-08",
+   "district": "D3"
+  },
+  {
+   "id": "D3-09",
+   "district": "D3"
+  },
+  {
+   "id": "D3-10",
+   "district": "D3"
+  },
+  {
+   "id": "D3-11",
+   "district": "D3"
+  },
+  {
+   "id": "D3-12",
+   "district": "D3"
+  },
+  {
+   "id": "D4-01",
+   "district": "D4"
+  },
+  {
+   "id": "D4-02",
+   "district": "D4"
+  },
+  {
+   "id": "D4-03",
+   "district": "D4"
+  },
+  {
+   "id": "D4-04",
+   "district": "D4"
+  },
+  {
+   "id": "D4-05",
+   "district": "D4"
+  },
+  {
+   "id": "D4-06",
+   "district": "D4"
+  },
+  {
+   "id": "D4-07",
+   "district": "D4"
+  },
+  {
+   "id": "D4-08",
+   "district": "D4"
+  },
+  {
+   "id": "D4-09",
+   "district": "D4"
+  },
+  {
+   "id": "D4-10",
+   "district": "D4"
+  },
+  {
+   "id": "D4-11",
+   "district": "D4"
+  },
+  {
+   "id": "D4-12",
+   "district": "D4"
+  }
+ ],
+ "edges": [
+  {
+   "a": "D1-01",
+   "b": "D1-02",
+   "type": "F"
+  },
+  {
+   "a": "D1-02",
+   "b": "D1-03",
+   "type": "F"
+  },
+  {
+   "a": "D1-03",
+   "b": "D1-04",
+   "type": "F"
+  },
+  {
+   "a": "D1-04",
+   "b": "D1-05",
+   "type": "F"
+  },
+  {
+   "a": "D1-05",
+   "b": "D1-06",
+   "type": "F"
+  },
+  {
+   "a": "D1-06",
+   "b": "D1-07",
+   "type": "F"
+  },
+  {
+   "a": "D1-07",
+   "b": "D1-08",
+   "type": "F"
+  },
+  {
+   "a": "D1-08",
+   "b": "D1-09",
+   "type": "F"
+  },
+  {
+   "a": "D1-09",
+   "b": "D1-10",
+   "type": "F"
+  },
+  {
+   "a": "D1-10",
+   "b": "D1-11",
+   "type": "F"
+  },
+  {
+   "a": "D1-11",
+   "b": "D1-12",
+   "type": "F"
+  },
+  {
+   "a": "D1-12",
+   "b": "D1-01",
+   "type": "F"
+  },
+  {
+   "a": "D1-01",
+   "b": "D1-06",
+   "type": "F"
+  },
+  {
+   "a": "D1-04",
+   "b": "D1-10",
+   "type": "F"
+  },
+  {
+   "a": "D2-01",
+   "b": "D2-02",
+   "type": "F"
+  },
+  {
+   "a": "D2-02",
+   "b": "D2-03",
+   "type": "F"
+  },
+  {
+   "a": "D2-03",
+   "b": "D2-04",
+   "type": "F"
+  },
+  {
+   "a": "D2-04",
+   "b": "D2-05",
+   "type": "F"
+  },
+  {
+   "a": "D2-05",
+   "b": "D2-06",
+   "type": "F"
+  },
+  {
+   "a": "D2-06",
+   "b": "D2-07",
+   "type": "F"
+  },
+  {
+   "a": "D2-07",
+   "b": "D2-08",
+   "type": "F"
+  },
+  {
+   "a": "D2-08",
+   "b": "D2-09",
+   "type": "F"
+  },
+  {
+   "a": "D2-09",
+   "b": "D2-10",
+   "type": "F"
+  },
+  {
+   "a": "D2-10",
+   "b": "D2-11",
+   "type": "F"
+  },
+  {
+   "a": "D2-11",
+   "b": "D2-12",
+   "type": "F"
+  },
+  {
+   "a": "D2-12",
+   "b": "D2-01",
+   "type": "F"
+  },
+  {
+   "a": "D2-01",
+   "b": "D2-06",
+   "type": "F"
+  },
+  {
+   "a": "D2-04",
+   "b": "D2-10",
+   "type": "F"
+  },
+  {
+   "a": "D3-01",
+   "b": "D3-02",
+   "type": "F"
+  },
+  {
+   "a": "D3-02",
+   "b": "D3-03",
+   "type": "F"
+  },
+  {
+   "a": "D3-03",
+   "b": "D3-04",
+   "type": "F"
+  },
+  {
+   "a": "D3-04",
+   "b": "D3-05",
+   "type": "F"
+  },
+  {
+   "a": "D3-05",
+   "b": "D3-06",
+   "type": "F"
+  },
+  {
+   "a": "D3-06",
+   "b": "D3-07",
+   "type": "F"
+  },
+  {
+   "a": "D3-07",
+   "b": "D3-08",
+   "type": "F"
+  },
+  {
+   "a": "D3-08",
+   "b": "D3-09",
+   "type": "F"
+  },
+  {
+   "a": "D3-09",
+   "b": "D3-10",
+   "type": "F"
+  },
+  {
+   "a": "D3-10",
+   "b": "D3-11",
+   "type": "F"
+  },
+  {
+   "a": "D3-11",
+   "b": "D3-12",
+   "type": "F"
+  },
+  {
+   "a": "D3-12",
+   "b": "D3-01",
+   "type": "F"
+  },
+  {
+   "a": "D3-01",
+   "b": "D3-06",
+   "type": "F"
+  },
+  {
+   "a": "D3-04",
+   "b": "D3-10",
+   "type": "F"
+  },
+  {
+   "a": "D4-01",
+   "b": "D4-02",
+   "type": "F"
+  },
+  {
+   "a": "D4-02",
+   "b": "D4-03",
+   "type": "F"
+  },
+  {
+   "a": "D4-03",
+   "b": "D4-04",
+   "type": "F"
+  },
+  {
+   "a": "D4-04",
+   "b": "D4-05",
+   "type": "F"
+  },
+  {
+   "a": "D4-05",
+   "b": "D4-06",
+   "type": "F"
+  },
+  {
+   "a": "D4-06",
+   "b": "D4-07",
+   "type": "F"
+  },
+  {
+   "a": "D4-07",
+   "b": "D4-08",
+   "type": "F"
+  },
+  {
+   "a": "D4-08",
+   "b": "D4-09",
+   "type": "F"
+  },
+  {
+   "a": "D4-09",
+   "b": "D4-10",
+   "type": "F"
+  },
+  {
+   "a": "D4-10",
+   "b": "D4-11",
+   "type": "F"
+  },
+  {
+   "a": "D4-11",
+   "b": "D4-12",
+   "type": "F"
+  },
+  {
+   "a": "D4-12",
+   "b": "D4-01",
+   "type": "F"
+  },
+  {
+   "a": "D4-01",
+   "b": "D4-06",
+   "type": "F"
+  },
+  {
+   "a": "D4-04",
+   "b": "D4-10",
+   "type": "F"
+  },
+  {
+   "a": "D1-01",
+   "b": "D2-02",
+   "type": "T"
+  },
+  {
+   "a": "D1-04",
+   "b": "D2-05",
+   "type": "T"
+  },
+  {
+   "a": "D1-07",
+   "b": "D2-08",
+   "type": "T"
+  },
+  {
+   "a": "D1-10",
+   "b": "D2-11",
+   "type": "T"
+  },
+  {
+   "a": "D2-01",
+   "b": "D3-02",
+   "type": "T"
+  },
+  {
+   "a": "D2-04",
+   "b": "D3-05",
+   "type": "T"
+  },
+  {
+   "a": "D2-07",
+   "b": "D3-08",
+   "type": "T"
+  },
+  {
+   "a": "D2-10",
+   "b": "D3-11",
+   "type": "T"
+  },
+  {
+   "a": "D3-01",
+   "b": "D4-02",
+   "type": "T"
+  },
+  {
+   "a": "D3-04",
+   "b": "D4-05",
+   "type": "T"
+  },
+  {
+   "a": "D3-07",
+   "b": "D4-08",
+   "type": "T"
+  },
+  {
+   "a": "D3-10",
+   "b": "D4-11",
+   "type": "T"
+  },
+  {
+   "a": "D4-01",
+   "b": "D1-02",
+   "type": "T"
+  },
+  {
+   "a": "D4-04",
+   "b": "D1-05",
+   "type": "T"
+  },
+  {
+   "a": "D4-07",
+   "b": "D1-08",
+   "type": "T"
+  },
+  {
+   "a": "D4-10",
+   "b": "D1-11",
+   "type": "T"
+  },
+  {
+   "a": "D1-06",
+   "b": "D2-06",
+   "type": "M"
+  },
+  {
+   "a": "D2-06",
+   "b": "D3-06",
+   "type": "M"
+  },
+  {
+   "a": "D3-06",
+   "b": "D4-06",
+   "type": "M"
+  },
+  {
+   "a": "D4-06",
+   "b": "D1-06",
+   "type": "M"
+  },
+  {
+   "a": "D1-06",
+   "b": "D1-01",
+   "type": "M"
+  },
+  {
+   "a": "D1-06",
+   "b": "D1-11",
+   "type": "M"
+  },
+  {
+   "a": "D2-06",
+   "b": "D2-02",
+   "type": "M"
+  },
+  {
+   "a": "D2-06",
+   "b": "D2-12",
+   "type": "M"
+  },
+  {
+   "a": "D3-06",
+   "b": "D3-03",
+   "type": "M"
+  },
+  {
+   "a": "D3-06",
+   "b": "D3-09",
+   "type": "M"
+  },
+  {
+   "a": "D4-06",
+   "b": "D4-04",
+   "type": "M"
+  },
+  {
+   "a": "D4-06",
+   "b": "D4-08",
+   "type": "M"
+  }
+ ],
+ "drop_candidates": [
+  "D1-03",
+  "D1-10",
+  "D1-01",
+  "D1-07",
+  "D2-04",
+  "D2-09",
+  "D2-12",
+  "D2-06",
+  "D3-02",
+  "D3-11",
+  "D3-05",
+  "D3-09",
+  "D4-05",
+  "D4-12",
+  "D4-03",
+  "D4-08",
+  "D4-01",
+  "D1-06",
+  "D4-06",
+  "D3-01",
+  "D4-07",
+  "D1-02",
+  "D1-05",
+  "D3-03"
+ ],
+ "gates": [
+  "D1-08",
+  "D4-02"
+ ],
+ "safehouses": [
+  "D2-07",
+  "D3-06"
+ ],
+ "notes": "Content data for prototype. Travel = 1 day per edge; stamina cost by edge type F=1 T=2 M=3, Hold=1. v1.2.0 (M2 W1, 2026-10-25): drop_candidates 16->24 \u2014 the pre-authorized content lever (pool 16->24) adopted in m2/aud003-constraint-analysis.md \u00a74 (8 nodes appended, pool-position order of the original 16 preserved). Effect: full C2\u2227C3\u2227C4 generator headroom 8/960 -> 115/2208 (24-case ladder need met 4.8x). History: this file's original 1.0.0 release (16-pool) is what the docs' 'map_alpha v1.1' label referred to. Parallel-edge pair note: one node pair carries two edges of different classes (legal content); prefix/efficiency consumers take the minimal-SP realization."
+}

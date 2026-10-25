@@ -2,9 +2,10 @@
   "name": "dead-drop",
   "private": true,
   "type": "module",
-  "description": "Dead Drop — async 1v1 hidden-movement duel. Engine workspace (M2).",
+  "description": "Dead Drop \u2014 async 1v1 hidden-movement duel. Engine workspace (M2) + web client (M3).",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "engines": {
     "node": ">=22.14"
