@@ -10,6 +10,7 @@ No balance simulation has been run anywhere in this project (04-balance-sim §4 
 | `dd_m1_w1_validation.py` | M1 Week-1 **independent** verification harness — re-derives every mechanical claim from `assets/sample_map_alpha.json` (the declared source of truth), deliberately NOT a re-run of `dd_map_and_calcs.py`. | stdout + `m1_w1_validation_results.json` |
 | `dd_m1_kit_map.py` | Generates the printable paper-prototype map (A4-landscape HTML/SVG) from the canonical JSON. | `m1/kit/map_print.html` |
 | `dd_m2_aud003_constraints.py` | **M2 W1 / AUD-003**: pins generator-constraint semantics; counts C2∧C3∧C4 under four named C3 readings; W1 reconciliation; candidate yields for the pool lever; exact widened-space recount. Modes: `analyze` (16-pool snapshot) / `recount <pool-file>`. | stdout + `m2_aud003_results.json`, `m2_aud003_recount_results.json` |
+| `dd_m2_emit_fixtures.py` | **M2 W2 pre-flight**: emits the engine package's L1 fixtures (per-config measured gate values for every pinned pass) from the **v1.2.0 24-pool** map; hard-asserts its 115-pass set is identical to `m2_aud003_recount_results.json` before writing. Core functions are a verbatim copy of the AUD-003 script's. | `packages/engine/fixtures/valid-configs.json`, `packages/engine/fixtures/regression-cases.json` |
 | `m2_aud003_results.json` | Raw base-960 counts + per-candidate lever yields (conventions named in `meta`). | — |
 | `m2_aud003_recount_results.json` | Raw pool-24 recount (2208-space): 115/2208 pass under the pinned reading; district distribution. | — |
 | `m2_aud003_pool24.json` | The lever's selection record: 8 added nodes + the selection rule (choice made outside the script, auditable). | — |
@@ -31,8 +32,10 @@ rate). Any M2 code that recounts must name its convention in its output.
 ## M2 reuse contract
 
 `dd_m1_w1_validation.py` doubles as the regression harness for the paper-playtest constants
-(P1 6d/5SP, P2 6d/6SP, P3 6d/7SP, canonical 7d/6SP). When the M2 engine lands, the same constants
-must be asserted by engine fixtures (09-testing §1) — the script remains the independent oracle.
+(P1 6d/5SP, P2 6d/6SP, P3 6d/7SP, canonical 7d/6SP). The M2 engine now asserts the same
+constants plus the full 115-config fixture set from the **TS side** (`packages/engine/test/`,
+vitest) — the Python scripts remain the independent emitting oracle; the two are reconciled
+in `packages/engine/test/l1-configs.test.ts` (dual-language, full 2208-space).
 
 ## Data snapshots (important since map v1.2.0)
 

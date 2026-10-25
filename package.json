@@ -1,0 +1,26 @@
+{
+  "name": "dead-drop",
+  "private": true,
+  "type": "module",
+  "description": "Dead Drop — async 1v1 hidden-movement duel. Engine workspace (M2).",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.14"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p packages/engine",
+    "build": "tsc -p packages/engine",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

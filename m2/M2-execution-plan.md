@@ -1,6 +1,6 @@
 # M2 Execution Plan — Rules Engine & Mathematical Simulation (3–4 weeks)
 
-**Status:** Week 1 **executed** (2026-10-25) · Weeks 2–4 planned · Milestone owner: designer/developer ·
+**Status:** Week 1 **executed** + Week 2 pre-flight **executed** (2026-10-25) · Weeks 2–4 in progress · Milestone owner: designer/developer ·
 Tracks the M2 row in 10-roadmap §1 and consumes `m1/m2-handoff.md` (frozen-inputs contract) +
 `m2/aud003-constraint-analysis.md` (pinned generator semantics).
 
@@ -33,31 +33,57 @@ these become the generator's acceptance fixtures in Week 2.
 
 ### Week 2 — engine package: types, resolve(), generator + BFS gate
 
-**Gate at week start (two decisions, recorded here when taken):**
+**Gate at week start (two decisions — TAKEN 2026-10-25, user-authorized session):**
 - **Freeze dependency:** `resolve()` implements the *frozen* ruleset — Week 2 coding waits for the
   M1 freeze tag (`m1-freeze-<version>`, per `m1/freeze-checklist.md` §2). The **generator +
   feasibility gate are methodology, not rules**: their spec is pinned and freeze-independent, so
-  generator code may start immediately.
+  generator code may start immediately. **→ Respected: everything shipped in the pre-flight is
+  generator-side; `resolve()` remains the only W2 item still blocked.**
 - **Toolchain:** the engine is a pure TypeScript package (10-roadmap M2 task 1; types lifted
   verbatim from `m1/engine-types/dead-drop.types.ts`). This environment has run Python-only so
   far (stdlib-only constraint applies to *verification scripts*); standing up Node + a TS
   toolchain (and deciding package layout `packages/engine`) is a Week-2 pre-flight, not a
-  design question.
+  design question. **→ Taken and recorded: [`adr-001-toolchain.md`](adr-001-toolchain.md).**
+
+**Pre-flight — EXECUTED 2026-10-25 (evidence):**
+
+1. Toolchain stood up per ADR-001: Node v24.21.0 · TypeScript 5.9.3 (`strict` +
+   `noUncheckedIndexedAccess`, NodeNext ESM) · npm workspaces · vitest 3.2.7. DevDeps at the
+   workspace root only; `@dead-drop/engine` declares **zero runtime dependencies**.
+2. `packages/engine` scaffolded; type draft lifted verbatim (provenance banner; lift-time
+   divergences registered as **T11** in `m1/engine-types/README.md`, never silently patched).
+3. The pinned feasibility gate ported 1:1 from the Python oracle (`src/feasibility.ts`), with
+   the oracle's internal cross-checks (BFS min-days ≡ forward-DP first completion) preserved.
+4. L1 fixtures emitted by the new `tools/verification/dd_m2_emit_fixtures.py` — per-config
+   measured gate values for all passes, hard-asserted at emit time to be **set-identical (115/115)**
+   to the independent M2-W1 recount. New convention-named fact: C2-only in-band on the 24-pool
+   = **435/2208** (ordered).
+5. **Verification: `tsc --noEmit` green; vitest 21/21 green** — including the dual-language
+   reconciliation (TS gate ≡ Python fixtures over the full 2,208-space, every field) and the
+   four regression constants; L2 generator properties green (seed determinism, C6 diversity
+   ≤50% + no-consecutive, §9.8/T8 asserts, C5 report completeness over 5 ladder seeds).
+6. W2 exit line already met at generator level: the engine runs the generator headlessly from a
+   seed to a C5-reported case and produces the 24-case ladder. The remainder of the W2 exit
+   ("runs a full case to a verdict") waits on `resolve()` — freeze-gated.
 
 Tasks:
-1. `packages/engine` scaffold; lift the type draft; carry **T1–T10** into the test plan
-   (esp. T2 derive-don't-store, T4 FORCED_HOLD engine-resolved, T8 generator asserts, T9
-   consumed-stakeout fixture).
+1. ~~`packages/engine` scaffold; lift the type draft; carry **T1–T10** into the test plan~~ —
+   **DONE (pre-flight)**; T1–T10 + new T11 carried: T2/T9 land with `resolve()` tests, T8 asserts
+   shipped in the generator now.
 2. `resolve()` — the exact §2 seven-step sequence as pure functions; verdicts per §6;
    §9.1–9.13 validation predicates; idempotent action application (§9.10 shape).
-3. Case generator: seeded sampling per C1; feasibility gate per C2–C4 (pinned semantics);
-   C5 feasibility report emitted per case; C6 batch ordering.
-4. **L1 fixtures first** (09-testing §1): the four regression constants — P1 6d/5SP, P2 6d/6SP,
+   **BLOCKED: freeze tag.**
+3. ~~Case generator: seeded sampling per C1; feasibility gate per C2–C4 (pinned semantics);
+   C5 feasibility report emitted per case; C6 batch ordering~~ — **DONE (pre-flight, verified)**.
+4. ~~**L1 fixtures first** (09-testing §1): the four regression constants — P1 6d/5SP, P2 6d/6SP,
    P3 6d/7SP, canonical 7d/6SP — asserted against `tools/verification/dd_m1_w1_validation.py`
-   as the independent oracle; the 115-config list asserted via the generator's own gate.
+   as the independent oracle; the 115-config list asserted via the generator's own gate~~ —
+   **DONE (pre-flight)**: constants + full 115-record reconciliation green; oracle contract held
+   (fixtures emitted BY the Python side, asserted BY the TS side).
 5. **L2 property tests** (09-testing §2): determinism (same seed+actions ⇒ same transcript),
    info-wall (InvestigatorView never contains fugitive-hidden fields — T2), §9.8 invariants
-   hold for every generated case (T8), stakeout consumption (T9).
+   hold for every generated case (T8), stakeout consumption (T9). — **Generator-side slice green**
+   (seed determinism, §9.8, C5/C6); the resolve()-dependent properties land with task 2.
 
 **Week 2 exit:** engine@0.x runs a full case headlessly from a seed to a verdict; L1 green;
 generator produces the 24-case ladder with C5 reports.
@@ -95,8 +121,8 @@ the reveal schedule written down.
 
 | Criterion | Status | Evidence at close |
 |---|---|---|
-| L1 regression fixtures green (4 constants + 115-config gate) | pending (W2) | test run logs vs `dd_m1_w1_validation.py` oracle |
-| Determinism over 10k seeds | pending (W2–W3) | harness output |
+| L1 regression fixtures green (4 constants + 115-config gate) | **green (W2 pre-flight, generator level)** | vitest `l1-regression` + `l1-configs`: TS ≡ Python oracle, all 115 records field-equal |
+| Determinism over 10k seeds | pending (W3 harness; generator-level determinism already green) | harness output |
 | Role win-rate 45–55% (or specific retune list) | pending (W3–W4) | balance report v1 |
 | No policy pair >65% at α=0.05 | pending (W3) | matrix table |
 | ≥60% captures on days 4–8 | pending (W3) | capture-day histogram |

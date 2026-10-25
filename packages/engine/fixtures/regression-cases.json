@@ -1,0 +1,54 @@
+{
+ "meta": {
+  "generator": "dd_m2_emit_fixtures.py",
+  "date": "2026-10-25",
+  "source": "m1/m2-handoff.md \u00a73 (paper-verified constants); oracle tools/verification/dd_m1_w1_validation.py",
+  "usage": "L1 fixture: engine BFS/Dijkstra must reproduce min_days and cheapest_drop2_sp for every case exactly."
+ },
+ "cases": [
+  {
+   "case": "P1",
+   "safehouse": "D2-07",
+   "drops": [
+    "D2-06",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days": 6,
+   "cheapest_drop2_sp": 5
+  },
+  {
+   "case": "P2",
+   "safehouse": "D3-06",
+   "drops": [
+    "D3-05",
+    "D4-03"
+   ],
+   "gate": "D4-02",
+   "min_days": 6,
+   "cheapest_drop2_sp": 6
+  },
+  {
+   "case": "P3",
+   "safehouse": "D3-06",
+   "drops": [
+    "D2-06",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days": 6,
+   "cheapest_drop2_sp": 7
+  },
+  {
+   "case": "canonical",
+   "safehouse": "D2-07",
+   "drops": [
+    "D2-09",
+    "D1-10"
+   ],
+   "gate": "D1-08",
+   "min_days": 7,
+   "cheapest_drop2_sp": 6
+  }
+ ]
+}
