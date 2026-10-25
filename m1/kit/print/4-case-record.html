@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Public Case Record (Sheet C)</title>
+<style>
+  @page { size: A4 portrait; margin: 11mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 10px; line-height: 1.36; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .band { border-bottom: 3px solid #111; padding-bottom: 5px; margin-bottom: 8px; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .4px; }
+  .sub { font-size: 9px; color: #444; margin-top: 2px; }
+  h2 { font-size: 11px; margin: 10px 0 4px; text-transform: uppercase; letter-spacing: .7px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .cfg { border: 1.4px solid #111; padding: 7px 9px; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 10px; }
+  .cfg b { display: inline-block; min-width: 74px; }
+  .fill { display: inline-block; border-bottom: 1px solid #111; min-width: 76px; }
+  table.rec { border-collapse: collapse; width: 100%; margin-top: 4px; }
+  .rec th { background: #eee; font-size: 8.6px; text-transform: uppercase; letter-spacing: .3px; border: 1px solid #777; padding: 3px 4px; text-align: left; }
+  .rec td { border: 1px solid #777; height: 34px; padding: 3px 4px; vertical-align: top; }
+  .rec .day { text-align: center; font-weight: bold; background: #eee; width: 26px; }
+  .due { display: inline-block; background: #111; color: #fff; font-size: 7.6px; padding: 0 4px; border-radius: 6px; vertical-align: 1px; }
+  .due.d { background: #274e8f; } .due.t { background: #b0722c; } .due.v { background: #111; }
+  .box { border: 1.2px solid #111; padding: 6px 8px; margin-top: 8px; }
+  .foot { margin-top: 8px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%). One per case leg — table-visible. This sheet records the case, not the belief: write only what is announced out loud.</div>
+
+<div class="band">
+  <h1>PUBLIC CASE RECORD — everything announced, nothing else</h1>
+  <div class="sub">Sheet C v2 · one per case leg · both players write here · Investigator's action column is filled <b>after the case</b> (§8.6 full-log reveal)</div>
+</div>
+
+<div class="cfg">
+  <span><b>Case id / seed</b> <span class="fill" style="min-width:110px"></span></span>
+  <span><b>map</b> map_alpha v1.0.0</span>
+  <span><b>ruleset</b> 1.0.0-alpha.1</span>
+  <span><b>Safehouse</b> <span class="fill"></span></span>
+  <span><b>Drop 1 → 2</b> <span class="fill" style="min-width:60px"></span> → <span class="fill" style="min-width:60px"></span></span>
+  <span><b>Gate</b> <span class="fill"></span></span>
+  <span><b>SP 12 · IP 10</b></span>
+  <span><b>Reveals</b> D3·D6 district · D4 transit</span>
+  <span><b>Leg</b> <span class="fill" style="min-width:40px"></span> (roles: F <span class="fill" style="min-width:60px"></span> / I <span class="fill" style="min-width:60px"></span>)</span>
+</div>
+
+<table class="rec">
+  <tr><th style="width:26px">Day</th><th style="width:31%">Public events — write exactly what was announced</th><th style="width:26%">Due today (tick when announced)</th><th style="width:19%">Investigator actions <span style="font-weight:normal;text-transform:none">(fill after the case)</span></th><th style="width:7%">IP</th><th>Notes (deductions either player is happy to share)</th></tr>
+  <tr><td class="day">1</td><td></td><td>—</td><td></td><td>10</td><td></td></tr>
+  <tr><td class="day">2</td><td></td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="day">3</td><td></td><td><span class="due d">DISTRICT</span></td><td></td><td></td><td></td></tr>
+  <tr><td class="day">4</td><td></td><td><span class="due t">TRANSIT</span> or "no movement"</td><td></td><td></td><td></td></tr>
+  <tr><td class="day">5</td><td></td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="day">6</td><td></td><td><span class="due d">DISTRICT</span></td><td></td><td></td><td></td></tr>
+  <tr><td class="day">7</td><td></td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="day">8</td><td></td><td><span class="due v">VERDICT</span></td><td></td><td></td><td></td></tr>
+</table>
+
+<div class="box">
+  <b>Verdict:</b> <span style="display:inline-block; border-bottom:1px solid #111; min-width:150px"></span> &nbsp; <b>Escaped / captured on day:</b> <span style="display:inline-block; border-bottom:1px solid #111; min-width:40px"></span> &nbsp; <b>Verdicts:</b> ESCAPE (F wins) · CAPTURE (I) · EXPIRY (I) · online-only: FORFEIT_F/I, VOID
+  <p style="margin:5px 0 0"><b>Announcement vocabulary</b> (the Fugitive's only public words): "district [Harbor / Old Town / Market / Rail Yard]" · "[Foot / Tram / Metro]" or "no movement" (Day 4) · "Drop 1 completed at [site], day [d]" · "Stranded" (§9.13) · "captured" — and the truthful yes/no answer to a stakeout check. Everything else stays on the hidden sheets until case end.</p>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/4-case-record.html · At case end (§8.6) both hidden sheets come out; transcribe this sheet plus the route ledger into the session transcript verbatim. District names: D1 Harbor (NW) · D2 Old Town (NE) · D3 Market (SW) · D4 Rail Yard (SE).</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Facilitator Run Sheet (FACILITATOR ONLY)</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 9.6px; line-height: 1.36; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .band { border-bottom: 3px solid #b00; padding-bottom: 5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  h1 { font-size: 16px; margin: 0; letter-spacing: .3px; }
+  .tag { font-size: 8.5px; border: 1.6px solid #b00; color: #b00; padding: 1px 7px; border-radius: 8px; font-weight: bold; letter-spacing: .6px; }
+  .sub { font-size: 9px; color: #444; margin-top: 2px; }
+  h2 { font-size: 10.8px; margin: 10px 0 4px; text-transform: uppercase; letter-spacing: .7px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .box { border: 1.2px solid #111; padding: 6px 9px; margin: 6px 0; }
+  .box.warn { border-color: #b00; border-left: 6px solid #b00; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 3px 5px; vertical-align: top; }
+  th { background: #eee; font-size: 8.6px; text-transform: uppercase; letter-spacing: .3px; text-align: left; }
+  .cb { display: inline-block; width: 10px; height: 10px; border: 1.3px solid #111; vertical-align: -1px; margin-right: 4px; }
+  ol.c { margin: 3px 0; padding-left: 17px; }
+  ol.c li { margin-bottom: 2px; }
+  .fill { display: inline-block; border-bottom: 1px solid #111; min-width: 56px; }
+  .foot { margin-top: 8px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+  .small { font-size: 8.8px; color: #333; }
+  td.tl { width: 88px; font-weight: bold; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%). Keep this OFF the player table — it carries the quarantined par data. One copy per session.</div>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page">
+<div class="band">
+  <h1>FACILITATOR RUN SHEET — page 1 · session in progress</h1>
+  <span class="tag">FACILITATOR ONLY — OFF THE TABLE</span>
+</div>
+<div class="sub">Session <span class="fill" style="min-width:36px"></span> (S1 / S2 / S3) · Date <span class="fill" style="min-width:86px"></span> · Partner <span class="fill" style="min-width:86px"></span> · Source: m1/playtest-protocol.md §1–3 · ruleset 1.0.0-alpha.1</div>
+
+<h2>Print-pack check (before the partner arrives)</h2>
+<table>
+  <tr><th style="width:34%">File (m1/kit/print/)</th><th>Print</th><th style="width:20%">Who gets it</th><th style="width:9%">✓</th></tr>
+  <tr><td>0-read-first.html</td><td>1 copy, A4 portrait</td><td>table, both read first</td><td><span class="cb"></span></td></tr>
+  <tr><td>1-day-mat.html</td><td>1 copy, A4 <b>landscape</b></td><td>table center</td><td><span class="cb"></span></td></tr>
+  <tr><td>2-investigator-sheet.html</td><td>1 per leg, A4 portrait <b>duplex</b></td><td>Investigator (PRIVATE)</td><td><span class="cb"></span></td></tr>
+  <tr><td>3-fugitive-sheet.html</td><td>1 per leg, A4 portrait <b>duplex</b></td><td>Fugitive (HIDDEN)</td><td><span class="cb"></span></td></tr>
+  <tr><td>4-case-record.html</td><td>1 per leg, A4 portrait</td><td>table (public)</td><td><span class="cb"></span></td></tr>
+  <tr><td>5-disputes-survey.html</td><td>1 per session, A4 portrait</td><td>table (public)</td><td><span class="cb"></span></td></tr>
+  <tr><td>map_print.html (kit v1)</td><td>1 copy, A4 <b>landscape</b>, background graphics ON</td><td>table center</td><td><span class="cb"></span></td></tr>
+</table>
+<p class="small" style="margin:3px 0 0">Pencils ×2, phone timer, this sheet. The v1 markdown cards (reference-and-logsheets.md) are the canonical text source — do not hand out at the table.</p>
+
+<h2>Session timeline (protocol §1–2: ~2.5–3 h)</h2>
+<table>
+  <tr><td class="tl"><span class="cb"></span> 0:00 · 10'</td><td><b>Setup.</b> Both read 0-read-first aloud-ish (or silently, 5 min). Read the case config aloud; players copy it. Hand out sheets. Confirm the leg's purpose (below) without revealing it — the partner only knows their card.</td></tr>
+  <tr><td class="tl"><span class="cb"></span> 0:10</td><td><b>Leg 1</b> (~60–75'). Run the 7-step day off the Day Mat. You time the clocks only when asked — the <i>opponent</i> times each action (§2.2).</td></tr>
+  <tr><td class="tl"><span class="cb"></span> ~1:25</td><td><b>Swap + survey.</b> Roles swap for Leg 2. Fill the mini-survey for Leg 1 <i>now</i> (memories decay).</td></tr>
+  <tr><td class="tl"><span class="cb"></span> ~1:35</td><td><b>Leg 2</b> (~60–75'). Fresh sheets, same procedure.</td></tr>
+  <tr><td class="tl"><span class="cb"></span> ~2:50</td><td><b>Survey Leg 2</b> + case-end reveal (§8.6): both hidden sheets on the table — let the partner see the whole story, it's the best part.</td></tr>
+  <tr><td class="tl"><span class="cb"></span> T + __:__</td><td><b>Transcription starts</b> (≤30 min — write the start time, that's the fabrication-guard window). Partner may stay and chat — anything they say about the case is welcome in the transcript notes.</td></tr>
+  <tr><td class="tl"><span class="cb"></span> T + 30</td><td><b>Triage</b> (30 min, page 2). Partner free to go.</td></tr>
+</table>
+
+<h2>Quarantined par data — never read aloud (protocol §3)</h2>
+<div class="box warn">
+  <b>P1</b> min completion 6 days (cheapest drop-2 route 5 SP) · <b>P2</b> 6 days (6 SP) · <b>P3</b> 6 days (7 SP) · <b>canonical</b> 7 days (6 SP). If a leg "solves" faster than par: a <b>finding</b>, not a cheat — record it in the session close. These constants are the M2 L1 regression fixtures (09-testing §1).
+</div>
+
+<h2>This session's engineered state (run in the leg where Player A is Fugitive)</h2>
+<table>
+  <tr><th style="width:12%">Session</th><th>Procedure (details in the s{n} template — that file governs)</th><th style="width:14%">Done</th></tr>
+  <tr><td><b>S1</b> (P1, Partner B)</td><td><b>AUD-004 drop-check triple:</b> ① arrival-collect — move onto the pending drop site (P1: D2-06 adjacent to safehouse D2-07), event fires <i>same day</i>; ② no-double-fire — Hold on the just-collected site: no second event, −1 SP, Day-4 "no movement" if applicable, <i>no stakeout notification</i>; ③ in-order — stand on drop 2 (D1-10) while drop 1 pending: nothing fires. (Revised per M2-001 — arrival always collects; the Hold variant is unreachable as originally written.)</td><td><span class="cb"></span></td></tr>
+  <tr><td><b>S2</b> (P2, Partner B)</td><td><b>§9.13 stranding:</b> written SP-burn plan to reach exactly 0 SP <i>before</i> Day 8 (Metro detours early, mirror W3 but tighter). Verify at the stranded day: free forced Hold, holds_used unchanged, "Stranded" in the log, no penalty, log is public. Note the actual day reached.</td><td><span class="cb"></span></td></tr>
+  <tr><td><b>S3</b> (P3, Partner C)</td><td><b>Free play — never engineer.</b> Watch naturally for: Hold-collect (AUD-004) · stranding (§9.13) · stakeout on current node (§9.6) · Day-4 Hold reveal (§9.7) · clock-expiry auto-action (§7). Record day + circumstances if any occur.</td><td><span class="cb"></span></td></tr>
+</table>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/6-facilitator-run-sheet.html (duplex) · The session templates in m1/sessions/ govern every data cell — this sheet is the table-side mirror, not a replacement.</div>
+</div>
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page">
+<div class="band">
+  <h1>FACILITATOR RUN SHEET — page 2 · transcription &amp; triage</h1>
+  <span class="tag">FACILITATOR ONLY — OFF THE TABLE</span>
+</div>
+<div class="sub">Start the ≤30-min transcription window at <b>T + <span class="fill" style="min-width:52px"></span></b> (write the clock time when the last leg ends — that timestamp is the fabrication guard's receipt).</div>
+
+<h2>Transcription checklist (≤30 min — verbatim beats tidy)</h2>
+<ol class="c">
+  <li><span class="cb"></span> Copy the session template → <b>s{n}-transcript.md</b> (never fill data cells before the session — empty cells are honest).</li>
+  <li><span class="cb"></span> Both legs' <b>public record</b> (Sheet C) — day rows, reveal/drop wording, verdicts, exactly as written.</li>
+  <li><span class="cb"></span> Both legs' <b>route ledgers</b> (hidden Sheet D, revealed at case end) — from/to, class, SP math, events, notes. Messy quotes stay messy.</li>
+  <li><span class="cb"></span> Every <b>dispute row</b> → word-for-word into the transcript, then each row again into <b>triage-log.md</b>.</li>
+  <li><span class="cb"></span> Both players' <b>mini-surveys</b> per leg — numbers + Q5 free text verbatim.</li>
+  <li><span class="cb"></span> <b>Standing notes</b> ticks (stakeout question / 2-minute clock) + any feelings line.</li>
+  <li><span class="cb"></span> <b>Engineered-state verification</b> for this session (page 1): hit / missed + the evidence quote. Missed = session counts but purpose unmet → re-run.</li>
+  <li><span class="cb"></span> Clock-expiry auto-actions logged in Notes — every one (async preview, §7).</li>
+</ol>
+
+<h2>Triage (30 min — immediately after transcription)</h2>
+<table>
+  <tr><th style="width:9%">Class</th><th>Meaning</th><th>Action tonight</th><th style="width:26%">Ruleset effect</th></tr>
+  <tr><td><b>(a)</b></td><td>Rules-text bug — the text is wrong</td><td>Patch 03-rules.md</td><td>bump <b>ruleset_version</b> patch level + audit §6 registry + engine same-commit fix if behavior changes (ADR-002)</td></tr>
+  <tr><td><b>(b)</b></td><td>Ambiguity — text right, easy to misread</td><td>Clarify wording only</td><td>wording-only, no behavior change</td></tr>
+  <tr><td><b>(c)</b></td><td>Design smell — works as written, feels wrong</td><td><b>No change.</b> Log verbatim, tag <b>feeling-not-data</b></td><td>M4 question list only</td></tr>
+</table>
+<p class="small" style="margin:3px 0 0">Never retune parameters during M1. No "the Investigator feels strong" — that line goes to the M4 list verbatim. Every row lands in triage-log.md with its class tonight; zero untriaged rows is a freeze gate (freeze-checklist §0).</p>
+
+<h2>Session close (fill in the transcript's close section)</h2>
+<table>
+  <tr><td style="width:44%"><span class="cb"></span> Tally (Player A): cases as Investigator <span class="fill" style="min-width:34px"></span> · as Fugitive <span class="fill" style="min-width:34px"></span></td><td><span class="cb"></span> Verdicts: Leg 1 <span class="fill" style="min-width:70px"></span> · Leg 2 <span class="fill" style="min-width:70px"></span></td></tr>
+  <tr><td><span class="cb"></span> Engineered state exercised: Leg <span class="fill" style="min-width:30px"></span> / missed (re-run)</td><td><span class="cb"></span> Faster-than-par finding (if any): <span class="fill" style="min-width:120px"></span></td></tr>
+  <tr><td><span class="cb"></span> All Sheet-E rows in triage-log.md, classed</td><td><span class="cb"></span> Parking-lot entries (who + date, none enter the ruleset): <span class="fill" style="min-width:110px"></span></td></tr>
+</table>
+
+<div class="box" style="margin-top:8px">
+  <b>Acceptance line to keep in sight (10-roadmap):</b> Player A ends M1 with <b>≥3 cases as Investigator AND ≥3 as Fugitive</b>, against 2 different partners (B and C). Partner shortfalls don't block the line — but record the tally honestly. After S3 + triage with zero open disputes: run m1/freeze-checklist.md.
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/6-facilitator-run-sheet.html (duplex) · Fabrication guard (m1/sessions/README.md): no session result may be written, inferred, or reconstructed — a transcript exists only because people sat at this table.</div>
+</div>
+</body>
+</html>

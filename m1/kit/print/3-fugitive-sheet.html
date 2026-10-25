@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Fugitive Sheet (HIDDEN · duplex)</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 10px; line-height: 1.36; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .band { border-bottom: 3px solid #b0722c; padding-bottom: 5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  h1 { font-size: 17px; margin: 0; color: #b0722c; letter-spacing: .4px; }
+  .tag { font-size: 8.5px; border: 1.4px solid #b0722c; color: #b0722c; padding: 1px 6px; border-radius: 8px; font-weight: bold; letter-spacing: .5px; }
+  .sub { font-size: 9px; color: #444; margin-top: 2px; }
+  h2 { font-size: 11px; margin: 10px 0 4px; text-transform: uppercase; letter-spacing: .7px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 3px 5px; vertical-align: top; }
+  th { background: #f7f0e8; font-size: 9px; text-transform: uppercase; letter-spacing: .4px; text-align: left; }
+  .box { border: 1.2px solid #111; padding: 6px 8px; margin: 6px 0; }
+  .box h3 { margin: 0 0 3px; font-size: 10.5px; }
+  ol.compact { margin: 3px 0; padding-left: 18px; }
+  ol.compact li { margin-bottom: 2px; }
+  .foot { margin-top: 8px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+  .route td { height: 21px; }
+  .route .daycol { width: 26px; text-align: center; font-weight: bold; background: #f7f0e8; }
+  .route .spcol { width: 44px; text-align: center; }
+  .prompt { color: #333; }
+  .bank { display: flex; gap: 6px; margin-top: 6px; }
+  .bankbox { flex: 1; border: 1.3px solid #111; text-align: center; padding: 5px 3px; }
+  .bankbox .v { font-size: 16px; font-weight: bold; color: #b0722c; }
+  .bankbox .k { font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #333; }
+  .cb { display: inline-block; width: 11px; height: 11px; border: 1.4px solid #111; vertical-align: -1px; margin-right: 4px; }
+  .fill { display: inline-block; border-bottom: 1px solid #111; min-width: 64px; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%, duplex "flip on long edge"). Page 1 = your card, page 2 = your secret route ledger. One sheet per Fugitive per case leg — hand it over only when the case ends (§8.6).</div>
+
+<!-- ==================== PAGE 1 — ROLE CARD ==================== -->
+<div class="page">
+<div class="band">
+  <h1>FUGITIVE SHEET — page 1 · your card</h1>
+  <span class="tag">HIDDEN — Investigator sees nothing</span>
+</div>
+<div class="sub">Case id <span class="fill"></span> · Safehouse (public): <span class="fill" style="min-width:80px"></span> · Gate: <span class="fill" style="min-width:80px"></span> · Drop 1: <span class="fill" style="min-width:70px"></span> → Drop 2: <span class="fill" style="min-width:70px"></span></div>
+
+<div class="bank">
+  <div class="bankbox"><div class="v">12</div><div class="k">SP start</div></div>
+  <div class="bankbox"><div class="v">1·2·3</div><div class="k">Foot · Tram · Metro SP</div></div>
+  <div class="bankbox"><div class="v">≤2</div><div class="k">Holds per case · 1 SP</div></div>
+  <div class="bankbox"><div class="v">8</div><div class="k">days — but SP is your real clock</div></div>
+</div>
+
+<h2>Your day: exactly one action, in secret (step 1)</h2>
+<table>
+  <tr><th style="width:20%">Action</th><th style="width:17%">Cost</th><th>Rules</th></tr>
+  <tr><td><b>Move</b> along one edge</td><td>1 / 2 / 3 SP</td><td>Any class, any direction — but <b>one edge per day</b>, no pass-through, and only if you can afford it. Foot keeps you in-district; Trams cross at the ring spokes; Metro is the telegraphed hub spine.</td></tr>
+  <tr><td><b>Hold</b> (stay)</td><td>1 SP</td><td>Max <b>2 per case</b>. A Hold <b>collects the drop</b> if you're standing on the pending site. A Hold on Day 4 publicly reports "no movement" — that's the price.</td></tr>
+  <tr><td><b>Stranded</b> (0 SP)</td><td>0</td><td>Nothing affordable → the day resolves as a <b>free forced Hold</b> (§9.13): Holds-used unchanged, log says "Stranded", no penalty. Say "Stranded" and move on.</td></tr>
+</table>
+
+<h2>What they know about you — the exhaustive list (§1.3)</h2>
+<div class="box">
+  <ol class="compact" style="margin:0">
+    <li>Your <b>start</b> — the safehouse is public, always.</li>
+    <li>Your <b>district</b> at the end of Days 3 &amp; 6.</li>
+    <li>Your <b>Day-4 move class</b> — or "no movement" if you Held.</li>
+    <li>Every <b>drop completion</b>: site + day, announced by you.</li>
+    <li><b>Nothing else.</b> Not your route, not your SP, not your Holds. Probes and stakeouts are invisible during the case.</li>
+  </ol>
+  <p style="margin:4px 0 0" class="prompt">At the paper table a stakeout question ("did your day end on X?") also leaks one watched node — a known paper artifact, logged on the dispute sheet. Don't build strategy on it; the online game is silent.</p>
+</div>
+
+<h2>Drop discipline — the leash</h2>
+<div class="box">
+  <span class="cb"></span> Drop 1 collected — day <span class="fill" style="min-width:34px"></span> &nbsp;→&nbsp; <span class="cb"></span> Drop 2 collected — day <span class="fill" style="min-width:34px"></span> <b>(only after drop 1 — standing on drop 2 early does nothing)</b> &nbsp;→&nbsp; <span class="cb"></span> Gate — day <span class="fill" style="min-width:34px"></span>
+  <p style="margin:5px 0 0"><b>ESCAPE = end any day ON the gate with both drops in order.</b> Ending on the gate with drops incomplete is legal and announces nothing (§9.5) — but the drop events convert your itinerary into public fact: every detour you buy with spare SP is ambiguity you paid for, and every day you linger is a day the calendar works for them.</p>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/3-fugitive-sheet.html (duplex) · rules citations: 03-rules.md §1.3, §2, §3.1–3.3, §9.5, §9.7, §9.13 · Flip this sheet: page 2 is your secret route ledger — the only record that matters, transcribed after the case.</div>
+</div>
+
+<!-- ==================== PAGE 2 — ROUTE LEDGER ==================== -->
+<div class="page">
+<div class="band">
+  <h1>FUGITIVE SHEET — page 2 · route ledger</h1>
+  <span class="tag">HIDDEN — Investigator sees nothing</span>
+</div>
+<div class="sub">Case id <span class="fill"></span> · SP 12 start · Holds <span class="cb"></span><span class="cb"></span> (max 2) · Drops <span class="cb"></span> 1 <span class="cb"></span> 2 · Verdict at the end: <span class="fill" style="min-width:100px"></span></div>
+
+<h2>One row per day — write it BEFORE anything public happens</h2>
+<table class="route">
+  <tr><th class="daycol">Day</th><th style="width:26%">From → To</th><th style="width:14%">Class (circle)</th><th style="width:10%">SP cost</th><th class="spcol">SP left</th><th style="width:22%">Public event (announce exactly this)</th><th>Notes</th></tr>
+  <tr><td class="daycol">1</td><td class="prompt"><span style="color:#777">safehouse</span> →</td><td class="prompt">F · T · M · HOLD</td><td></td><td><b>11</b></td><td class="prompt">drop? reveal? — announce at steps 3–5</td><td></td></tr>
+  <tr><td class="daycol">2</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">3</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td class="prompt">announce your district</td><td></td></tr>
+  <tr><td class="daycol">4</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td class="prompt">announce class — or "no movement"</td><td></td></tr>
+  <tr><td class="daycol">5</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">6</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td class="prompt">announce your district</td><td></td></tr>
+  <tr><td class="daycol">7</td><td></td><td>F · T · M · HOLD</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">8</td><td></td><td>F · T · M · HOLD / STRANDED</td><td></td><td></td><td class="prompt">no escape here = EXPIRY (they win)</td><td></td></tr>
+</table>
+
+<div class="box" style="margin-top:8px">
+  <h3>Paranoia notes (legality check before you commit)</h3>
+  <ul style="margin:0; padding-left:14px">
+    <li><b>Afford it?</b> Cost ≤ SP left. A 3rd Hold is not legal — plan the SP ledger, not just the route.</li>
+    <li><b>Adjacent?</b> One edge only — check the map line between From and To. No pass-through, no shortcuts.</li>
+    <li><b>Worth announcing?</b> Drop events, D3/D6 district, D4 class: your only public words. Everything else stays on this sheet.</li>
+    <li><b>Arm yourself:</b> "Stranded" at 0 SP is a rule, not a failure — say it and take the free Hold (§9.13).</li>
+    <li>Disputes, confusions, "feels wrong": one line in Notes — verbatim quotes survive transcription best.</li>
+  </ul>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/3-fugitive-sheet.html (duplex) · This ledger is the case's hidden truth: at case end (§8.6) it goes on the table and gets transcribed into the session record — write legibly, it becomes evidence.</div>
+</div>
+</body>
+</html>

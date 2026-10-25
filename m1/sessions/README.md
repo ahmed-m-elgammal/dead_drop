@@ -25,8 +25,11 @@ cell is honest, an invented one poisons the freeze evidence and the M2 fixtures.
 
 ## Workflow per session (mirrors protocol §2)
 
-1. **Before:** print the kit (map, cards, sheets); confirm the facilitator-only par data stays
-   quarantined; copy the template to `s{n}-transcript.md`.
+1. **Before:** print the kit — the **print pack v2** (`../kit/print/`: read-first, day mat,
+   duplex role sheets, case record, disputes/survey, facilitator run sheet) + `../kit/map_print.html`
+   (v1 markdown cards remain the canonical text source); confirm the facilitator-only par data stays
+   quarantined (the run sheet carries it — keep it off the table); copy the template to
+   `s{n}-transcript.md`.
 2. **At the table:** run the two case legs (roles swapped); record events on paper Sheets C/D/E/F —
    *not* on a laptop.
 3. **Immediately after (transcription, ≤30 min):** transcribe both legs into the transcript file,

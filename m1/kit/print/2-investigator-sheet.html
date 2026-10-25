@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Investigator Sheet (PRIVATE · duplex)</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 10px; line-height: 1.36; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .band { border-bottom: 3px solid #274e8f; padding-bottom: 5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: baseline; }
+  h1 { font-size: 17px; margin: 0; color: #274e8f; letter-spacing: .4px; }
+  .tag { font-size: 8.5px; border: 1.4px solid #274e8f; color: #274e8f; padding: 1px 6px; border-radius: 8px; font-weight: bold; letter-spacing: .5px; }
+  .sub { font-size: 9px; color: #444; margin-top: 2px; }
+  h2 { font-size: 11px; margin: 10px 0 4px; text-transform: uppercase; letter-spacing: .7px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 3px 5px; vertical-align: top; }
+  th { background: #eceff5; font-size: 9px; text-transform: uppercase; letter-spacing: .4px; text-align: left; }
+  .box { border: 1.2px solid #111; padding: 6px 8px; margin: 6px 0; }
+  .box h3 { margin: 0 0 3px; font-size: 10.5px; }
+  .speak { font-style: italic; background: #f0f2f7; padding: 4px 6px; border-left: 3px solid #274e8f; margin-top: 4px; }
+  ol.compact { margin: 3px 0; padding-left: 18px; }
+  ol.compact li { margin-bottom: 2px; }
+  .foot { margin-top: 8px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+  .tracker th, .tracker td { font-size: 9px; padding: 3px 4px; }
+  .tracker .daycol { width: 30px; text-align: center; font-weight: bold; background: #eceff5; }
+  .prompt { color: #333; }
+  .ledger td { height: 17px; }
+  .bank { display: flex; gap: 6px; margin-top: 6px; }
+  .bankbox { flex: 1; border: 1.3px solid #111; text-align: center; padding: 5px 3px; }
+  .bankbox .v { font-size: 16px; font-weight: bold; color: #274e8f; }
+  .bankbox .k { font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #333; }
+  .fill { display: inline-block; border-bottom: 1px solid #111; min-width: 60px; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%, duplex "flip on long edge"). Page 1 = your card, page 2 = your working tracker. One sheet per Investigator per case leg.</div>
+
+<!-- ==================== PAGE 1 — ROLE CARD ==================== -->
+<div class="page">
+<div class="band">
+  <h1>INVESTIGATOR SHEET — page 1 · your card</h1>
+  <span class="tag">PRIVATE — never show during the case</span>
+</div>
+<div class="sub">Case id <span class="fill"></span> · ruleset 1.0.0-alpha.1 · Full logs reveal at case end (§8.6) — until then this sheet is yours alone.</div>
+
+<div class="bank">
+  <div class="bankbox"><div class="v">10</div><div class="k">IP start · carries over</div></div>
+  <div class="bankbox"><div class="v">≤2/day</div><div class="k">probes · 1 IP</div></div>
+  <div class="bankbox"><div class="v">≤1/day</div><div class="k">stakeout · 3 IP · not Day 8</div></div>
+  <div class="bankbox"><div class="v">8</div><div class="k">days until EXPIRY</div></div>
+</div>
+
+<h2>You act only at step 6</h2>
+<table>
+  <tr><th style="width:19%">Action</th><th style="width:10%">Cost</th><th style="width:13%">Cap</th><th>Effect</th></tr>
+  <tr><td><b>Probe node X</b></td><td>1 IP</td><td>2 / day</td><td>"Is your end position <b>today</b> X?" → HIT / MISS. <b>Information only, never a capture.</b> A MISS says nothing about any other day.</td></tr>
+  <tr><td><b>Arm stakeout on Y</b></td><td>3 IP</td><td>1 / day</td><td>At <b>tomorrow's step 2</b>: Fugitive ends that day on Y → <b>CAPTURE</b>. Else: consumed silently. Arming on Day 8 is rejected (§9.3); armed on Day 7 it still resolves on Day 8. Legal on the node they might be standing on (§9.6).</td></tr>
+  <tr><td><b>Wait</b></td><td>0</td><td>—</td><td>Save IP. Day 8 arrives on its own — EXPIRY is your fallback win.</td></tr>
+</table>
+<div class="speak">Stakeout check script (next day, step 2): "Stakeout check — did your day end on <b>[Y]</b>?" — Fugitive answers truthfully. Yes → CAPTURE. No → nothing happens; say nothing more. (The question itself is a paper-table artifact — logged once on the dispute sheet.)</div>
+
+<h2>Reading your evidence (§4)</h2>
+<table>
+  <tr><th style="width:24%">Channel</th><th>How to use it</th></tr>
+  <tr><td><b>District reveal</b> — Days 3 &amp; 6</td><td>Names the district of their end position. Unpruned, that's 48 → 12 candidates: <b>exactly 2 bits</b>, the biggest lever in the game.</td></tr>
+  <tr><td><b>Transit reveal</b> — Day 4</td><td>Class of that day's move (Foot/Tram/Metro), or <b>"no movement"</b> = they Held (≤1.58 bits). "No movement" collapses today's candidates to yesterday's set.</td></tr>
+  <tr><td><b>Drop events</b></td><td>Public: site + day. Drops are ordered — the event converts their mandatory itinerary into hard fact. The gate race after drop 2 is your endgame.</td></tr>
+  <tr><td><b>Probe HIT</b></td><td>A <b>historical pin</b> — they were there <i>today</i>. Probe answers yesterday's question; stakeout prices tomorrow's. Think in predictions.</td></tr>
+  <tr><td><b>Probe MISS</b></td><td>Crosses one node off <b>today only</b>. Blind probing cannot win: expected 24 probes to first hit at 2/day &gt; 8 days. Reveals + route reasoning are your real map.</td></tr>
+</table>
+
+<h2>Endgame arithmetic</h2>
+<div class="box">
+  <b>1 stakeout = 3 probes of budget.</b> With 3 IP you either learn one yes/no about <i>tomorrow</i> with capture upside — or up to three pins about <i>today</i> with none. Time pressure reverses information-first only when the calendar, not the belief, is your enemy: a stakeout armed on Day 7 for Day 8 on the gate can steal EXPIRY into CAPTURE. Your IP is exhausted? Waiting wins only if Day 8 arrives first.
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/2-investigator-sheet.html (duplex) · rules citations: 03-rules.md §2, §4, §5.1–5.3, §9.3, §9.6 · Flip this sheet: page 2 is your working tracker for the case.</div>
+</div>
+
+<!-- ==================== PAGE 2 — BELIEF TRACKER ==================== -->
+<div class="page">
+<div class="band">
+  <h1>INVESTIGATOR SHEET — page 2 · belief tracker</h1>
+  <span class="tag">PRIVATE — never show during the case</span>
+</div>
+<div class="sub">Case id <span class="fill"></span> · Safehouse (their start, public): <span class="fill" style="min-width:80px"></span> · Gate: <span class="fill" style="min-width:80px"></span> · Drop 1: <span class="fill" style="min-width:70px"></span> → Drop 2: <span class="fill" style="min-width:70px"></span></div>
+
+<h2>1 · Action ledger (write here, show no one)</h2>
+<table class="ledger">
+  <tr><th style="width:7%">Day</th><th style="width:23%">Probe target(s)</th><th style="width:18%">Result (HIT / MISS)</th><th style="width:23%">Stakeout armed (resolves tomorrow, step 2)</th><th>IP left</th></tr>
+  <tr><td style="text-align:center">1</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">2</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">3</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">4</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">5</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">6</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">7</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td style="text-align:center">8</td><td></td><td></td><td style="color:#888">— not allowed on Day 8 (§9.3)</td><td></td></tr>
+</table>
+
+<h2>2 · Candidate tracker (where can they be, per day?)</h2>
+<p class="prompt" style="margin:2px 0 4px">Write node IDs. <b>Rule of the ledger:</b> today's set = {each yesterday candidate} ∪ {every neighbor of one} (a Hold = same node again). Then apply the public events of that day. A probe MISS crosses one node off <b>today's row only</b>.</p>
+<table class="tracker">
+  <tr><th class="daycol">Day</th><th style="width:8%">Due?</th><th style="width:44%">Candidates (node IDs — it's fine to write ranges like "D1-01..04, D1-07")</th><th style="width:7%">Count</th><th>Notes / deductions</th></tr>
+  <tr><td class="daycol">1</td><td>—</td><td class="prompt">start = safehouse; after their action: the safehouse itself (Hold) or any node adjacent to it</td><td></td><td></td></tr>
+  <tr><td class="daycol">2</td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">3</td><td><b>D3</b></td><td class="prompt">district reveal lands here: keep only candidates in district <span class="fill" style="min-width:46px"></span> (48→12 if unpruned — 2 bits)</td><td></td><td></td></tr>
+  <tr><td class="daycol">4</td><td><b>D4</b></td><td class="prompt">transit reveal: "no movement" → today = yesterday's set exactly; a class → keep only arrivals by that class</td><td></td><td></td></tr>
+  <tr><td class="daycol">5</td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">6</td><td><b>D6</b></td><td class="prompt">district reveal: keep only candidates in district <span class="fill" style="min-width:46px"></span></td><td></td><td></td></tr>
+  <tr><td class="daycol">7</td><td>—</td><td></td><td></td><td></td></tr>
+  <tr><td class="daycol">8</td><td><b>END</b></td><td class="prompt">their last chance: both drops + on gate = they already won at step 5; else EXPIRY is yours</td><td></td><td></td></tr>
+</table>
+
+<div class="box" style="margin-top:6px">
+  <h3>Discipline notes</h3>
+  <ul style="margin:0; padding-left:14px">
+    <li>Probe HIT → today's row is exactly <b>{that node}</b>. Predict <i>from</i> it; don't celebrate it — they're already gone by tomorrow.</li>
+    <li>Drop 1 event fires → they were standing on drop 1 that day: pin the site, count neighbors, price the gate race.</li>
+    <li>Their SP is hidden. Stamina-based pruning is legal but optional — spend effort where it matters (usually the reveal days and the post-drop-2 chase).</li>
+    <li>Disputes, confusions, "feels wrong": one line in the tracker notes — verbatim quotes survive transcription best.</li>
+  </ul>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/2-investigator-sheet.html (duplex) · The tracker is bookkeeping, not belief math — everything you wrote is derivable from public channels (§4). At case end, transcribe this sheet with the route sheet (§8.6).</div>
+</div>
+</body>
+</html>

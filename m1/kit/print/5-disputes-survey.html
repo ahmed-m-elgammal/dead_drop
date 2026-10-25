@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Disputes & Mini-Survey (per session)</title>
+<style>
+  @page { size: A4 portrait; margin: 11mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 10px; line-height: 1.38; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .band { border-bottom: 3px solid #111; padding-bottom: 5px; margin-bottom: 8px; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .4px; }
+  .sub { font-size: 9px; color: #444; margin-top: 2px; }
+  h2 { font-size: 11px; margin: 11px 0 4px; text-transform: uppercase; letter-spacing: .7px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .fill { display: inline-block; border-bottom: 1px solid #111; min-width: 70px; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 3px 5px; vertical-align: top; }
+  th { background: #eee; font-size: 8.8px; text-transform: uppercase; letter-spacing: .3px; text-align: left; }
+  .disp td { height: 30px; }
+  .disp .id { text-align: center; font-weight: bold; width: 62px; }
+  .cls { font-size: 8.5px; color: #333; }
+  .box { border: 1.2px solid #111; padding: 6px 9px; margin: 8px 0; }
+  .cols { display: flex; gap: 10px; }
+  .col { flex: 1; }
+  .survey td { height: 22px; text-align: center; }
+  .survey td:first-child { text-align: left; }
+  .foot { margin-top: 9px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+  .note { color: #333; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%). One per session (both legs share it). The dispute rows feed the triage log verbatim — write quotes, not summaries.</div>
+
+<div class="band">
+  <h1>DISPUTES &amp; MINI-SURVEY</h1>
+  <div class="sub">Session <span class="fill" style="min-width:36px"></span> · Date <span class="fill" style="min-width:90px"></span> · Facilitator <span class="fill" style="min-width:90px"></span> · Players: A <span class="fill" style="min-width:90px"></span> + <span class="fill" style="min-width:90px"></span></div>
+</div>
+
+<h2>1 · Dispute log — every rules argument gets a row, whoever wins it</h2>
+<p class="cls" style="margin:2px 0 4px">Play the provisional ruling and move on — <b>never argue past 3 minutes</b>. Row id = S<span style="border:1px solid #777; padding:0 4px">n</span>-01… (matches the triage log). Classes: <b>(a)</b> rules-text bug → patch after session · <b>(b)</b> ambiguity → wording clarification · <b>(c)</b> rule works as written, feels wrong → no change, M4 list. Classifying is the <b>facilitator's post-session job</b> — at the table, only write the row.</p>
+<table class="disp">
+  <tr><th style="width:62px">Row id</th><th style="width:60px">Day / step</th><th style="width:30%">What happened</th><th style="width:20%">Rules point (cite § if known)</th><th style="width:22%">Provisional ruling we played</th><th>Needs patch? (Y/N + one line)</th></tr>
+  <tr><td class="id">S__-01</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="id">S__-02</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="id">S__-03</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="id">S__-04</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="id">S__-05</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td class="id">S__-06</td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+
+<div class="box">
+  <h2 style="margin-top:0">2 · Standing paper-table notes — tick the ones that came up (pre-seeded rows)</h2>
+  <p style="margin:2px 0 6px" class="note">These are known artifacts of playing an async game on paper. Tick and, if either player has a feeling about it, one line below. They log once per session and feed the same M4 list.</p>
+  <p style="margin:2px 0"><span style="display:inline-block; width:11px; height:11px; border:1.4px solid #111; vertical-align:-1px; margin-right:5px"></span><b>The stakeout question</b> — a miss tells the Fugitive one watched node ("did your day end on X?"). Irreducible at a 2-player table without a referee; the online game is fully silent (§5.2).</p>
+  <p style="margin:2px 0"><span style="display:inline-block; width:11px; height:11px; border:1.4px solid #111; vertical-align:-1px; margin-right:5px"></span><b>The 2-minute clock</b> — a live stand-in for 24-h async deadlines (§7); opponent-timed, expiry = auto-Hold / auto-wait.</p>
+  <p style="margin:2px 0" class="note">Feelings: <span style="display:inline-block; border-bottom:1px solid #111; width:100%"></span></p>
+</div>
+
+<h2>3 · Mini-survey — both players, after each case leg (1–5 circles)</h2>
+<div class="cols">
+  <div class="col">
+    <table class="survey">
+      <tr><th colspan="7" style="text-align:left">Player A · role this leg: F / I (circle)</th></tr>
+      <tr><td style="width:56%">Q1 · I always knew what to do next</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q2 · The information I had felt fair</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q3 · At least one decision was genuinely hard</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q4 · I'd play again / play the other role</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td colspan="6" style="height:40px; text-align:left">Q5 · One thing that confused me:</td><td style="border:none"></td></tr>
+    </table>
+  </div>
+  <div class="col">
+    <table class="survey">
+      <tr><th colspan="7" style="text-align:left">Player B · role this leg: F / I (circle)</th></tr>
+      <tr><td style="width:56%">Q1 · I always knew what to do next</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q2 · The information I had felt fair</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q3 · At least one decision was genuinely hard</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td>Q4 · I'd play again / play the other role</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td style="border:none"></td></tr>
+      <tr><td colspan="6" style="height:40px; text-align:left">Q5 · One thing that confused me:</td><td style="border:none"></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 · m1/kit/print/5-disputes-survey.html · Same 1–5 scales as the M4 protocol (04-balance-sim §7) so M1 notes stay comparable. Feelings are logged, never tuned on, during M1. Dispute row ids carry into m1/sessions/triage-log.md verbatim.</div>
+</body>
+</html>

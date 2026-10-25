@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Day Mat (table center)</title>
+<style>
+  @page { size: A4 landscape; margin: 8mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 9.5px; line-height: 1.32; }
+  .hint { font-size: 11px; color: #555; padding: 5px 2px; }
+  @media print { .hint { display: none; } }
+  .band { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px solid #111; padding-bottom: 4px; margin-bottom: 8px; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .5px; }
+  .sub { font-size: 9px; color: #444; }
+  .steps { display: flex; gap: 6px; }
+  .step { flex: 1.05; border: 1.3px solid #111; padding: 6px 7px; min-height: 148px; }
+  .step.first { flex: 1.35; border-left: 6px solid #b0722c; }
+  .step.last { border-left: 6px solid #274e8f; }
+  .step .n { display: inline-block; background: #111; color: #fff; font-weight: bold; font-size: 11px; padding: 1px 6px; border-radius: 8px; }
+  .step .t { font-weight: bold; font-size: 10.5px; margin-left: 4px; }
+  .step p { margin: 4px 0 0; }
+  .step .who { margin-top: 5px; font-size: 8px; text-transform: uppercase; letter-spacing: .5px; color: #333; border-top: 1px dotted #888; padding-top: 3px; }
+  .clock { display: inline-block; border: 1px solid #111; border-radius: 8px; padding: 0 5px; font-size: 8.5px; font-weight: bold; }
+  .speak { font-style: italic; background: #f2f2ee; padding: 4px 6px; margin-top: 4px; border-left: 3px solid #666; }
+  .row2 { display: flex; gap: 6px; margin-top: 8px; }
+  .panel { border: 1.2px solid #111; padding: 6px 8px; }
+  .panel h3 { margin: 0 0 4px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; }
+  .panel ul { margin: 0; padding-left: 14px; }
+  .panel li { margin-bottom: 2px; }
+  .grow { flex: 1.6; }
+  table.vd { border-collapse: collapse; width: 100%; font-size: 8.8px; }
+  .vd td, .vd th { border: 1px solid #777; padding: 2px 4px; }
+  .vd b { white-space: nowrap; }
+  .foot { margin-top: 7px; font-size: 8px; color: #444; border-top: 1px solid #999; padding-top: 3px; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 landscape, background graphics ON, scale 100%). One copy per table — keep it in the middle where both players can point at it.</div>
+
+<div class="band">
+  <h1>DEAD DROP — DAY MAT · one day = these 7 steps, always in order, none skipped</h1>
+  <div class="sub">ruleset 1.0.0-alpha.1 · SP 12 · IP 10 · reveals D3·D6 district, D4 transit · disputes → dispute sheet, 3-min cap</div>
+</div>
+
+<div class="steps">
+  <div class="step first">
+    <span class="n">1</span><span class="t">FUGITIVE MOVES (secret)</span>
+    <p>Exactly one action: <b>Move</b> along one edge (Foot 1 SP · Tram 2 · Metro 3) or <b>Hold</b> (stay, 1 SP, max 2/case). At 0 SP: <b>forced Hold, free</b> — say "Stranded" (§9.13). Write it on your route sheet. <b>Announce nothing yet.</b></p>
+    <div class="who">fugitive only · <span class="clock">⏱ 2:00</span> timed by opponent · timeout = auto-Hold (free if 0 SP), log it</div>
+  </div>
+  <div class="step">
+    <span class="n">2</span><span class="t">STAKEOUT CHECK</span>
+    <p>Only if a stakeout was armed yesterday. The armed node is compared to today's end position: equal → <b>CAPTURE</b>, case over (steps 3–7 don't happen). Miss → consumed silently, play continues.</p>
+    <div class="speak">Investigator: "Stakeout check — did your day end on [node]?" · Fugitive answers truthfully: yes/no.</div>
+    <div class="who">no clock · no armed stakeout → skip to 3</div>
+  </div>
+  <div class="step">
+    <span class="n">3</span><span class="t">REVEALS</span>
+    <p><b>Day 3 &amp; 6:</b> Fugitive announces the district of their end position.<br><b>Day 4:</b> Fugitive announces the class of today's move — or <b>"no movement"</b> if they Held (§9.7).</p>
+    <div class="who">fugitive announces · both record on Case Record sheet</div>
+  </div>
+  <div class="step">
+    <span class="n">4</span><span class="t">DROP CHECK</span>
+    <p>If end position = the <i>pending</i> drop site → public event: <b>"Drop N completed at [site], day [d]"</b>. Fires after a Move <b>or</b> a Hold. Standing on drop 2 while drop 1 is pending: <b>nothing fires</b> (in order).</p>
+    <div class="who">fugitive announces · record on Case Record sheet</div>
+  </div>
+  <div class="step">
+    <span class="n">5</span><span class="t">ESCAPE CHECK</span>
+    <p>Both drops collected <b>and</b> end position = gate → <b>ESCAPE</b>, Fugitive wins, case over. The gate is ordinary ground until then (§9.5) — ending there early announces nothing.</p>
+    <div class="who">checked every day · fugitive announces only if escaping</div>
+  </div>
+  <div class="step last">
+    <span class="n">6</span><span class="t">INVESTIGATOR ACTS</span>
+    <p>In private, on your own sheet: ≤2 <b>Probes</b> (1 IP each — "is your end position <i>today</i> X?") and/or ≤1 <b>Stakeout</b> (3 IP — captures tomorrow if they end tomorrow on your node; <b>never arm on Day 8</b>). Or wait. Unspent IP carries over.</p>
+    <div class="who">investigator only, silent · <span class="clock">⏱ 2:00</span> · timeout = auto-wait, log it</div>
+  </div>
+  <div class="step last">
+    <span class="n">7</span><span class="t">CLOCK ADVANCE</span>
+    <p>Day 8 ending here → verdict <b>EXPIRY</b>, Investigator wins. Otherwise day += 1, probe counters reset, back to step 1.</p>
+    <div class="who">both note the new day on the Case Record sheet</div>
+  </div>
+</div>
+
+<div class="row2">
+  <div class="panel grow">
+    <h3>Special situations — the four you will actually meet</h3>
+    <ul>
+      <li><b>Stranded (§9.13):</b> 0 SP at the start of a day → the day resolves as a <b>free forced Hold</b>; Holds-used does <b>not</b> increase; the log says "Stranded"; if it's Day 4 the transit reveal reports "no movement". No penalty, no capture risk from the rule itself.</li>
+      <li><b>Stakeout on the node they're standing on (§9.6):</b> legal. It captures only if they are <b>still there at the end of tomorrow</b> — Holding into an armed node is a capture; walking away escapes it.</li>
+      <li><b>Hold across Day 4 (§9.7):</b> legal; the transit reveal says "no movement" — public. That's the information price of a Hold.</li>
+      <li><b>Day 8 rules:</b> arming a stakeout is <b>rejected</b> (§9.3 — armed on Day 7, it still resolves on Day 8). A Day-8 probe is legal but cannot change the verdict. No escape by end of Day 8 = EXPIRY, Investigator wins.</li>
+    </ul>
+  </div>
+  <div class="panel" style="flex:1">
+    <h3>Verdicts</h3>
+    <table class="vd">
+      <tr><td><b>ESCAPE</b></td><td>gate + both drops, in order → <b>Fugitive</b></td></tr>
+      <tr><td><b>CAPTURE</b></td><td>stakeout hit at step 2 → <b>Investigator</b></td></tr>
+      <tr><td><b>EXPIRY</b></td><td>Day 8 ends, no escape → <b>Investigator</b></td></tr>
+      <tr><td><b>FORFEIT / VOID</b></td><td>online only — paper uses auto-Hold / auto-wait</td></tr>
+    </table>
+    <p style="margin:4px 0 0"><b>No draws exist.</b> When the verdict lands, both sheets go on the table: full logs reveal at case end (§8.6) — that's how the record gets transcribed.</p>
+  </div>
+</div>
+
+<div class="foot">DEAD DROP paper kit v2 (UX pass) · m1/kit/print/1-day-mat.html · Every ruling here quotes 03-rules.md verbatim (§ refs on the lines). Table rulings are provisional: log arguments on the dispute sheet, never argue past 3 minutes.</div>
+</body>
+</html>

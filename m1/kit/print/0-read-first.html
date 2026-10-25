@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dead Drop — Read This First (5 minutes, both players)</title>
+<style>
+  @page { size: A4 portrait; margin: 11mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #111; font-size: 10.5px; line-height: 1.4; }
+  .hint { font-size: 11px; color: #555; padding: 6px 2px; }
+  @media print { .hint { display: none; } }
+  .band { border-bottom: 3px solid #111; padding-bottom: 6px; margin-bottom: 10px; }
+  h1 { font-size: 21px; margin: 0; letter-spacing: .5px; }
+  .sub { font-size: 10px; color: #444; margin-top: 3px; }
+  h2 { font-size: 12.5px; margin: 12px 0 5px; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .cols { display: flex; gap: 10px; }
+  .col { flex: 1; }
+  .box { border: 1.2px solid #111; padding: 7px 9px; margin: 6px 0; }
+  .box.inv { border-left: 5px solid #274e8f; }
+  .box.fug { border-left: 5px solid #b0722c; }
+  .role-t { font-weight: bold; font-size: 11.5px; }
+  ol.steps { margin: 4px 0; padding-left: 20px; }
+  ol.steps li { margin-bottom: 3px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .chip { border: 1px solid #111; padding: 3px 6px; font-size: 9px; border-radius: 8px; }
+  .num { font-weight: bold; display: inline-block; min-width: 13px; text-align: center; }
+  .numbers { display: flex; gap: 8px; margin-top: 6px; }
+  .bigbox { flex: 1; border: 1.4px solid #111; text-align: center; padding: 7px 4px; }
+  .bigbox .v { font-size: 19px; font-weight: bold; }
+  .bigbox .k { font-size: 8.5px; text-transform: uppercase; letter-spacing: .6px; color: #333; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: 1px solid #777; padding: 3px 5px; vertical-align: top; }
+  .foot { margin-top: 10px; font-size: 8.5px; color: #444; border-top: 1px solid #999; padding-top: 4px; }
+  .quiet { color: #333; }
+  .q { font-style: italic; }
+</style>
+</head>
+<body>
+<div class="hint">Screen preview — print with Ctrl/Cmd+P (A4 portrait, background graphics ON, scale 100%). One copy on the table for both players to read before the first case.</div>
+
+<div class="band">
+  <h1>DEAD DROP — READ THIS FIRST</h1>
+  <div class="sub">5 minutes, both players · paper playtest of an asynchronous hidden-movement game · ruleset 1.0.0-alpha.1 · map_alpha v1.0.0 · No homework required — everything you need is on your own sheet.</div>
+</div>
+
+<h2>The game in four sentences</h2>
+<p>Dead Drop is hide-and-seek in a city of 48 locations over a case that lasts <b>8 days</b>. One of you is the <b>Fugitive</b>: moving in secret, collecting two public "drops" <i>in order</i>, trying to reach the exit gate — or simply never be found. The other is the <b>Investigator</b>: you never see the Fugitive, only fragments of evidence the rules hand you, and you win by being <i>one step ahead of where they are</i>. There are no dice and no luck: given the moves, the outcome is pure logic. Today's paper table runs on a 2-minute clock standing in for the online game's 24-hour deadlines.</p>
+
+<div class="numbers">
+  <div class="bigbox"><div class="v">8</div><div class="k">days per case</div></div>
+  <div class="bigbox"><div class="v">12</div><div class="k">Fugitive SP (stamina)</div></div>
+  <div class="bigbox"><div class="v">10</div><div class="k">Investigator IP (intel)</div></div>
+  <div class="bigbox"><div class="v">2 + 2</div><div class="k">min clock · probe cap/day</div></div>
+</div>
+
+<h2>Who wins</h2>
+<div class="cols">
+  <div class="col">
+    <div class="box fug">
+      <span class="role-t">FUGITIVE wins by ESCAPE</span> — end any day standing <b>on the gate</b> with <b>both drops collected, in order</b> (drop 1 before drop 2). If Day 8 ends and you were never captured: bad news — that verdict is <b>EXPIRY</b> and it counts for the Investigator. Your real deadline is your stamina: every move costs SP (Foot 1 · Tram 2 · Metro 3), Holds cost 1 (max 2 per case), and at 0 SP you are <b>stranded</b> (a free forced Hold — no penalty, but you're a statue).
+    </div>
+  </div>
+  <div class="col">
+    <div class="box inv">
+      <span class="role-t">INVESTIGATOR wins by CAPTURE or EXPIRY</span> — a <b>stakeout</b> (3 IP) armed today catches the Fugitive <b>tomorrow</b> if they end that day on your node; otherwise it misses <i>silently</i> and is spent. <b>Probes</b> (1 IP, ≤2/day) ask "are you <i>here</i> today?" and never capture — they pin. Blind probing cannot win: the scheduled evidence — <b>district reveals on Days 3 &amp; 6</b>, <b>transit class on Day 4</b> — is your real map. Unspent IP carries over; Day 8 forbids new stakeouts.
+    </div>
+  </div>
+</div>
+
+<h2>The shape of every day (always the same 7 steps, in this order)</h2>
+<ol class="steps">
+  <li><b>Fugitive acts</b> — in secret: one move along an edge, or a Hold. Write it on your route sheet; announce nothing yet.</li>
+  <li><b>Stakeout check</b> — only if the Investigator armed one yesterday (exact script on the Day Mat).</li>
+  <li><b>Reveals fire</b> — Days 3 &amp; 6: which district they ended in. Day 4: the class of that day's move, or "no movement".</li>
+  <li><b>Drop check</b> — if they end on the pending drop site, it completes <i>publicly</i> (site + day). Standing on drop 2 before drop 1 does nothing.</li>
+  <li><b>Escape check</b> — both drops collected <i>and</i> on the gate: they win on the spot.</li>
+  <li><b>Investigator acts</b> — up to 2 probes (1 IP) and/or 1 stakeout (3 IP), or wait. Written in private on your own sheet.</li>
+  <li><b>Clock</b> — Day 8 ending here = EXPIRY, Investigator wins. Otherwise next day begins.</li>
+</ol>
+<div class="chips">
+  <span class="chip"><span class="num">1</span> fugitive, secret</span>
+  <span class="chip"><span class="num">2</span> stakeout check</span>
+  <span class="chip"><span class="num">3</span> reveals D3·D6·D4</span>
+  <span class="chip"><span class="num">4</span> drop check</span>
+  <span class="chip"><span class="num">5</span> escape check</span>
+  <span class="chip"><span class="num">6</span> investigator</span>
+  <span class="chip"><span class="num">7</span> clock</span>
+</div>
+
+<h2>How we talk at the table (the whole etiquette — 5 lines)</h2>
+<table>
+  <tr><td style="width:22%"><b>Fugitive, out loud</b></td><td>Only what the rules make public: district reveals (Days 3/6), your Day-4 transit class or "no movement", drop completions ("Drop 1 completed at D2-06"), "captured" if it happens, and the truthful answer to a stakeout question. <b>Never show the route sheet until the case ends</b> — then everything is on the table (that's a rule: full logs reveal at case end).</td></tr>
+  <tr><td><b>Investigator, out loud</b></td><td>"Investigator phase" when you act — then write probes/stakeouts on your <b>own private sheet</b>. Placements and results are yours alone until the case ends. Nothing else you do is announced.</td></tr>
+  <tr><td><b>The stakeout question</b></td><td class="q">When a stakeout is armed, the Investigator asks once, out loud: "Stakeout check — did your day end on <b>[node]</b>?" Answer truthfully: yes = CAPTURE, no = nothing happens. <span class="quiet">(A "no" tells you one node that was watched — a paper-table artifact the online game doesn't have; it gets logged once on the dispute sheet. Don't build strategy on it.)</span></td></tr>
+  <tr><td><b>Disputes</b></td><td>Any rules argument → one row on the dispute sheet, play the provisional ruling, <b>never argue past 3 minutes</b>. Table rulings are provisional by design; the rules doc gets patched only after the session.</td></tr>
+  <tr><td><b>The clock</b></td><td>Your opponent times you: <b>2 minutes</b> per Fugitive action, 2 minutes per Investigator phase. Time out = auto-Hold (Fugitive; free "Stranded" if 0 SP) or auto-wait (Investigator) — just log it in Notes. <span class="quiet">(Online, two consecutive missed 24-h deadlines forfeit the case; paper skips that bookkeeping.)</span></td></tr>
+</table>
+
+<h2>Before day 1 — 60 seconds</h2>
+<ol class="steps">
+  <li>The facilitator reads the <b>case config</b> aloud; copy it onto the public Case Record sheet.</li>
+  <li>Fugitive takes the <b>Fugitive Sheet (hidden)</b> + a pencil. Investigator takes the <b>Investigator Sheet</b> — keep it private.</li>
+  <li>The <b>map</b> goes where both can reach it. The <b>Day Mat</b> sits in the middle; glance at it every step until the flow feels natural.</li>
+</ol>
+
+<div class="foot">DEAD DROP paper kit v2 (UX pass) · ruleset 1.0.0-alpha.1 · map_alpha v1.0.0 · m1/kit/print/0-read-first.html · every number on this page is normative per 03-rules.md — if the table disagrees with the rules, the rules win and the argument goes on the dispute sheet.</div>
+</body>
+</html>
