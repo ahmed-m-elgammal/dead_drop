@@ -16,6 +16,11 @@
 
 Pin C3's exact semantics ("≥3 distinct minimal-cost first-three-day route prefixes" — strict vs loose reading of *minimal-cost* and the prefix window), then count the **full conjunction C2∧C3∧C4** over the ordered 960-config space. Strict reading admitted only **7/960** vs the 24-case ladder need. Pre-authorized lever if the count fails: widen the drop-candidate pool **16 → 24** (+ optionally a third safehouse) — a *content-data* change, no rules churn (04-balance-sim §6). Name every counting convention in outputs (AUD-002 lesson).
 
+> **→ Executed 2026-10-25 (M2 W1):** C3 pinned to the min-cost reading; conjunction counted under
+> four named readings; lever adopted with a documented 8-node selection — **115/2208** configs
+> pass (4.8× ladder need). Full rationale, counts, erratum (W1 C4 either-gate laxity, corrected),
+> and the generator constraint spec v1.0: [`../m2/aud003-constraint-analysis.md`](../m2/aud003-constraint-analysis.md).
+
 ## 3. Regression constants (paper-verified → L1 engine fixtures, 09-testing §1)
 
 | Case | Config (public) | Min completion | Cheapest drop-2 route |

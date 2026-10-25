@@ -1,0 +1,5 @@
+{
+  "selection_rule": "top-8 by C3-A marginal pass yield (13,12,11,9,8,6,6,5), tie-break C3-C yield then node id; all four districts D1/D3/D4 gain candidates, D2 already represented in pool16",
+  "pool_24_added": ["D4-01", "D1-06", "D4-06", "D3-01", "D4-07", "D1-02", "D1-05", "D3-03"],
+  "extra_safehouse": null
+}

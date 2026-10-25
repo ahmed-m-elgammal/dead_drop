@@ -1,6 +1,6 @@
 {
  "map_id": "map_alpha",
- "version": "1.0.0",
+ "version": "1.2.0",
  "districts": {
   "D1": "Harbor",
   "D2": "Old Town",
@@ -639,7 +639,15 @@
   "D4-05",
   "D4-12",
   "D4-03",
-  "D4-08"
+  "D4-08",
+  "D4-01",
+  "D1-06",
+  "D4-06",
+  "D3-01",
+  "D4-07",
+  "D1-02",
+  "D1-05",
+  "D3-03"
  ],
  "gates": [
   "D1-08",
@@ -649,5 +657,5 @@
   "D2-07",
   "D3-06"
  ],
- "notes": "Content data for prototype. Travel = 1 day per edge; stamina cost by edge type F=1 T=2 M=3, Hold=1."
+ "notes": "Content data for prototype. Travel = 1 day per edge; stamina cost by edge type F=1 T=2 M=3, Hold=1. v1.2.0 (M2 W1, 2026-10-25): drop_candidates 16->24 \u2014 the pre-authorized content lever (pool 16->24) adopted in m2/aud003-constraint-analysis.md \u00a74 (8 nodes appended, pool-position order of the original 16 preserved). Effect: full C2\u2227C3\u2227C4 generator headroom 8/960 -> 115/2208 (24-case ladder need met 4.8x). History: this file's original 1.0.0 release (16-pool) is what the docs' 'map_alpha v1.1' label referred to. Parallel-edge pair note: one node pair carries two edges of different classes (legal content); prefix/efficiency consumers take the minimal-SP realization."
 }

@@ -106,3 +106,19 @@ Nothing here proves balance, fun, or teachability — those are M2 (simulation) 
 ### 7.2 Ruling-confirmation line for the freeze note (10-roadmap acceptance)
 
 Every §9 ruling carries its W1 textual verification (§1 above); the two engineered states carry table confirmation iff their S1/S2 checklist rows are checked. Freeze wording (Branch A/B per `m1/freeze-checklist.md` §2): *"every §9 ruling confirmed in text (W1 audit §1) and the two audited-unplayed states confirmed at the table (S1 AUD-004, S2 §9.13) — or patched and re-ruled (`1.0.0-beta`)."*
+
+## 8. Post-audit notes (appended M2 W1, 2026-10-25)
+
+- **AUD-003 — RESOLVED.** C3 semantics pinned (minimal-SP-cost reading; window = days 1–3
+  end-of-day positions); full conjunction C2∧C3∧C4 counted under four named readings
+  (8/960 base under the pin); the pre-authorized lever was adopted — drop-candidate pool
+  16→24 with a documented 8-node selection — yielding **115/2208** qualifying configurations
+  (4.8× the 24-case ladder need). Analysis, counts, and the normative generator constraint
+  spec v1.0: `m2/aud003-constraint-analysis.md`. No rules change (generator is methodology).
+- **Erratum — no published number changes.** This audit's C4 helper (`gate_in_3_from` in
+  `tools/verification/dd_m1_w1_validation.py`) accepted an arrival at EITHER gate node, while
+  rules §2 step 5 escapes only at *the case's gate*. The M2 fresh recount under the corrected
+  case-gate semantics leaves the published strict count unchanged (**7/960**; 3 of 113 in-band
+  base configs flip). The corrected semantics are normative for the M2 generator
+  (`m2/aud003-constraint-analysis.md` §3.1, §6-C4). The W1 script is kept byte-for-byte as the
+  independent regression oracle — its C4 laxity is documented here rather than silently patched.

@@ -89,6 +89,6 @@ Instrumentation: client events (phase completed, markers used, tutorial steps) +
 
 ## 9. Dependencies & assumptions
 
-- Assumes map_alpha's geometry supports the difficulty bands — **[computed]** feasibility headroom exists (55/480 configs in band) but *fun* headroom is unproven.
+- Assumes map_alpha's geometry supports the difficulty bands — **[computed]** feasibility headroom exists (55/480 configs in C2-band on the 16-pool; **115/2208** pass the full generator conjunction on the widened 24-pool — `m2/aud003-constraint-analysis.md`) but *fun* headroom is unproven.
 - Assumes the investigator prediction game (stakeouts) feels fair at 3 IP cost — [hypothesis], M2/M4 test.
 - Assumes Web Push reliability is adequate for deadlines — [hypothesis], tested at M5.

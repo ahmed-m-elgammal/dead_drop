@@ -25,7 +25,7 @@
 | P9 | District reveal days | 3, 6 | [hypothesis] |
 | P10 | Transit reveal days | 4 | [hypothesis] |
 | P11 | Stakeout window | armed day d → resolves day d+1; forbidden on day 8 | fixed by rules logic |
-| P12 | Generator feasibility band | min completion days ∈ [5,7] | [computed: 55/480 configs qualify at SP=12] |
+| P12 | Generator feasibility band | min completion days ∈ [5,7] | [computed: C2-only 55/480 on the 16-pool; full C2∧C3∧C4 = **115/2208** on the widened 24-pool — see m2/aud003-constraint-analysis.md] |
 | P13 | Matchmaking rating band | ±100 (launch) | [design judgment] |
 | P14 | Clocks | casual 24 h / ranked 12 h | [design judgment] |
 
@@ -34,7 +34,7 @@
 ### 3.1 Feasibility and case-shape (exhaustive BFS over map_alpha) **[computed]**
 
 - 3 ordered drops + gate, SP=14: minimum over all drop/gate/start configurations = **12 days**; **0/480** configurations complete ≤ 8 days even at SP=16. → The research concept's 3-drop case shape is geometrically impossible in 8 days; MVP uses 2 drops (audit A4).
-- 2 drops + gate, SP=12, min-days band [5,7]: **55/480** configurations qualify (11.5%) — sufficient generator headroom for a 24-case ladder with repeats filtered. *(Convention, M1 audit AUD-002: "480" = unordered drop enumeration with drop order fixed by pool position; the generator-relevant ordered space is 113/960, the same ~11.8% rate. Constraint conjunction C2∧C3∧C4 not yet counted — see M2 handoff, m1/w1-rules-audit AUD-003.)*
+- 2 drops + gate, SP=12, min-days band [5,7]: **55/480** configurations qualify (11.5%) — sufficient generator headroom for a 24-case ladder with repeats filtered. *(Convention, M1 audit AUD-002: "480" = unordered drop enumeration with drop order fixed by pool position; the generator-relevant ordered space is 113/960, the same ~11.8% rate. Constraint conjunction C2∧C3∧C4 counted at M2 W1: 8/960 on the 16-pool under the pinned C3 reading, **115/2208** after the authorized pool widening — see `m2/aud003-constraint-analysis.md`.)*
 - Stamina sweep on a friendly 2-drop case: minimal days constant (7) across SP ∈ [8,14] → **feasibility is geometry-bound, not stamina-bound**; stamina's design role is route-ambiguity slack (audit A3).
 - Map integrity: 48 nodes, 84 edges (F56/T16/M12), connected, degree 2–7.
 
@@ -106,14 +106,14 @@ Prioritized sweeps (each ±1 step around v1.0-alpha): P4 (IP) → P8 (stakeout c
 
 ## 6. Case-generator constraints (normative for M2)
 
-1. Sample drops (2, ordered, distinct), gate, and safehouse from `map_alpha` pools (16/2/2).
+1. Sample drops (2, ordered, distinct), gate, and safehouse from `map_alpha` pools (**24**/2/2 after the M2 W1 lever — pool 16→24 adopted with a documented 8-node selection, `m2/aud003-constraint-analysis.md` §4).
 2. Compute minimal completion days by BFS over (node, stamina, drop-progress) — **reject** any case whose minimum ∉ [5,7] (P12).
-3. Require ≥3 distinct minimal-cost first-three-day route prefixes (anti-scripting: prevents cases solvable by one memorized route).
+3. Require ≥3 distinct minimal-cost first-three-day route prefixes (anti-scripting: prevents cases solvable by one memorized route). **Pinned at M2 W1:** "minimal-cost" = globally minimal SP cost (≤8 days, ≤12 SP); prefix = end-of-day positions on days 1–3; the min-day gloss and a Pareto variant were counted and rejected as gates (`m2/aud003-constraint-analysis.md` §1).
 4. Require the gate to be reachable from drop-2 within 3 days at SP remaining after the cheapest drop-2 route (endgame must be a race, not a formality).
 5. Record the seed and the feasibility report with every published case.
 6. Diversity quota per ladder batch: no district pair may supply >50% of consecutive cases (variety, [design judgment]).
 
-**[computed]** Constraint 2 admits 55/480 configurations today; if M2 diversity targets fail, the first lever is widening drop candidates (pool 16→24) or adding a third safehouse — both are content-data changes, not rules changes.
+**[computed, updated M2 W1]** Constraint 2 alone admitted 55/480 on the 16-pool; the full conjunction C2∧C3∧C4 admitted only **8/960** under the pinned C3 reading — resolved by the pre-authorized lever (drop-candidate pool 16→24, 8 documented nodes): **115/2208** ordered configurations pass (4.8× the 24-case ladder need). Third-safehouse lever evaluated, not adopted. Full counts, conventions, and the normative generator constraint spec: `m2/aud003-constraint-analysis.md`.
 
 ## 7. Human validation (M4 playtest protocol)
 

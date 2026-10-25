@@ -26,6 +26,7 @@ Dead Drop is an asynchronous 1v1 hidden-movement deduction game: an **Investigat
 | [assets/sample_map_alpha.json](assets/sample_map_alpha.json) | Concrete 48-node map (content data, versioned separately from rules) | **Source of truth: map data** |
 | [research/game-concept-research.md](research/game-concept-research.md) | Upstream concept-research report (superseded where it conflicts) | Reference (upstream) |
 | [tools/verification/](tools/verification/README.md) | Offline verification scripts + raw results (pure Python, no deps; verification, **not** simulation) | Reference (computation) |
+| [m2/](m2/M2-execution-plan.md) | M2 planning & analysis (execution plan, AUD-003 generator-constraint resolution) | See M2 section |
 
 ### M1 — Requirements & design validation (in progress)
 
@@ -41,6 +42,15 @@ Dead Drop is an asynchronous 1v1 hidden-movement deduction game: an **Investigat
 | [m1/m2-handoff.md](m1/m2-handoff.md) | M2 handoff: constants, AUD-003 first task, type-layer contract | Pre-written (two `[AT FREEZE]` fields) |
 
 M1 status (2026-10-25): Weeks 1–3 tooling complete — ruleset at **`1.0.0-alpha.1`** (no-TBD grep clean, re-verified), session kit ready for S1–S3, freeze pre-flight + M2 handoff pre-written with `[AT FREEZE]` fields. M1 *closes* only when the human-run sessions produce transcript evidence (audit §7 tally) — then: freeze tag, B2 closure, handoff finalization.
+
+### M2 — Rules engine & mathematical simulation (Week 1 executed)
+
+| File | Contents | Status |
+|---|---|---|
+| [m2/M2-execution-plan.md](m2/M2-execution-plan.md) | Week-by-week M2 plan (engine, sim harness, balance report), G1 exit tracking | W1 done; W2–W4 planned |
+| [m2/aud003-constraint-analysis.md](m2/aud003-constraint-analysis.md) | AUD-003 resolution: C3 semantics **pinned** (min-cost), conjunction counted (8/960 base), lever adopted (drop pool 16→24 → **115/2208** pass, 4.8× ladder headroom), generator constraint spec v1.0 | Executed |
+
+M2 status (2026-10-25): Week 1 (generator-constraint semantics, the handoff's first M2 task) executed — machine-doable, freeze-independent. Weeks 2–4 (engine `resolve()`, generator, sim harness, balance report) are planned; `resolve()` coding waits for the M1 freeze tag per the plan's gate.
 
 ## Conventions
 
