@@ -42,6 +42,13 @@
 - Sidebar IA: CaseHeader extracted as the single status anchor (file tab, DAY/IP/probes/armed, glyph-matched config badges, compact halo toggle); ActionBar deduplicated to turn indicator + controls; right column order = status → actions → tools → evidence.
 - Evidence scanability: district reveals carry pixel surveillance-photo thumbnails in both seats' logs; briefing dossier gains the safehouse-district polaroid; archetype dossiers gain mugshots. Asset pack 9 → 17 files (same locked W4 style + PIL pipeline); every img degrades gracefully (onError drops the frame, never the note).
 
+### W4.6 — Case-wall map pass (DONE — [ADR-010](adr-010-m3-w46-case-wall-map.md))
+- Player reference: a detective cork board ("make the map like this, easier to read"). Same improve-don't-replace framing; presentation-only (store/engine/AI byte-untouched, 150/150 incl. parity gate).
+- The map becomes the case wall's pinned paper map: `.cork-board` surface (wood frame, warm cork), SVG paper plate tiling the new procedural street-grid tile (pans/zooms with the city, taped corners, offset shadow, corner pushpin), flat-cream fallback if the tile is missing.
+- Ink-on-paper readability: dark ink labels with paper halos (inverse of the night map), typewriter district stamps, edge palette retuned for cream (F ink pencil / T ochre twine / M teal ribbon) with a cream KNOCK-OUT casing so crossings stay separable; legend + halo/ring/YOU/HIT/markers re-inked.
+- Red-string selection (the board's signature, functional): the selected pin threads sagging red strings to every connected node (bow away from canvas center) + neighbor rings + a red pushpin on the selection — three redundant cues for "what applies to this pin", both seats.
+- Asset audit: exactly ONE new asset (map-paper.png, procedural, seamless); everything else reuses existing textures/primitives; nothing interactive baked into bitmaps.
+
 ### W5 — Hardening + dogfood (re-scoped from W4)
 - PWA install/offline shell, settings S9, reduced-motion pass, text-scale pass.
 - Audio pass (Web Audio SFX/ambience — deferred from W4 art sprint to keep one sprint one theme).

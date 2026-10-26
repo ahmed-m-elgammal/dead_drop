@@ -228,13 +228,14 @@ export function buildLayout(vm: import('@dead-drop/engine').ValidatedMap): {
   return { nodes, districts };
 }
 
-/** Night-map edge styling (M3 W4): F thin pale · T dashed amber · M thick teal. */
+/** Map edge styling (M3 W4.5 case-wall pass): the city now reads as a printed
+ *  paper map pinned to the cork board, so edges are tuned for CREAM paper —
+ *  F thin ink pencil · T ochre twine (dashed) · M deep-teal ribbon. The dark
+ *  night-city palette they replace lives in git history (commit bc45895). */
 export const EDGE_STYLE: Record<EdgeClass, { stroke: string; width: number; dash: string }> = {
-  // Night-city palette (M3 W4): pale fog footpaths, amber tram lines,
-  // teal metro spine — all read on the ink-navy map plate.
-  F: { stroke: '#c9d3e4', width: 1.5, dash: '' },
-  T: { stroke: '#e8a33d', width: 2.1, dash: '7,5' },
-  M: { stroke: '#4f8f85', width: 4.6, dash: '' },
+  F: { stroke: '#5c6478', width: 1.6, dash: '' },
+  T: { stroke: '#b0722c', width: 2.2, dash: '7,5' },
+  M: { stroke: '#2f6a5f', width: 4.6, dash: '' },
 };
 
 /** Render order: Metro spine first (bottom), then Trams, then Foot on top. */

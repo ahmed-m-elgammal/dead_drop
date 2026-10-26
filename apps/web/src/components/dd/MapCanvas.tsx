@@ -1,14 +1,18 @@
 'use client';
 
 /**
- * Dead Drop — interactive city map (M3 W1, 06-uiux §2).
+ * Dead Drop — interactive city map (M3 W1, 06-uiux §2; case-wall pass W4.5).
  *
  * Vector map, fixed layout (roadmap M3 risk note: no renderer scope creep):
- * paper-map geometry, three edge passes (M under T under F), glyph-coded
- * pools, radial id labels. Interactivity W1: tap-select (hit target grows
- * with zoom), button zoom + drag pan, belief halo (rules-mechanical, off by
- * default), reveal tint, drop badges, armed-stakeout ring, today's HIT pins.
- * Belief markers (?/!/✕) are LOCAL-only — never part of engine state.
+ * the city is a PAPER STREET MAP pinned to the cork case wall (the W4.5
+ * reference board): paper plate pans/zooms with the city, districts are
+ * ink-stamped regions (red-pen loop on reveal), edges knock out with cream
+ * casing, and selecting a node threads RED STRINGS to everything it
+ * connects to — the detective-board signature, presentation-only. Core
+ * interactivity unchanged: tap-select (hit target grows with zoom), button
+ * zoom + drag pan, belief halo (off by default), drop badges, armed-
+ * stakeout ring, today's HIT pins. Belief markers (?/!/✕) are LOCAL-only —
+ * never part of engine state.
  */
 import { useMemo, useRef, useState } from 'react';
 import type { CaseConfig, FugitiveView, InvestigatorView, NodeId, ValidatedMap } from '@dead-drop/engine';
@@ -17,11 +21,22 @@ import { buildLayout, EDGE_STYLE, sortedEdges, type NodeLayout } from '@/lib/dd/
 import { useDD, type MarkerKind } from '@/lib/dd/store';
 
 const MARKER_GLYPH: Record<MarkerKind, string> = { possible: '?', pinned: '!', cleared: '✕' };
+/* case-wall palette — ink on cream paper (tokens mirrored from globals.css) */
+const INK = '#33291a';
+const INK_SOFT = '#5a4d38';
+const PAPER_HALO = '#ece2cc';
+const RED = '#a62f2f';
 const MARKER_FILL: Record<MarkerKind, string> = {
-  possible: '#e8a33d',
-  pinned: '#e05252',
-  cleared: '#5d6d88',
+  possible: '#b0722c',
+  pinned: RED,
+  cleared: '#6b7280',
 };
+/** Paper plate bounds — inset from the 760×1000 viewBox so cork shows
+ *  around the map (the board is bigger than the map pinned to it). */
+const PAPER_RECT = { x: 16, y: 16, w: 728, h: 968 };
+/** Canvas center — the string fan bows AWAY from this point. */
+const CCX = 380;
+const CCY = 500;
 
 interface Props {
   vm: ValidatedMap;
@@ -104,19 +119,42 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
     ? (view as FugitiveView).fugitive.position
     : null;
 
+  // Case-wall signature: the selected pin threaded to its neighbors.
+  // Pure presentation — sag curves bow AWAY from the canvas center so the
+  // fan never collapses toward the metro spine; route data is untouched.
+  const { stringPaths, stringNeighbors } = useMemo(() => {
+    if (!selected) return { stringPaths: [] as Array<{ d: string }>, stringNeighbors: [] as NodeId[] };
+    const paths: Array<{ d: string }> = [];
+    const neighbors = new Set<NodeId>();
+    for (const e of edges) {
+      if (e.a !== selected && e.b !== selected) continue;
+      const a = layout.nodes.get(e.a);
+      const b = layout.nodes.get(e.b);
+      if (!a || !b) continue;
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      let nx = -(b.y - a.y);
+      let ny = b.x - a.x;
+      const nl = Math.hypot(nx, ny) || 1;
+      nx /= nl;
+      ny /= nl;
+      if (nx * (CCX - mx) + ny * (CCY - my) > 0) {
+        nx = -nx;
+        ny = -ny;
+      }
+      const len = Math.hypot(b.x - a.x, b.y - a.y);
+      const sag = Math.min(16, Math.max(7, len * 0.09));
+      paths.push({ d: `M ${a.x} ${a.y} Q ${mx + nx * sag} ${my + ny * sag} ${b.x} ${b.y}` });
+      for (const n of [a, b]) if (n.id !== selected) neighbors.add(n.id);
+    }
+    return { stringPaths: paths, stringNeighbors: [...neighbors] };
+  }, [selected, edges, layout]);
+
   const cursor =
     mode === 'inspect' ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer';
 
   return (
-    <div className="pixel-frame relative h-full w-full overflow-hidden bg-[#0e1524]">
-      {/* night-city vignette + faint street grid (decorative) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-10"
-        style={{
-          background:
-            'radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,8,16,.55) 100%)',
-        }}
-      />
+    <div className="cork-board relative h-full w-full overflow-hidden">
       <svg
         viewBox={`0 0 760 1000`}
         className={`h-full w-full touch-none select-none ${cursor}`}
@@ -139,8 +177,56 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
           drag.current = null;
         }}
       >
+        <defs>
+          <pattern id="dd-map-paper" width="256" height="256" patternUnits="userSpaceOnUse">
+            <rect width="256" height="256" fill="#e9dec8" />
+            <image href="/art/map-paper.png" width="256" height="256" />
+          </pattern>
+        </defs>
         <g transform={`translate(${tx} ${ty}) scale(${k})`}>
-          {/* district plates + names */}
+          {/* the paper street map — pinned to the cork: crisp offset shadow
+              (the house pixel-shadow language), taped top corners, one
+              pushpin at the lower-right corner */}
+          <rect
+            x={PAPER_RECT.x + 5}
+            y={PAPER_RECT.y + 7}
+            width={PAPER_RECT.w}
+            height={PAPER_RECT.h}
+            fill="rgba(24,14,4,0.42)"
+          />
+          <rect
+            x={PAPER_RECT.x}
+            y={PAPER_RECT.y}
+            width={PAPER_RECT.w}
+            height={PAPER_RECT.h}
+            fill="url(#dd-map-paper)"
+            stroke="rgba(58,44,24,0.5)"
+            strokeWidth={1.5}
+          />
+          <g pointerEvents="none">
+            <rect
+              x={PAPER_RECT.x - 4}
+              y={PAPER_RECT.y - 9}
+              width={76}
+              height={20}
+              fill="rgba(238,231,214,0.55)"
+              stroke="rgba(58,44,24,0.14)"
+              transform={`rotate(-38 ${PAPER_RECT.x + 34} ${PAPER_RECT.y + 1})`}
+            />
+            <rect
+              x={PAPER_RECT.x + PAPER_RECT.w - 72}
+              y={PAPER_RECT.y - 9}
+              width={76}
+              height={20}
+              fill="rgba(238,231,214,0.55)"
+              stroke="rgba(58,44,24,0.14)"
+              transform={`rotate(38 ${PAPER_RECT.x + PAPER_RECT.w - 34} ${PAPER_RECT.y + 1})`}
+            />
+            <CornerPin x={PAPER_RECT.x + PAPER_RECT.w - 34} y={PAPER_RECT.y + PAPER_RECT.h - 32} />
+          </g>
+
+          {/* district plates + names — soft ink regions on paper; a revealed
+              district gets the red-pen double loop + day stamp */}
           {layout.districts.map((d) => {
             const revealedDay = revealedDistricts.get(d.id);
             return (
@@ -149,37 +235,76 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cx={d.x}
                   cy={d.y}
                   r={d.plateR}
-                  fill={revealedDay !== undefined ? '#15273a' : '#121b2d'}
-                  stroke={revealedDay !== undefined ? '#e8a33d' : '#2a3850'}
-                  strokeWidth={revealedDay !== undefined ? 2 : 1.2}
+                  fill={revealedDay !== undefined ? 'rgba(232,163,61,0.13)' : 'rgba(120,96,60,0.06)'}
+                  stroke="#8a7a5c"
+                  strokeWidth={revealedDay !== undefined ? 1.4 : 1}
+                  strokeDasharray={revealedDay !== undefined ? undefined : '5,4'}
                 />
+                {revealedDay !== undefined && (
+                  <g pointerEvents="none">
+                    <ellipse
+                      cx={d.x}
+                      cy={d.y}
+                      rx={d.plateR + 4}
+                      ry={d.plateR - 5}
+                      fill="none"
+                      stroke={RED}
+                      strokeWidth={2.2}
+                      opacity={0.85}
+                      transform={`rotate(7 ${d.x} ${d.y})`}
+                    />
+                    <ellipse
+                      cx={d.x}
+                      cy={d.y}
+                      rx={d.plateR - 1}
+                      ry={d.plateR + 2}
+                      fill="none"
+                      stroke={RED}
+                      strokeWidth={1.4}
+                      opacity={0.55}
+                      transform={`rotate(-4 ${d.x} ${d.y})`}
+                    />
+                  </g>
+                )}
                 <text
                   x={d.labelX}
                   y={d.labelY}
                   textAnchor="middle"
                   fontSize={15}
                   fontWeight={700}
-                  fill={revealedDay !== undefined ? '#f4c86a' : '#5d6d88'}
-                  stroke="#0b101b"
+                  fill={revealedDay !== undefined ? '#8a2424' : '#4a4030'}
+                  stroke={PAPER_HALO}
                   strokeWidth={3}
                   paintOrder="stroke"
                   strokeLinejoin="round"
                   className="uppercase"
-                  style={{ letterSpacing: 1.5 }}
+                  style={{ letterSpacing: 2, fontFamily: 'var(--font-type)' }}
                 >
                   {d.name}
                 </text>
                 {revealedDay !== undefined && (
-                  <text x={d.labelX} y={d.labelY + 15} textAnchor="middle" fontSize={10} fill="#e8a33d">
-                    revealed day {revealedDay}
+                  <text
+                    x={d.labelX}
+                    y={d.labelY + 16}
+                    textAnchor="middle"
+                    fontSize={11}
+                    fill={RED}
+                    stroke={PAPER_HALO}
+                    strokeWidth={2.5}
+                    paintOrder="stroke"
+                    strokeLinejoin="round"
+                    style={{ letterSpacing: 1.5, fontFamily: 'var(--font-type)' }}
+                  >
+                    revealed · day {revealedDay}
                   </text>
                 )}
               </g>
             );
           })}
 
-          {/* edges — ink casing pass first so crossings stay readable, then
-              the three color passes (M under T under F) */}
+          {/* edges — cream KNOCK-OUT casing pass first (paper shows between
+              crossings — the transit-map readability trick), then the three
+              color passes (M under T under F) */}
           {edges.map((e, i) => {
             const a = layout.nodes.get(e.a);
             const b = layout.nodes.get(e.b);
@@ -192,11 +317,11 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                 y1={a.y}
                 x2={b.x}
                 y2={b.y}
-                stroke="#0b101b"
-                strokeWidth={st.width + 2.6}
+                stroke={PAPER_HALO}
+                strokeWidth={st.width + 3}
                 strokeDasharray={st.dash || undefined}
                 strokeLinecap="round"
-                opacity={0.6}
+                opacity={0.85}
               />
             );
           })}
@@ -221,6 +346,31 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
             );
           })}
 
+          {/* red string fan — selected pin threaded to its neighbors */}
+          {stringPaths.map((s, i) => (
+            <g key={`str-${i}`} pointerEvents="none">
+              <path d={s.d} fill="none" stroke="#6d1d1d" strokeWidth={4.6} strokeLinecap="round" opacity={0.9} />
+              <path d={s.d} fill="none" stroke="#b23434" strokeWidth={2.6} strokeLinecap="round" />
+            </g>
+          ))}
+          {stringNeighbors.map((n) => {
+            const p = layout.nodes.get(n);
+            if (!p) return null;
+            return (
+              <circle
+                key={`nb-${n}`}
+                cx={p.x}
+                cy={p.y}
+                r={13.5}
+                fill="none"
+                stroke={RED}
+                strokeWidth={2}
+                opacity={0.85}
+                pointerEvents="none"
+              />
+            );
+          })}
+
           {/* belief halo (optional, investigator role only) */}
           {belief &&
             [...belief].map((n) => {
@@ -232,9 +382,9 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cx={p.x}
                   cy={p.y}
                   r={20}
-                  fill="rgba(61,112,104,0.22)"
-                  stroke="rgba(79,143,133,0.6)"
-                  strokeWidth={1}
+                  fill="rgba(61,112,104,0.18)"
+                  stroke="rgba(47,106,95,0.75)"
+                  strokeWidth={1.2}
                   pointerEvents="none"
                 />
               );
@@ -251,7 +401,7 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cy={p.y}
                   r={24}
                   fill="none"
-                  stroke="#e05252"
+                  stroke={RED}
                   strokeWidth={2.4}
                   strokeDasharray="6,4"
                   className="ring-pulse"
@@ -280,7 +430,8 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
 
           {/* labels — non-interactive layer (pointer-events none); positions
               come from the geometry label resolver (no seam collisions), and
-              an ink halo (paint-order stroke) keeps text readable over lines */}
+              a paper halo (paint-order stroke) keeps ink text readable over
+              printed streets and route lines */}
           {[...layout.nodes.values()].map((p) => (
             <text
               key={`label-${p.id}`}
@@ -295,10 +446,10 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
               }
               fill={
                 vm.map.gates.includes(p.id) || vm.map.safehouses.includes(p.id) || vm.map.drop_candidates.includes(p.id)
-                  ? '#e8ddc7'
-                  : '#8b9bb4'
+                  ? INK
+                  : INK_SOFT
               }
-              stroke="#0b101b"
+              stroke={PAPER_HALO}
               strokeWidth={2.6}
               paintOrder="stroke"
               strokeLinejoin="round"
@@ -339,10 +490,10 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
         </button>
       </div>
 
-      {/* legend — a taped paper strip */}
+      {/* legend — a pinned paper strip over the board */}
       <div className="paper-card absolute bottom-2.5 left-3 z-20 flex flex-wrap items-center gap-x-3 gap-y-1 px-2.5 py-1.5 text-[10px] font-semibold text-[#33291a] tilt-l">
         <span className="flex items-center gap-1">
-          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#8a94a8" strokeWidth="1.6" /></svg>
+          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#5c6478" strokeWidth="1.6" /></svg>
           Foot 1 SP
         </span>
         <span className="flex items-center gap-1">
@@ -350,14 +501,25 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
           Tram 2
         </span>
         <span className="flex items-center gap-1">
-          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#3d7068" strokeWidth="4" /></svg>
+          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#2f6a5f" strokeWidth="4" /></svg>
           Metro 3
         </span>
-        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 border-[1.5px] border-[#33291a] bg-[#e8ddc7]" /> drop site</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rotate-45 border-[1.5px] border-[#a62f2f] bg-[#a62f2f]" /> gate</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-0 w-0 border-x-[5px] border-b-[9px] border-x-transparent border-b-[#3d7068]" /> safehouse</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 border-[1.5px] border-[#33291a] bg-[#efe6d2]" /> drop site</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rotate-45 border-[1.5px] border-[#33291a] bg-[#a62f2f]" /> gate</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-0 w-0 border-x-[5px] border-b-[9px] border-x-transparent border-b-[#2f6a5f]" /> safehouse</span>
       </div>
     </div>
+  );
+}
+
+/** Brass-cornered pushpin holding the paper map to the cork (decorative). */
+function CornerPin({ x, y }: { x: number; y: number }) {
+  return (
+    <g>
+      <ellipse cx={x + 2} cy={y + 3} rx={7.5} ry={5} fill="rgba(30,14,4,0.4)" />
+      <circle cx={x} cy={y} r={6.5} fill="#a62f2f" stroke="#6d1d1d" strokeWidth={1.2} />
+      <circle cx={x - 2} cy={y - 2} r={2.2} fill="#e8907a" opacity={0.9} />
+    </g>
   );
 }
 
@@ -391,13 +553,32 @@ function NodeGlyph(props: {
           twins never overlap (06-uiux §2: targets grow with zoom, which
           this preserves — r scales with k). */}
       <circle cx={p.x} cy={p.y} r={p.hitR} fill="transparent" stroke="none" />
-      {isSelected && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#e8a33d" strokeWidth={2.2} />}
-      {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#f4c86a" strokeWidth={2.2} />}
+      {isSelected && (
+        <g pointerEvents="none">
+          <circle cx={p.x} cy={p.y} r={19} fill="none" stroke={RED} strokeWidth={2.2} />
+          {/* red pushpin dropped onto the selected glyph */}
+          <ellipse cx={p.x + 2.5} cy={p.y + 4} rx={9} ry={5.5} fill="rgba(30,14,4,0.35)" />
+          <circle cx={p.x} cy={p.y - 1} r={8.5} fill="#b23434" stroke="#6d1d1d" strokeWidth={1.4} />
+          <circle cx={p.x - 2.8} cy={p.y - 3.8} r={2.8} fill="#f0a68c" opacity={0.92} />
+        </g>
+      )}
+      {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#b0722c" strokeWidth={2.2} />}
       {meHere && (
         <g pointerEvents="none">
-          <circle cx={p.x} cy={p.y} r={15} fill="#58b98a" opacity={0.22} />
-          <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="#58b98a" strokeWidth={2.2} />
-          <text x={p.x} y={p.y - 20} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#58b98a">
+          <circle cx={p.x} cy={p.y} r={15} fill="rgba(46,125,79,0.16)" />
+          <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="#2e7d4f" strokeWidth={2.2} />
+          <text
+            x={p.x}
+            y={p.y - 20}
+            textAnchor="middle"
+            fontSize={9.5}
+            fontWeight={800}
+            fill="#2e7d4f"
+            stroke={PAPER_HALO}
+            strokeWidth={3}
+            paintOrder="stroke"
+            strokeLinejoin="round"
+          >
             YOU
           </text>
         </g>
@@ -405,16 +586,16 @@ function NodeGlyph(props: {
       {isGate ? (
         <polygon
           points={`${p.x},${p.y - 11} ${p.x + 11},${p.y} ${p.x},${p.y + 11} ${p.x - 11},${p.y}`}
-          fill="#a62f2f"
-          stroke="#e8ddc7"
+          fill={RED}
+          stroke={INK}
           strokeWidth={1.6}
         />
       ) : isSafehouse ? (
         <polygon
           points={`${p.x},${p.y - 11} ${p.x + 10},${p.y + 7} ${p.x - 10},${p.y + 7}`}
-          fill="#3d7068"
-          stroke="#e8ddc7"
-          strokeWidth={1}
+          fill="#2f6a5f"
+          stroke={INK}
+          strokeWidth={1.4}
         />
       ) : isDropSite ? (
         <rect
@@ -422,16 +603,16 @@ function NodeGlyph(props: {
           y={p.y - 8.5}
           width={17}
           height={17}
-          fill="#e8ddc7"
-          stroke="#0b101b"
+          fill="#efe6d2"
+          stroke={INK}
           strokeWidth={1.8}
         />
       ) : (
-        <circle cx={p.x} cy={p.y} r={10} fill="#d7deeb" stroke="#0b101b" strokeWidth={1.6} />
+        <circle cx={p.x} cy={p.y} r={10} fill="#d9cbb0" stroke={INK} strokeWidth={1.7} />
       )}
       {dropSlot !== undefined && (
         <>
-          <circle cx={p.x} cy={p.y} r={5.5} fill="#0b101b" />
+          <circle cx={p.x} cy={p.y} r={5.5} fill={INK} />
           <text x={p.x} y={p.y + 2.5} textAnchor="middle" fontSize={7.5} fill="#f4c86a" fontWeight={700}>
             {dropSlot}
           </text>
@@ -444,6 +625,10 @@ function NodeGlyph(props: {
           fontSize={15}
           fontWeight={800}
           fill={MARKER_FILL[marker]}
+          stroke={PAPER_HALO}
+          strokeWidth={3}
+          paintOrder="stroke"
+          strokeLinejoin="round"
           pointerEvents="none"
         >
           {MARKER_GLYPH[marker]}
