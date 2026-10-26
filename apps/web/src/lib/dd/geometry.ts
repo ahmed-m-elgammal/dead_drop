@@ -1,28 +1,36 @@
 /**
- * Dead Drop — web map geometry (M3 W1).
+ * Dead Drop — web map geometry (M3 W1; W4.8 reference-board relayout).
  *
  * Ports the paper-prototype layout math (`dead_drop/tools/verification/
- * dd_m1_kit_map.py`, commit 5958018) to a portrait web viewBox:
+ * dd_m1_kit_map.py`, commit 5958018) to a near-square web viewBox — the
+ * W4.8 reference board shows the parchment map FILLING the central panel,
+ * districts spread to its four corners (the old 760×1000 portrait plate
+ * letterboxed into a narrow strip on the desktop case screen):
  *   - 4 districts as 2x2 quadrants (D1 Harbor NW · D2 Old Town NE ·
  *     D3 Market SW · D4 Rail Yard SE — same compass as the printed map)
  *   - 12 nodes per district on a ring, rotated so each district's metro
  *     hub (node 06) faces the canvas center — the same "read the Metro
  *     spine at a glance" property the paper map was designed around
- *   - glyphs: drop candidates = squares, gates = diamonds, safehouses =
- *     triangles, everything else = circles (06-uiux §2: never color-only)
+ *   - glyph SEMANTICS unchanged: drop candidates = squares, gates =
+ *     diamonds, safehouses = triangles, rest = circles (06-uiux §2:
+ *     never color-only). Colors tune to the aged parchment in MapCanvas.
+ *
+ * Pure presentation: node ids/edges/classes come from the validated map;
+ * only x/y screen placement lives here.
  */
 import type { CityMapEdge, DistrictId, EdgeClass, NodeId } from '@dead-drop/engine';
 
-export const VIEW_W = 760;
-export const VIEW_H = 1000;
-/** Canvas center — district hubs face this point. */
-const CC = { x: VIEW_W / 2, y: VIEW_H / 2 };
+export const VIEW_W = 880;
+export const VIEW_H = 920;
 
+/** Quadrant centers spread wide (W4.8): ring edges leave ≥140px between
+ *  adjacent districts at the seams (was ~11px in the portrait plate), so
+ *  labels/edges/hit-targets breathe without a resolver fighting them. */
 const CENTERS: Record<DistrictId, { x: number; y: number }> = {
-  D1: { x: 215, y: 255 },
-  D2: { x: 545, y: 255 },
-  D3: { x: 215, y: 745 },
-  D4: { x: 545, y: 745 },
+  D1: { x: 242, y: 232 },
+  D2: { x: 638, y: 232 },
+  D3: { x: 242, y: 688 },
+  D4: { x: 638, y: 688 },
 };
 
 /** Screen-space angle (deg, y down) the hub (node 06) should face. */
@@ -33,7 +41,7 @@ const HUB_TARGET_ANGLE: Record<DistrictId, number> = {
   D4: -135, // from SE
 };
 
-const R = 165;
+const R = 170;
 const PLATE_R = R + 30;
 
 export type Glyph = 'circle' | 'square' | 'diamond' | 'triangle';
@@ -66,9 +74,11 @@ export interface DistrictLayout {
   x: number;
   y: number;
   plateR: number;
-  /** Label anchor at the district's outer corner, away from the canvas center. */
+  /** Corner label placement (W4.8): names hug the paper's corners like the
+   *  reference board — never clipped, clear of the map's zoom controls. */
   labelX: number;
   labelY: number;
+  anchor: 'start' | 'end';
 }
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
@@ -211,35 +221,49 @@ export function buildLayout(vm: import('@dead-drop/engine').ValidatedMap): {
 
   const districts: DistrictLayout[] = (Object.keys(CENTERS) as DistrictId[]).map((d) => {
     const c = CENTERS[d];
-    // Point away from the canvas center = the district's outer corner.
-    const dx = c.x - CC.x;
-    const dy = c.y - CC.y;
-    const len = Math.hypot(dx, dy) || 1;
+    // W4.8: names pinned to the plate's corners (reference-board layout).
+    // Top-right clears the zoom-control stack (~60px); the reveal loop still
+    // draws around the REGION (x/y/plateR), not the label.
+    const corner: Record<DistrictId, { x: number; y: number; anchor: 'start' | 'end' }> = {
+      D1: { x: 22, y: 34, anchor: 'start' },
+      // top-right clears the zoom controls on BOTH viewports (HTML-px buttons
+      // eat ~108 viewBox units on a 390px phone, ~51 on desktop)
+      D2: { x: VIEW_W - 120, y: 34, anchor: 'end' },
+      D3: { x: 22, y: VIEW_H - 18, anchor: 'start' },
+      D4: { x: VIEW_W - 24, y: VIEW_H - 18, anchor: 'end' },
+    };
     return {
       id: d,
       name: vm.map.districts[d],
       x: c.x,
       y: c.y,
       plateR: PLATE_R,
-      labelX: c.x + (dx / len) * (PLATE_R + 26),
-      labelY: c.y + (dy / len) * (PLATE_R + 26),
+      labelX: corner[d].x,
+      labelY: corner[d].y,
+      anchor: corner[d].anchor,
     };
   });
   return { nodes, districts };
 }
 
-/** Map edge styling (M3 W4.5 case-wall pass): the city now reads as a printed
- *  paper map pinned to the cork board, so edges are tuned for CREAM paper —
- *  F thin ink pencil · T ochre twine (dashed) · M deep-teal ribbon. The dark
- *  night-city palette they replace lives in git history (commit bc45895). */
+/** Map edge styling (W4.8 reference-board pass): route hierarchy matches the
+ *  reference board — teal solid METRO the strongest, orange dashed TRAM over
+ *  it, muted steel-blue ROADS the subtle under-layer. Tuned for the aged tan
+ *  parchment plate. The dark night-city palette they replace lives in git
+ *  history (commit bc45895); the W4.6 cream-paper tuning in c4df435. */
 export const EDGE_STYLE: Record<EdgeClass, { stroke: string; width: number; dash: string }> = {
-  F: { stroke: '#5c6478', width: 1.6, dash: '' },
-  T: { stroke: '#b0722c', width: 2.2, dash: '7,5' },
-  M: { stroke: '#2f6a5f', width: 4.6, dash: '' },
+  F: { stroke: '#5b6a85', width: 1.6, dash: '' },
+  T: { stroke: '#c0782e', width: 2.3, dash: '8,5' },
+  M: { stroke: '#2e6e63', width: 4.4, dash: '' },
 };
 
-/** Render order: Metro spine first (bottom), then Trams, then Foot on top. */
+/** Render order: ROADS bottom (subtle under-layer), then Trams, Metro on top
+ *  — crossings read transit-first like the reference board. */
 export function sortedEdges(edges: CityMapEdge[]): CityMapEdge[] {
-  const rank = { M: 0, T: 1, F: 2 } as const;
+  const rank = { F: 0, T: 1, M: 2 } as const;
   return [...edges].sort((a, b) => rank[a.type] - rank[b.type]);
 }
+
+/** Edge render pass order for MapCanvas/ReplayViewer: each class gets a
+ *  paper-color casing under it so crossings stay separable on the plate. */
+export const EDGE_PASS_ORDER: EdgeClass[] = ['F', 'T', 'M'];

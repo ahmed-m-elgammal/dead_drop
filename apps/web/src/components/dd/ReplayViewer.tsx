@@ -22,7 +22,7 @@ import {
 import type { ArchetypeId } from '@/lib/dd/archetypes';
 import { ARCHETYPES } from '@/lib/dd/archetypes';
 import { VM } from '@/lib/dd/vm';
-import { buildLayout, EDGE_STYLE, sortedEdges } from '@/lib/dd/geometry';
+import { buildLayout, EDGE_STYLE, sortedEdges, VIEW_H, VIEW_W } from '@/lib/dd/geometry';
 import type { CaseSource } from '@/lib/dd/history';
 
 export interface ReplayMeta {
@@ -167,7 +167,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
 
         {/* map */}
         <div className="min-h-0 flex-1 overflow-hidden bg-[#0e1524]">
-          <svg viewBox="0 0 760 1000" className="h-full w-full" role="img" aria-label="Replay map — true route by day">
+          <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="h-full w-full" role="img" aria-label="Replay map — true route by day">
             {layout.districts.map((d) => {
               const rev = revealed.get(d.id);
               return (
@@ -183,8 +183,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                   <text
                     x={d.labelX}
                     y={d.labelY}
-                    textAnchor="middle"
-                    fontSize={15}
+                    textAnchor={d.anchor}
+                    fontSize={13}
                     fontWeight={700}
                     fill={rev !== undefined ? '#f4c86a' : '#5d6d88'}
                     className="uppercase"

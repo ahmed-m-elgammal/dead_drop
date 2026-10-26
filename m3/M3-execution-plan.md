@@ -49,6 +49,14 @@
 - Red-string selection (the board's signature, functional): the selected pin threads sagging red strings to every connected node (bow away from canvas center) + neighbor rings + a red pushpin on the selection — three redundant cues for "what applies to this pin", both seats.
 - Asset audit: exactly ONE new asset (map-paper.png, procedural, seamless); everything else reuses existing textures/primitives; nothing interactive baked into bitmaps.
 
+### W4.7 — Reference-board layout pass (DONE — [ADR-011](adr-011-m3-w47-reference-board-layout.md))
+- Left CaseBriefPanel (identity/objective/daily-loop/legend/compass from real map stats) mounted in both seats, hidden on mobile; END PHASE affordance fixed; map bytes untouched.
+
+### W4.8 — Implement the reference-board investigation map (DONE — [ADR-012](adr-012-m3-w48-reference-map-implementation.md))
+- Player escalation: "Critical Fix: Implement the Actual Game Map UI — the central map is the highest priority." Live audit found the map interactive but NOT matching the reference: portrait 760×1000 plate letterboxed into a narrow strip inside the near-square desktop panel, districts packed (11px seams), washed-out cream paper, roads drawn over transit, ReplayViewer hardcoding the old viewBox.
+- Relayout (presentation-only; store/engine/AI byte-untouched, 150/150 incl. parity gate): near-square 880×920 plate FILLING the panel; quadrant centers spread (seams ≥46px); full-bleed parchment inside a dark `.map-frame` bezel with survey grid + age vignette; richer aged-tan `map-paper.png` (blocks, hatching, stains); route hierarchy flipped transit-first (F→T→M passes, paper casing per class) with reference colors (steel-blue roads / orange dashed trams / teal metro); district names pinned to the plate corners (clear of zoom controls on desktop AND mobile); replay map follows the geometry constants; legend swatches single-sourced from `EDGE_STYLE`.
+- Verified live (agent-browser, both seats + 390×844): selection strings/probe/zoom/pan/FIT, MARKET district reveal loop + corner stamp + evidence note, fugitive YOU pin + courier panel, zero page errors on cold render; repo `typecheck` clean, `vitest` 150/150, `eslint` clean, `next build` green.
+
 ### W5 — Hardening + dogfood (re-scoped from W4)
 - PWA install/offline shell, settings S9, reduced-motion pass, text-scale pass.
 - Audio pass (Web Audio SFX/ambience — deferred from W4 art sprint to keep one sprint one theme).

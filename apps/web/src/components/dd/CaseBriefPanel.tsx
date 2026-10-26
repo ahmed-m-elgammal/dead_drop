@@ -15,6 +15,7 @@
  * status (day/IP/probes stay single-sourced there).
  */
 import type { CaseConfig, FugitiveView, InvestigatorView, ValidatedMap } from '@dead-drop/engine';
+import { EDGE_STYLE } from '@/lib/dd/geometry';
 import { useDD } from '@/lib/dd/store';
 
 /* map-legend glyph language — mirrors MapCanvas node shapes (paper-styled
@@ -70,16 +71,11 @@ function YouGlyph() {
 }
 
 function RouteSwatch({ kind }: { kind: 'F' | 'T' | 'M' }) {
-  // exact EDGE_STYLE values from geometry.ts
-  const s =
-    kind === 'M'
-      ? { stroke: '#2f6a5f', w: 3.6 }
-      : kind === 'T'
-        ? { stroke: '#b0722c', w: 2.2, dash: '4,3' }
-        : { stroke: '#5c6478', w: 1.6 };
+  // exact EDGE_STYLE values — single source of truth in geometry.ts
+  const s = EDGE_STYLE[kind];
   return (
     <svg viewBox="0 0 18 8" className="h-2 w-4 shrink-0" aria-hidden>
-      <line x1="0" y1="4" x2="18" y2="4" stroke={s.stroke} strokeWidth={s.w} strokeDasharray={s.dash} strokeLinecap="round" />
+      <line x1="0" y1="4" x2="18" y2="4" stroke={s.stroke} strokeWidth={Math.min(4, s.width)} strokeDasharray={s.dash || undefined} strokeLinecap="round" />
     </svg>
   );
 }
