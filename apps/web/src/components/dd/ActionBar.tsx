@@ -31,7 +31,6 @@ export default function ActionBar() {
   if (!view) return null;
   const leg = investigatorLegality(view, useDD.getState().session?.p);
   const myPhase = view.phase === 'INVESTIGATOR_ACTIONS';
-  const intel = view.investigator.intel;
   const day = view.day;
   const totalDays = useDD.getState().session?.p.P1_days_per_case ?? 8;
 
@@ -72,29 +71,20 @@ export default function ActionBar() {
 
   return (
     <div className="pixel-frame relative p-3">
-      {/* phase strip */}
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <span className="whitespace-nowrap font-term text-lg leading-none">
-          {aiThinking || view.phase === 'FUGITIVE_MOVE' ? (
-            <span className="flex items-center gap-1.5 text-amber-2">
-              <span className="inline-block h-2 w-2 animate-ping rounded-full bg-amber-2" />
-              THE FUGITIVE IS MOVING…
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5 text-mint">
-              <span className="inline-block h-2 w-2 rounded-full bg-mint" />
-              YOUR PHASE — DAY {Math.min(day, totalDays)} · STEP 6
-            </span>
-          )}
-        </span>
-        <span className="font-term text-base text-fog">
-          IP <b className="text-amber-2">{intel}</b> · probes today {view.investigator.probes_today}/2 ·{' '}
-          {view.investigator.stakeout_armed ? (
-            <span className="font-bold text-blood-2">armed @ {view.investigator.stakeout_armed}</span>
-          ) : (
-            'no stakeout armed'
-          )}
-        </span>
+      {/* turn indicator — status (day/IP/probes/armed) lives in CaseHeader,
+          so this strip stays a pure whose-turn signal */}
+      <div className="mb-2 flex items-center">
+        {aiThinking || view.phase === 'FUGITIVE_MOVE' ? (
+          <span className="flex items-center gap-1.5 font-term text-lg leading-none text-amber-2">
+            <span className="inline-block h-2 w-2 animate-ping rounded-full bg-amber-2" />
+            THE FUGITIVE IS MOVING…
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 font-term text-lg leading-none text-mint">
+            <span className="inline-block h-2 w-2 rounded-full bg-mint" />
+            YOUR PHASE
+          </span>
+        )}
       </div>
       {aiThinking && <div className="thinking-strip absolute inset-x-0 top-0 h-1" aria-hidden />}
 

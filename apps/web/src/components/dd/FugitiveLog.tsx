@@ -45,7 +45,20 @@ export default function FugitiveLog({ fview }: { fview: FugitiveView }) {
                   <span className={`mt-0.5 shrink-0 px-1 text-center font-term text-sm leading-4 ${e.leak ? 'text-blood-2' : 'text-fog-2'}`}>
                     D{e.day}
                   </span>
-                  <span className={`font-type text-[11.5px] leading-snug ${e.leak ? 'text-blood-2' : 'text-fog'}`}>
+                  {e.photo && (
+                    <span className="ml-auto shrink-0 rotate-1 border-[3px] border-[#f4efe4] bg-[#f4efe4] shadow-[1px_2px_0_rgba(4,8,16,.35)]">
+                      <img
+                        src={e.photo}
+                        alt=""
+                        className="art block h-9 w-14 object-cover"
+                        loading="lazy"
+                        onError={(ev) => {
+                          (ev.currentTarget.parentElement as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    </span>
+                  )}
+                  <span className={`min-w-0 flex-1 font-type text-[11.5px] leading-snug ${e.leak ? 'text-blood-2' : 'text-fog'}`}>
                     {e.text}
                   </span>
                 </div>
@@ -58,13 +71,14 @@ export default function FugitiveLog({ fview }: { fview: FugitiveView }) {
   );
 }
 
-function eventText(ev: PublicEvent): { day: number; text: string; leak?: boolean } {
+function eventText(ev: PublicEvent): { day: number; text: string; leak?: boolean; photo?: string } {
   switch (ev.kind) {
     case 'DISTRICT_REVEAL':
       return {
         day: ev.day,
         text: `District reveal — the Investigator learned you ended the day in ${DISTRICT_NAMES[ev.district] ?? ev.district}.`,
         leak: true,
+        photo: `/art/district-${ev.district}.png`,
       };
     case 'TRANSIT_REVEAL':
       return {

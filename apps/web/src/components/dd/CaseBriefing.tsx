@@ -80,16 +80,31 @@ export default function CaseBriefing({ config, role, openKey, onClose }: Props) 
             {isF ? 'YOU ARE THE COURIER' : 'THE COURIER IS MOVING'}
           </div>
 
-          {/* photo strip */}
+          {/* photo strip — subject polaroid + the neighborhood */}
           <div className="mt-4 flex items-center gap-4">
-            <div className="relative shrink-0 border-[6px] border-[#f4efe4] bg-[#f4efe4] shadow-md tilt-l">
-              <img
-                src={isF ? '/art/portrait-courier.png' : '/art/lineup.png'}
-                alt={isF ? 'Your dossier photo — a hooded courier' : 'Suspect lineup — the Courier pool'}
-                className="art block h-20 w-20 object-cover sm:h-24 sm:w-32"
-              />
-              <div className="mt-1 text-center font-type text-[9px] uppercase tracking-widest text-[#6b5b3e]">
-                {isF ? 'subject: you' : 'known associates'}
+            <div className="flex shrink-0 flex-col gap-2.5">
+              <div className="relative border-[6px] border-[#f4efe4] bg-[#f4efe4] shadow-md tilt-l">
+                <img
+                  src={isF ? '/art/portrait-courier.png' : '/art/lineup.png'}
+                  alt={isF ? 'Your dossier photo — a hooded courier' : 'Suspect lineup — the Courier pool'}
+                  className="art block h-20 w-20 object-cover sm:h-24 sm:w-32"
+                />
+                <div className="mt-1 text-center font-type text-[9px] uppercase tracking-widest text-[#6b5b3e]">
+                  {isF ? 'subject: you' : 'known associates'}
+                </div>
+              </div>
+              <div className="border-[5px] border-[#f4efe4] bg-[#f4efe4] shadow-md tilt-r">
+                <img
+                  src={`/art/district-${(config.safehouse || 'D1').slice(0, 2)}.png`}
+                  alt={`Surveillance view of ${district}`}
+                  className="art block h-12 w-[6.25rem] object-cover sm:h-14 sm:w-32"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <div className="pb-0.5 text-center font-type text-[8.5px] uppercase tracking-widest text-[#6b5b3e]">
+                  {district} — yesterday
+                </div>
               </div>
             </div>
             <p className="min-h-[8.5rem] font-type text-[13px] leading-relaxed text-[#33291a] sm:text-sm">

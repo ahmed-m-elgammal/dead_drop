@@ -20,6 +20,7 @@ import SetupScreen from '@/components/dd/SetupScreen';
 import LadderScreen from '@/components/dd/LadderScreen';
 import MapCanvas from '@/components/dd/MapCanvas';
 import ActionBar from '@/components/dd/ActionBar';
+import CaseHeader from '@/components/dd/CaseHeader';
 import Sidebar from '@/components/dd/Sidebar';
 import FugitivePanel from '@/components/dd/FugitivePanel';
 import FugitiveLog from '@/components/dd/FugitiveLog';
@@ -135,6 +136,7 @@ export default function Home() {
           <MapCanvas vm={VM} view={view} config={config} />
         </div>
         <div className="flex min-h-0 flex-1 flex-col gap-3 lg:w-[350px] lg:flex-none">
+          <CaseHeader />
           <ActionBar />
           <div className="min-h-0 flex-1">
             <Sidebar />

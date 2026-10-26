@@ -81,18 +81,20 @@ export default function SetupScreen() {
               />
               <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-panel via-transparent to-transparent sm:h-28" />
               <div className="relative p-2.5">
-                <div className={`font-pixel text-[10px] ${role === 'investigator' ? 'text-amber' : 'text-paper'}`}>
-                  INVESTIGATOR
+                <div className="flex items-center justify-between gap-1">
+                  <div className={`font-pixel text-[10px] ${role === 'investigator' ? 'text-amber' : 'text-paper'}`}>
+                    INVESTIGATOR
+                  </div>
+                  {role === 'investigator' && (
+                    <span className="stamp shrink-0 border-mint text-mint" style={{ fontSize: '0.55rem', padding: '0.05em 0.4em' }}>
+                      on duty
+                    </span>
+                  )}
                 </div>
                 <div className="mt-1 font-type text-[11px] leading-snug text-fog">
                   Read the trail. Probe the dark. Stake out the gate.
                 </div>
               </div>
-              {role === 'investigator' && (
-                <span className="stamp absolute right-2 top-2 border-mint text-mint" style={{ fontSize: '0.55rem' }}>
-                  on duty
-                </span>
-              )}
             </button>
 
             <button
@@ -109,18 +111,20 @@ export default function SetupScreen() {
               />
               <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-panel via-transparent to-transparent sm:h-28" />
               <div className="relative p-2.5">
-                <div className={`font-pixel text-[10px] ${role === 'fugitive' ? 'text-amber' : 'text-paper'}`}>
-                  FUGITIVE
+                <div className="flex items-center justify-between gap-1">
+                  <div className={`font-pixel text-[10px] ${role === 'fugitive' ? 'text-amber' : 'text-paper'}`}>
+                    FUGITIVE
+                  </div>
+                  {role === 'fugitive' && (
+                    <span className="stamp shrink-0 border-blood-2 text-blood-2" style={{ fontSize: '0.55rem', padding: '0.05em 0.4em' }}>
+                      wanted
+                    </span>
+                  )}
                 </div>
                 <div className="mt-1 font-type text-[11px] leading-snug text-fog">
                   Move in secret. Dodge the net. Vanish by Day 8.
                 </div>
               </div>
-              {role === 'fugitive' && (
-                <span className="stamp absolute right-2 top-2 border-blood-2 text-blood-2" style={{ fontSize: '0.55rem' }}>
-                  wanted
-                </span>
-              )}
             </button>
           </div>
 
@@ -143,13 +147,26 @@ export default function SetupScreen() {
                       aria-pressed={on}
                       className={`paper-card p-2.5 text-left transition-transform hover:-translate-y-0.5 ${on ? 'tilt-r' : 'opacity-85'}`}
                     >
-                      <div className="flex items-baseline justify-between gap-1">
-                        <span className="font-pixel text-[9px] text-[#241d10]">{a.label.toUpperCase()}</span>
-                        <span className="stamp border-[#7a2d2d] text-[#7a2d2d]" style={{ fontSize: '0.5rem', padding: '0.05em 0.35em' }}>
-                          {a.tier}
-                        </span>
+                      <div className="flex items-start gap-2">
+                        {/* mugshot — same dossier table the precinct keeps */}
+                        <img
+                          src={`/art/mugshot-${id}.png`}
+                          alt={`${a.label} mugshot`}
+                          className={`art h-12 w-12 shrink-0 border-2 border-[#241d10]/70 object-cover ${on ? '' : 'grayscale-[35%]'}`}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-baseline justify-between gap-1">
+                            <span className="font-pixel text-[9px] text-[#241d10]">{a.label.toUpperCase()}</span>
+                            <span className="stamp shrink-0 border-[#7a2d2d] text-[#7a2d2d]" style={{ fontSize: '0.5rem', padding: '0.05em 0.35em' }}>
+                              {a.tier}
+                            </span>
+                          </div>
+                          <p className="mt-1 font-type text-[10.5px] leading-snug text-[#4a3d27]">{a.tagline}</p>
+                        </div>
                       </div>
-                      <p className="mt-1.5 font-type text-[10.5px] leading-snug text-[#4a3d27]">{a.tagline}</p>
                     </button>
                   );
                 })}

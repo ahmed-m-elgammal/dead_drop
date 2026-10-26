@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * Dead Drop — case side panel (M3 W1 logic, W4 noir skin): case header as
- * a file tab, marker tools, and the evidence log as pinned paper notes on
- * the corkboard — private results read as surveillance photos. The §1.3
- * information boundary stays visible (private entries are flagged).
+ * Dead Drop — case side panel (M3 W1 logic, W4 noir skin): marker tools and
+ * the evidence log as pinned paper notes on the corkboard — private results
+ * read as surveillance slips, district reveals carry a pixel surveillance
+ * photo. Case status lives in CaseHeader (single source, no duplication).
+ * The §1.3 information boundary stays visible (private entries are flagged).
  */
 import { useEffect, useMemo, useRef } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { PublicEvent, PrivateInvestigatorEvent } from '@dead-drop/engine';
 import { useDD, type MarkerKind } from '@/lib/dd/store';
@@ -21,14 +21,9 @@ const DISTRICT_NAMES: Record<string, string> = {
 
 export default function Sidebar() {
   const view = useDD((s) => s.view);
-  const config = useDD((s) => s.config);
   const selected = useDD((s) => s.selected);
   const markers = useDD((s) => s.markers);
   const setMarker = useDD((s) => s.setMarker);
-  const beliefHalo = useDD((s) => s.beliefHalo);
-  const toggleHalo = useDD((s) => s.toggleHalo);
-  const abandonCase = useDD((s) => s.abandonCase);
-  const tutorial = useDD((s) => s.tutorial);
 
   const logRef = useRef<HTMLDivElement>(null);
   const entries = useMemo(() => (view ? mergeLogs(view) : []), [view]);
@@ -37,7 +32,7 @@ export default function Sidebar() {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: 'smooth' });
   }, [entries.length]);
 
-  if (!view || !config) return null;
+  if (!view) return null;
 
   const markerBtn = (kind: MarkerKind, label: string) => (
     <Button
@@ -55,58 +50,6 @@ export default function Sidebar() {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
-      {/* case tab — file header */}
-      <div className="pixel-frame relative p-3">
-        <div className="absolute -top-[10px] left-3 bg-amber px-2 py-0.5 font-pixel text-[7px] text-[#141005]">
-          DEAD DROP · CASE №{String(config.seed % 100000).padStart(5, '0')}
-        </div>
-        <div className="mt-1 flex items-end justify-between">
-          <div className="font-pixel text-sm text-paper">
-            DAY {Math.min(view.day, 8)}
-            <span className="text-fog-2">/8</span>
-            <span className="ml-2 font-type text-[10px] font-normal tracking-wide text-fog">
-              {view.phase === 'FUGITIVE_MOVE' ? '· courier moving' : view.phase === 'INVESTIGATOR_ACTIONS' ? '· your phase' : ''}
-            </span>
-          </div>
-          <div className="text-right font-term text-base leading-none text-fog">
-            <div>seed <b className="text-amber-2">{config.seed}</b></div>
-            <div className="mt-0.5">IP <b className="text-amber-2">{view.investigator.intel}</b></div>
-          </div>
-        </div>
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          <Badge variant="outline" className="border-line-2 bg-ink-2 font-term text-sm text-fog">
-            SH {config.safehouse}
-          </Badge>
-          <Badge variant="outline" className="border-line-2 bg-ink-2 font-term text-sm text-fog">
-            DROP1 {config.drops[0]}
-          </Badge>
-          <Badge variant="outline" className="border-line-2 bg-ink-2 font-term text-sm text-fog">
-            DROP2 {config.drops[1]}
-          </Badge>
-          <Badge variant="outline" className="border-blood/60 bg-ink-2 font-term text-sm text-blood-2">
-            GATE {config.gate}
-          </Badge>
-        </div>
-        <div className="mt-2.5 flex items-center gap-2">
-          <button
-            onClick={toggleHalo}
-            data-on={beliefHalo}
-            className="chip-pixel px-2 py-0.5 text-sm"
-          >
-            belief halo {beliefHalo ? 'ON' : 'OFF'}
-          </button>
-          <span className="font-type text-[10px] text-fog-2">where they could be — public evidence only</span>
-        </div>
-        {!tutorial && (
-          <button
-            onClick={abandonCase}
-            className="mt-2 font-type text-[10px] text-fog-2 underline hover:text-fog"
-          >
-            abandon case (clears the local record)
-          </button>
-        )}
-      </div>
-
       {/* markers — red-string thinking */}
       <div className="pixel-frame p-3">
         <div className="mb-1.5 flex items-center justify-between font-term text-base uppercase tracking-wider text-fog">
@@ -162,8 +105,23 @@ export default function Sidebar() {
                     >
                       D{e.day}
                     </span>
+                    {e.photo && (
+                      <span className="float-right ml-1 mt-0.5 shrink-0 rotate-1 border-[3px] border-[#f4efe4] bg-[#f4efe4] shadow-[1px_2px_0_rgba(4,8,16,.35)]">
+                        <img
+                          src={e.photo}
+                          alt=""
+                          className="art block h-9 w-14 object-cover"
+                          loading="lazy"
+                          onError={(ev) => {
+                            // A missing vignette must never break the log —
+                            // drop the frame, keep the note.
+                            (ev.currentTarget.parentElement as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      </span>
+                    )}
                     <span
-                      className={`font-type text-[11.5px] leading-snug ${
+                      className={`min-w-0 flex-1 font-type text-[11.5px] leading-snug ${
                         e.private ? 'text-fog' : 'text-[#33291a]'
                       }`}
                     >
@@ -189,6 +147,8 @@ interface Entry {
   day: number;
   text: string;
   private?: boolean;
+  /** Pixel surveillance vignette (district reveals) — presentation only. */
+  photo?: string;
 }
 
 function mergeLogs(view: NonNullable<ReturnType<typeof useDD.getState>['view']>): Entry[] {
@@ -205,7 +165,11 @@ function mergeLogs(view: NonNullable<ReturnType<typeof useDD.getState>['view']>)
 function eventText(ev: PublicEvent): Entry {
   switch (ev.kind) {
     case 'DISTRICT_REVEAL':
-      return { day: ev.day, text: `District reveal — they ended the day in ${DISTRICT_NAMES[ev.district] ?? ev.district}.` };
+      return {
+        day: ev.day,
+        text: `District reveal — they ended the day in ${DISTRICT_NAMES[ev.district] ?? ev.district}.`,
+        photo: `/art/district-${ev.district}.png`,
+      };
     case 'TRANSIT_REVEAL':
       return {
         day: ev.day,

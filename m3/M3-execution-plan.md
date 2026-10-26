@@ -36,6 +36,12 @@
 - Zero rules churn: store/engine/AI untouched (150/150 incl. parity gate); briefing content audit — drops/gate/safehouse/reveal calendar only, all public config.
 - E2E found + fixed: procedural paper texture generated black (Image.new default base never painted), fugitive Hold-button text wrap, briefing effect setState-in-effect (repo lint stricter than sandbox — sandbox eslint now ignores the embedded repo tree).
 
+### W4.5 — Incremental UI/UX polish sprint (DONE — [ADR-009](adr-009-m3-polish-uiux.md))
+- Player-framed as "improve, don't replace": audit-driven fixes on the live game, no redesign. Presentation-only — store/engine/AI byte-untouched (150/150 incl. parity gate).
+- Map readability: deterministic label resolver (seam labels no longer collide), ink label halos, edge-casing underlay for crossing legibility, hit-radius clamp (seam twins' hit areas no longer overlap — later-rendered twin used to swallow clicks).
+- Sidebar IA: CaseHeader extracted as the single status anchor (file tab, DAY/IP/probes/armed, glyph-matched config badges, compact halo toggle); ActionBar deduplicated to turn indicator + controls; right column order = status → actions → tools → evidence.
+- Evidence scanability: district reveals carry pixel surveillance-photo thumbnails in both seats' logs; briefing dossier gains the safehouse-district polaroid; archetype dossiers gain mugshots. Asset pack 9 → 17 files (same locked W4 style + PIL pipeline); every img degrades gracefully (onError drops the frame, never the note).
+
 ### W5 — Hardening + dogfood (re-scoped from W4)
 - PWA install/offline shell, settings S9, reduced-motion pass, text-scale pass.
 - Audio pass (Web Audio SFX/ambience — deferred from W4 art sprint to keep one sprint one theme).

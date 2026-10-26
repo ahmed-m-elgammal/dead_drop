@@ -160,6 +160,10 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   fontSize={15}
                   fontWeight={700}
                   fill={revealedDay !== undefined ? '#f4c86a' : '#5d6d88'}
+                  stroke="#0b101b"
+                  strokeWidth={3}
+                  paintOrder="stroke"
+                  strokeLinejoin="round"
                   className="uppercase"
                   style={{ letterSpacing: 1.5 }}
                 >
@@ -174,7 +178,28 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
             );
           })}
 
-          {/* edges — three passes so Foot reads on top of Tram on top of Metro */}
+          {/* edges — ink casing pass first so crossings stay readable, then
+              the three color passes (M under T under F) */}
+          {edges.map((e, i) => {
+            const a = layout.nodes.get(e.a);
+            const b = layout.nodes.get(e.b);
+            if (!a || !b) return null;
+            const st = EDGE_STYLE[e.type];
+            return (
+              <line
+                key={`casing-${i}`}
+                x1={a.x}
+                y1={a.y}
+                x2={b.x}
+                y2={b.y}
+                stroke="#0b101b"
+                strokeWidth={st.width + 2.6}
+                strokeDasharray={st.dash || undefined}
+                strokeLinecap="round"
+                opacity={0.6}
+              />
+            );
+          })}
           {edges.map((e, i) => {
             const a = layout.nodes.get(e.a);
             const b = layout.nodes.get(e.b);
@@ -253,13 +278,15 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
             />
           ))}
 
-          {/* labels — non-interactive layer (pointer-events none) */}
+          {/* labels — non-interactive layer (pointer-events none); positions
+              come from the geometry label resolver (no seam collisions), and
+              an ink halo (paint-order stroke) keeps text readable over lines */}
           {[...layout.nodes.values()].map((p) => (
             <text
               key={`label-${p.id}`}
-              x={p.x + p.ux * 24}
-              y={p.y + p.uy * 24 + 3.5}
-              textAnchor={p.ux > 0.35 ? 'start' : p.ux < -0.35 ? 'end' : 'middle'}
+              x={p.lx}
+              y={p.ly}
+              textAnchor={p.anchor}
               fontSize={10.5}
               fontWeight={
                 vm.map.gates.includes(p.id) || vm.map.safehouses.includes(p.id) || vm.map.drop_candidates.includes(p.id)
@@ -271,6 +298,10 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   ? '#e8ddc7'
                   : '#8b9bb4'
               }
+              stroke="#0b101b"
+              strokeWidth={2.6}
+              paintOrder="stroke"
+              strokeLinejoin="round"
               pointerEvents="none"
             >
               {p.id}
@@ -355,10 +386,11 @@ function NodeGlyph(props: {
       role="button"
       aria-label={`node ${p.id}`}
     >
-      {/* invisible hit area — makes the whole glyph a stable target (06-uiux §2:
-          node hit targets grow toward 44px with zoom; also shields clicks from
-          the district plate circle underneath) */}
-      <circle cx={p.x} cy={p.y} r={16} fill="transparent" stroke="none" />
+      {/* invisible hit area — makes the whole glyph a stable target. The
+          radius is clamped to half the nearest-neighbor distance so seam
+          twins never overlap (06-uiux §2: targets grow with zoom, which
+          this preserves — r scales with k). */}
+      <circle cx={p.x} cy={p.y} r={p.hitR} fill="transparent" stroke="none" />
       {isSelected && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#e8a33d" strokeWidth={2.2} />}
       {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#f4c86a" strokeWidth={2.2} />}
       {meHere && (
