@@ -9,7 +9,7 @@
  * End phase advances the clock (the AI Fugitive then moves).
  */
 import { useRef, useState } from 'react';
-import { Crosshair, EyeOff, Hand, Radar, ShieldAlert } from 'lucide-react';
+import { Crosshair, EyeOff, Hand, MoveRight, Radar, ShieldAlert } from 'lucide-react';
 import { investigatorLegality } from '@dead-drop/engine';
 import { useDD } from '@/lib/dd/store';
 
@@ -145,11 +145,12 @@ export default function ActionBar() {
       </div>
 
       <button
-        className="btn-pixel-ghost mt-2 w-full py-2.5 uppercase"
+        className="btn-pixel-ghost mt-2 flex w-full items-center justify-between gap-2 px-3 py-2.5 uppercase"
         disabled={!myPhase}
         onClick={endPhase}
       >
-        End phase — advance to Day {Math.min(day + 1, totalDays)}
+        <span className="text-[15px] leading-none">End phase — advance to Day {Math.min(day + 1, totalDays)}</span>
+        <MoveRight className="h-4 w-4 shrink-0" aria-hidden />
       </button>
     </div>
   );

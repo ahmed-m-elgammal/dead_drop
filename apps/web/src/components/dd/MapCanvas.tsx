@@ -490,8 +490,9 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
         </button>
       </div>
 
-      {/* legend — a pinned paper strip over the board */}
-      <div className="paper-card absolute bottom-2.5 left-3 z-20 flex flex-wrap items-center gap-x-3 gap-y-1 px-2.5 py-1.5 text-[10px] font-semibold text-[#33291a] tilt-l">
+      {/* legend — mobile-only pinned strip; desktop reads the legend from
+          the left case-brief panel (single legend per viewport) */}
+      <div className="paper-card absolute bottom-2.5 left-3 z-20 flex flex-wrap items-center gap-x-3 gap-y-1 px-2.5 py-1.5 text-[10px] font-semibold text-[#33291a] tilt-l lg:hidden">
         <span className="flex items-center gap-1">
           <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#5c6478" strokeWidth="1.6" /></svg>
           Foot 1 SP

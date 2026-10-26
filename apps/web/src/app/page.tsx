@@ -21,6 +21,7 @@ import LadderScreen from '@/components/dd/LadderScreen';
 import MapCanvas from '@/components/dd/MapCanvas';
 import ActionBar from '@/components/dd/ActionBar';
 import CaseHeader from '@/components/dd/CaseHeader';
+import CaseBriefPanel from '@/components/dd/CaseBriefPanel';
 import Sidebar from '@/components/dd/Sidebar';
 import FugitivePanel from '@/components/dd/FugitivePanel';
 import FugitiveLog from '@/components/dd/FugitiveLog';
@@ -110,6 +111,7 @@ export default function Home() {
     return (
       <div className="desk fx-grain flex h-screen flex-col">
         <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row">
+          <CaseBriefPanel role="fugitive" vm={VM} view={fview} config={config} />
           <div className="h-[54vh] min-h-0 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
             <MapCanvas vm={VM} view={fview} config={config} fugitiveRole />
           </div>
@@ -132,6 +134,7 @@ export default function Home() {
   return (
     <div className="desk fx-grain flex h-screen flex-col">
       <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row">
+        <CaseBriefPanel role="investigator" vm={VM} view={view} config={config} />
         <div className="h-[54vh] min-h-0 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
           <MapCanvas vm={VM} view={view} config={config} />
         </div>
