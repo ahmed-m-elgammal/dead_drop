@@ -48,7 +48,7 @@
 | Risks | Reveal schedule wrong → S2 readout; sim policies too weak to expose dominance → add `I-Calendar` variants |
 | **Exit** | G1 signed off in 14-readiness |
 
-### M3 — Playable single-player prototype (4–5 wks; W1 executed 2026-10-26 — apps/web scaffold + playable Investigator loop + Stage-1 F-Planner AI, ADR-005; next: W2 archetypes + ladder + IndexedDB replay)
+### M3 — Playable single-player prototype (4–5 wks; W1–W2 executed 2026-10-26 — W1 apps/web scaffold + playable Investigator loop (ADR-005); W2 archetypes + 24-case ladder + IndexedDB replay viewer + tutorial + CI on dist-resolved engine (ADR-006); next: W3 fugitive-side + I-GreedyProbe)
 
 | Field | Detail |
 |---|---|

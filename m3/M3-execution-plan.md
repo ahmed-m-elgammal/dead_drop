@@ -1,6 +1,6 @@
 # M3 — Playable Single-Player Prototype (execution plan)
 
-**Status:** W1 done (2026-10-26) · **Dependencies:** M2 closed (`engine@1.0.0-alpha.0`, G1 signed off) · **Exit gate:** G2 (10-roadmap M3 — L5 pass, tutorial completion ≥70% internal, zero known rule bugs, crash-free ≥99%) · **W1 decisions:** [ADR-005](adr-005-m3-w1-web.md)
+**Status:** W2 done (2026-10-26) · **Dependencies:** M2 closed (`engine@1.0.0-alpha.0`, G1 signed off) · **Exit gate:** G2 (10-roadmap M3 — L5 pass, tutorial completion ≥70% internal, zero known rule bugs, crash-free ≥99%) · **W1 decisions:** [ADR-005](adr-005-m3-w1-web.md) · **W2 decisions:** [ADR-006](adr-006-m3-w2-content-ai-replay.md)
 
 ## Week-by-week plan (4–5 wks; W1 executed)
 
@@ -15,12 +15,12 @@
 - Persistence: seed + investigator journal → deterministic replay on reload (ADR-005 D3).
 - Verified: browser E2E green path (see ADR-005 verification record); ruleset untouched at `1.0.0-alpha.1`.
 
-### W2 — Content + AI stage 2 + replay
-- Fugitive archetypes Random / Cautious / Deceptive (05-ai-spec §3) + difficulty select on setup.
-- `buildLadder` (engine, 24 cases) → solo ladder screen S7 with completion stars (local).
-- IndexedDB case history + replay viewer S6 (per-day scrubber).
-- Tutorial beats 1–3 (scripted case, 06-uiux §3).
-- CI: root npm install + engine build + `next build` for apps/web (make the repo the buildable source of truth; retire the sandbox engine lift).
+### W2 — Content + AI stage 2 + replay (DONE — [ADR-006](adr-006-m3-w2-content-ai-replay.md))
+- Fugitive archetypes Random / Cautious / Deceptive (05-ai-spec §3, verbatim knobs) as seeded selection policies over the W1 feasibility-filtered candidate list + difficulty select on setup; per-day `mulberry32` streams keyed (seed, archetype, day) — replay bit-exact (browser-verified).
+- `buildLadder` (engine, 24 cases, M2 C6 diversity) → solo ladder screen S7 with tier ramp 1–8 Random / 9–16 Cautious / 17–24 Deceptive and local completion stars.
+- IndexedDB case history + replay viewer S6 (per-day scrubber over the engine's `disclosure()` — rebuilt from seed + archetype + journal through the shared day-runner, never snapshotted).
+- Tutorial beats 1–3 (fixed seed 6, scripted Fugitive: HOLD day 1 → walk onto drop[0] day 2 → day-2 step-2 stakeout CAPTURE), beat gating in the store, coach-bar spotlight, completion flag.
+- CI: `.github/workflows/web-ci.yml` — npm ci → engine+sim tsc → vitest → web lint → `next build` for apps/web against the BUILT engine dist (repo is the buildable source of truth; sandbox lift's build role retired).
 
 ### W3 — Fugitive-side playable + polish
 - Case screen S2 (Fugitive view): route ribbon, stamina bar, leak calendar, commit-move bottom sheet.

@@ -29,9 +29,10 @@ export default function Sidebar() {
   const beliefHalo = useDD((s) => s.beliefHalo);
   const toggleHalo = useDD((s) => s.toggleHalo);
   const abandonCase = useDD((s) => s.abandonCase);
+  const tutorial = useDD((s) => s.tutorial);
 
   const logRef = useRef<HTMLDivElement>(null);
-  const entries = useMemo(() => mergeLogs(view), [view]);
+  const entries = useMemo(() => (view ? mergeLogs(view) : []), [view]);
 
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: 'smooth' });
@@ -88,12 +89,14 @@ export default function Sidebar() {
           </button>
           <span>where they could be, from public evidence only</span>
         </div>
-        <button
-          onClick={abandonCase}
-          className="mt-2 text-[10px] text-neutral-400 underline hover:text-neutral-600"
-        >
-          abandon case (clears the local record)
-        </button>
+        {!tutorial && (
+          <button
+            onClick={abandonCase}
+            className="mt-2 text-[10px] text-neutral-400 underline hover:text-neutral-600"
+          >
+            abandon case (clears the local record)
+          </button>
+        )}
       </div>
 
       <div className="rounded-xl border bg-white p-3 shadow-sm">

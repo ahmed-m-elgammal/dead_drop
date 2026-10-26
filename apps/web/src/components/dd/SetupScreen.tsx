@@ -1,16 +1,20 @@
 'use client';
 
 /**
- * Dead Drop — case setup (M3 W1). Seed-reproducible solo case vs the Stage-1
- * baseline Fugitive AI (05-ai-spec §2). No account, no server: the engine
- * runs on-device and the case persists locally as (seed + journal).
+ * Dead Drop — home / case setup (M3 W2). Seed-reproducible solo case vs a
+ * Fugitive archetype (05-ai-spec §3), the solo ladder, the tutorial, and the
+ * case history — no account, no server: everything runs on-device.
  */
 import { useState } from 'react';
-import { Dices, Map as MapIcon, Play, RotateCcw } from 'lucide-react';
+import { BookOpen, Dices, GraduationCap, History, Map as MapIcon, Play, RotateCcw, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useDD } from '@/lib/dd/store';
+import { useDD, type ArchetypeId } from '@/lib/dd/store';
+import { ARCHETYPES } from '@/lib/dd/archetypes';
 import { VERDICT_WINNER } from '@dead-drop/engine';
+import HistoryDialog from '@/components/dd/HistoryDialog';
+
+const ORDER: ArchetypeId[] = ['baseline', 'random', 'cautious', 'deceptive'];
 
 function randomSeed(): number {
   return Math.floor(Math.random() * 2 ** 31);
@@ -20,7 +24,12 @@ export default function SetupScreen() {
   const startCase = useDD((s) => s.startCase);
   const resumeCase = useDD((s) => s.resumeCase);
   const resumable = useDD((s) => s.resumable);
+  const goLadder = useDD((s) => s.goLadder);
+  const startTutorial = useDD((s) => s.startTutorial);
+  const tutorialDone = useDD((s) => s.tutorialDone);
   const [seedText, setSeedText] = useState(() => String(randomSeed()));
+  const [archetype, setArchetype] = useState<ArchetypeId>('random');
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const seed = Number.parseInt(seedText, 10);
   const valid = Number.isInteger(seed) && seed >= 0;
@@ -40,7 +49,41 @@ export default function SetupScreen() {
 
         <div className="rounded-2xl border bg-white p-5 shadow-sm">
           <label className="text-xs font-bold uppercase tracking-wider text-neutral-500" htmlFor="seed">
-            Case seed — same seed, same case, same fugitive
+            Fugitive archetype — same seed, same case, same fugitive
+          </label>
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            {ORDER.map((id) => {
+              const a = ARCHETYPES[id];
+              const on = archetype === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => setArchetype(id)}
+                  aria-pressed={on}
+                  className={`rounded-xl border p-2.5 text-left transition-colors ${
+                    on ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-200 bg-white hover:border-neutral-400'
+                  }`}
+                >
+                  <div className="flex items-baseline justify-between gap-1">
+                    <span className="text-sm font-black">{a.label}</span>
+                    <span
+                      className={`rounded px-1 text-[9px] font-bold uppercase tracking-wide ${
+                        on ? 'bg-white/20 text-white/80' : 'bg-neutral-100 text-neutral-500'
+                      }`}
+                    >
+                      {a.tier}
+                    </span>
+                  </div>
+                  <p className={`mt-1 text-[10px] leading-snug ${on ? 'text-white/70' : 'text-neutral-500'}`}>
+                    {a.tagline}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+
+          <label className="mt-4 block text-xs font-bold uppercase tracking-wider text-neutral-500" htmlFor="seed">
+            Case seed
           </label>
           <div className="mt-2 flex gap-2">
             <Input
@@ -62,25 +105,37 @@ export default function SetupScreen() {
             </Button>
           </div>
 
-          <div className="mt-3 rounded-lg bg-neutral-50 px-3 py-2 text-xs text-neutral-600">
-            <b>Fugitive AI:</b> Stage-1 baseline (F-Planner) — deterministic, readable, plays by the same
-            information wall you do. Archetypes (Cautious / Deceptive) arrive later in M3.
-          </div>
-
-          <Button className="mt-4 h-11 w-full gap-2 text-base" disabled={!valid} onClick={() => startCase(seed)}>
+          <Button
+            className="mt-4 h-11 w-full gap-2 text-base"
+            disabled={!valid}
+            onClick={() => startCase(seed, { archetype, source: 'solo' })}
+          >
             <Play className="h-4 w-4" /> Open the case
           </Button>
 
           {resumable && (
             <Button className="mt-2 h-10 w-full gap-2" variant="outline" onClick={resumeCase}>
               <RotateCcw className="h-4 w-4" />
-              Resume case (seed {resumable.seed}
+              {resumable.source === 'tutorial' ? 'Resume tutorial' : 'Resume case'} (seed {resumable.seed}
               {resumable.investigator.length > 0 ? `, ${resumable.investigator.length} actions in` : ''})
             </Button>
           )}
         </div>
 
-        <div className="mt-4 rounded-2xl border bg-white p-4 text-xs leading-relaxed text-neutral-600 shadow-sm">
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={goLadder}>
+            <Trophy className="h-4 w-4" /> Solo ladder
+          </Button>
+          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={startTutorial}>
+            <GraduationCap className="h-4 w-4" />
+            {tutorialDone ? 'Tutorial again' : 'Learn (60s)'}
+          </Button>
+          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={() => setHistoryOpen(true)}>
+            <History className="h-4 w-4" /> History
+          </Button>
+        </div>
+
+        <div className="mt-3 rounded-2xl border bg-white p-4 text-xs leading-relaxed text-neutral-600 shadow-sm">
           <div className="mb-1.5 flex items-center gap-1.5 font-bold text-neutral-800">
             <MapIcon className="h-3.5 w-3.5" /> The 60-second rules
           </div>
@@ -92,12 +147,19 @@ export default function SetupScreen() {
           <span className="font-mono text-[10px]">ruleset 1.0.0-alpha.1</span>.
         </div>
 
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[10px] text-neutral-400">
+          <BookOpen className="h-3 w-3" />
+          The AI plays by the same information wall you do — it reads the public evidence, never your private log.
+        </p>
+
         {resumable?.verdict && (
-          <p className="mt-3 text-center text-xs text-neutral-400">
+          <p className="mt-2 text-center text-xs text-neutral-400">
             Last case closed: {resumable.verdict} ({VERDICT_WINNER[resumable.verdict]}).
           </p>
         )}
       </div>
+
+      {historyOpen && <HistoryDialog onClose={() => setHistoryOpen(false)} />}
     </div>
   );
 }

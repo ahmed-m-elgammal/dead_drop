@@ -4,3 +4,4 @@ coverage/
 *.tsbuildinfo
 npm-debug.log*
 .DS_Store
+.next/

@@ -1,54 +1,75 @@
 /**
- * Dead Drop — solo game store (M3 W1).
+ * Dead Drop — solo game store (M3 W2).
  *
  * Architecture (07-architecture §2, Option B): the UI drives the REAL engine —
  * `CaseSession` is the only rules authority; the store never re-implements a
  * rule. What the store adds is:
- *   1. day-loop mediation (AI F-Planner submits through the same public API
- *      a human Fugitive would; §9.13 stranding is resolved via the engine's
- *      designed `resolveStranded()` contract),
+ *   1. day-loop mediation (the AI — archetype blend per 05-ai-spec §3 —
+ *      submits through the same public API a human Fugitive would; §9.13
+ *      stranding resolves via the engine's `resolveStranded()` contract;
+ *      tutorial days run a scripted controller, also engine-submitted),
  *   2. the action journal + deterministic replay: a case IS (seed +
- *      investigator submissions) — reload rebuilds the session by replaying
- *      the journal through the engine (07-architecture §4 "the case is the
- *      action list + config (replayable)").
- *      The AI is a deterministic function of the session, so Fugitive moves
- *      need no journaling: same seed ⇒ same route. This is the 05-ai-spec §7
- *      reproducibility property, live.
- *   3. role-scoped projection: the UI only ever sees `session.investigatorView()`.
+ *      archetype + investigator submissions). Reload rebuilds the session by
+ *      replaying the journal through the engine and re-running the SAME
+ *      archetype's per-day seeded streams — same seed ⇒ same route
+ *      (05-ai-spec §7 reproducibility, live for every archetype),
+ *   3. role-scoped projection: the UI only ever sees `session.investigatorView()`,
+ *   4. case lifecycle: solo cases, the 24-case ladder (06-uiux S7), tutorial
+ *      beats 1–3 (06-uiux §3), and the closed-case history archive (IndexedDB).
  */
 import { create } from 'zustand';
 import { toast } from 'sonner';
 
-import mapJson from '@/data/map_alpha.json';
 import {
   CaseSession,
   EngineError,
   generateCase,
   investigatorLegality,
-  validateCityMap,
   type ActionEnvelope,
   type CaseConfig,
   type CaseEndDisclosure,
   type InvestigatorSubmission,
   type InvestigatorView,
   type NodeId,
-  type ValidatedMap,
   type Verdict,
 } from '@dead-drop/engine';
-import { fPlannerMove } from './f-planner';
+import { runDays, type ArchetypeId } from './archetypes';
+import { VM } from './vm';
+import { ladderSlots, saveLadderResult, starsFor } from './ladder';
+import {
+  saveCaseRecord,
+  type CaseSource,
+  type HistoryRecord,
+} from './history';
+import {
+  TUTORIAL_SEED,
+  isTutorialDone,
+  markTutorialDone,
+  type TutorialBeat,
+} from './tutorial';
 
-export const VM: ValidatedMap = validateCityMap(mapJson);
+export { VM };
+export type { ArchetypeId };
 
 export type MarkerKind = 'possible' | 'pinned' | 'cleared';
 export type Mode = 'inspect' | 'probe' | 'stakeout';
+export type Screen = 'setup' | 'case' | 'ladder';
 
 interface CaseRecord {
   seed: number;
+  /** Archetype this case is played against — part of the case's identity:
+   *  replay = (seed + archetype + journal). W1 records default to baseline. */
+  archetype: ArchetypeId;
   /** Investigator submissions in order — the journal. Fugitive moves are
-   *  deterministic from the seed and are NOT stored. */
+   *  deterministic from (seed, archetype) and are NOT stored. */
   investigator: Array<ActionEnvelope<InvestigatorSubmission>>;
   verdict: Verdict | null;
   closedAt?: number;
+  startedAt: number;
+  source: CaseSource;
+  ladderIndex?: number | null;
+  /** Live tutorial beat (tutorial cases only) so a reload resumes mid-beat. */
+  tutorialBeat?: TutorialBeat;
 }
 
 const STORE_KEY = 'dd.m3w1.case.v1';
@@ -57,9 +78,15 @@ function loadRecord(): CaseRecord | null {
   try {
     const raw = window.localStorage.getItem(STORE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as CaseRecord;
+    const parsed = JSON.parse(raw) as Partial<CaseRecord>;
     if (typeof parsed?.seed !== 'number' || !Array.isArray(parsed.investigator)) return null;
-    return parsed;
+    // W1 back-compat: records predate archetype/source metadata.
+    return {
+      ...parsed,
+      archetype: parsed.archetype ?? 'baseline',
+      source: parsed.source ?? 'solo',
+      startedAt: parsed.startedAt ?? Date.now(),
+    } as CaseRecord;
   } catch {
     return null;
   }
@@ -83,8 +110,26 @@ function clearRecord(): void {
 
 let aiTimer: ReturnType<typeof setTimeout> | null = null;
 
+function cancelAiTimer(): void {
+  if (aiTimer !== null) {
+    clearTimeout(aiTimer);
+    aiTimer = null;
+  }
+}
+
+export interface StartOptions {
+  resume?: CaseRecord;
+  archetype?: ArchetypeId;
+  source?: CaseSource;
+  ladderIndex?: number | null;
+}
+
+export interface TutorialState {
+  beat: TutorialBeat;
+}
+
 export interface DDState {
-  screen: 'setup' | 'case';
+  screen: Screen;
   session: CaseSession | null;
   config: CaseConfig | null;
   view: InvestigatorView | null;
@@ -97,9 +142,14 @@ export interface DDState {
   mode: Mode;
   aiThinking: boolean;
   beliefHalo: boolean;
+  tutorial: TutorialState | null;
+  tutorialDone: boolean;
 
   hydrate: () => void;
-  startCase: (seed: number, resume?: CaseRecord) => void;
+  goSetup: () => void;
+  goLadder: () => void;
+  startCase: (seed: number, opts?: StartOptions) => void;
+  startLadderCase: (index: number) => void;
   resumeCase: () => void;
   abandonCase: () => void;
   select: (n: NodeId | null) => void;
@@ -109,31 +159,32 @@ export interface DDState {
   probe: (n: NodeId) => void;
   stakeout: (n: NodeId) => void;
   endPhase: () => void;
+  startTutorial: () => void;
+  advanceTutorial: () => void;
+  finishTutorial: () => void;
 }
 
-function depsOf(session: CaseSession, config: CaseConfig) {
-  return { vm: VM, config, params: session.p };
-}
+const TUTORIAL_SEQUENCE: TutorialBeat[] = [
+  'welcome',
+  'tap-drop',
+  'probe-sh',
+  'stakeout-drop',
+  'end-phase',
+];
 
-/** Run the AI Fugitive's day (steps 1–5) through the engine's public API. */
-function runAiDay(session: CaseSession, config: CaseConfig): void {
-  while (session.state.phase === 'FUGITIVE_MOVE' && session.state.verdict === null) {
-    const action = fPlannerMove(depsOf(session, config), session.fugitiveView());
-    if (action === null) {
-      session.resolveStranded(); // §9.13 — engine-produced, never submitted
-      toast.info('The Fugitive is stranded — forced Hold at no cost (§9.13).');
-      continue;
-    }
-    session.submitFugitive({ idempotency_key: `ai-f-${session.state.day}`, action });
-  }
-}
-
-function describe(action: InvestigatorSubmission): string {
-  return action.kind === 'PROBE'
-    ? `probe @ ${action.target}`
-    : action.kind === 'STAKEOUT'
-      ? `stakeout @ ${action.target}`
-      : 'end phase';
+function aiDay(
+  session: CaseSession,
+  config: CaseConfig,
+  arch: ArchetypeId,
+  tutorial: boolean,
+): void {
+  runDays(
+    session,
+    config,
+    arch,
+    { scripted: tutorial },
+    () => toast.info('The Fugitive is stranded — forced Hold at no cost (§9.13).'),
+  );
 }
 
 export const useDD = create<DDState>((set, get) => ({
@@ -149,17 +200,27 @@ export const useDD = create<DDState>((set, get) => ({
   mode: 'inspect',
   aiThinking: false,
   beliefHalo: false,
+  tutorial: null,
+  tutorialDone: false,
 
   hydrate: () => {
     const rec = loadRecord();
-    set({ resumable: rec && rec.verdict === null ? rec : null });
+    set({
+      resumable: rec && rec.verdict === null ? rec : null,
+      tutorialDone: isTutorialDone(),
+    });
   },
 
-  startCase: (seed, resume) => {
-    if (aiTimer !== null) {
-      clearTimeout(aiTimer);
-      aiTimer = null;
-    }
+  goSetup: () => set({ screen: 'setup' }),
+  goLadder: () => set({ screen: 'ladder' }),
+
+  startCase: (seed, opts) => {
+    cancelAiTimer();
+    const resuming = opts?.resume;
+    const archetype: ArchetypeId = resuming?.archetype ?? opts?.archetype ?? 'random';
+    const source: CaseSource = resuming?.source ?? opts?.source ?? 'solo';
+    const ladderIndex = resuming?.ladderIndex ?? opts?.ladderIndex ?? null;
+
     let session: CaseSession;
     let config: CaseConfig;
     try {
@@ -171,26 +232,35 @@ export const useDD = create<DDState>((set, get) => ({
       return;
     }
 
-    const record: CaseRecord = resume
-      ? { seed, investigator: [...resume.investigator], verdict: null, closedAt: undefined }
-      : { seed, investigator: [], verdict: null };
+    const record: CaseRecord = resuming
+      ? {
+          ...resuming,
+          seed,
+          archetype,
+          source,
+          ladderIndex,
+          investigator: [...resuming.investigator],
+          verdict: null,
+          closedAt: undefined,
+        }
+      : { seed, archetype, source, ladderIndex, investigator: [], verdict: null, startedAt: Date.now() };
 
+    const isTutorial = source === 'tutorial';
     try {
-      runAiDay(session, config); // day 1 fugitive move → investigator phase
+      aiDay(session, config, archetype, isTutorial); // day 1 fugitive move → investigator phase
       for (const env of record.investigator) {
         session.submitInvestigator(env); // fresh session: journal replays cleanly
-        if (session.state.phase === 'FUGITIVE_MOVE') runAiDay(session, config);
-      }
-      if (record.investigator.length === 0 && record.verdict !== null) {
-        // replaying a closed case is not a W1 flow; guard anyway
-        record.verdict = null;
+        if (session.state.phase === 'FUGITIVE_MOVE' && session.state.verdict === null) {
+          aiDay(session, config, archetype, isTutorial);
+        }
       }
     } catch (err) {
       toast.error(`Replay failed — starting fresh (${String(err)})`);
       session = new CaseSession(VM, config);
       record.investigator = [];
       record.verdict = null;
-      runAiDay(session, config);
+      record.closedAt = undefined;
+      aiDay(session, config, archetype, isTutorial);
     }
 
     const over = session.state.verdict !== null;
@@ -212,19 +282,30 @@ export const useDD = create<DDState>((set, get) => ({
       selected: null,
       mode: 'inspect',
       aiThinking: false,
+      tutorial: isTutorial ? { beat: record.tutorialBeat ?? 'welcome' } : null,
+    });
+  },
+
+  startLadderCase: (index) => {
+    const slot = ladderSlots()[index];
+    if (!slot) {
+      toast.error('Ladder slot not found.');
+      return;
+    }
+    get().startCase(slot.seed, {
+      archetype: slot.archetype,
+      source: 'ladder',
+      ladderIndex: index,
     });
   },
 
   resumeCase: () => {
     const rec = get().resumable;
-    if (rec) get().startCase(rec.seed, rec);
+    if (rec) get().startCase(rec.seed, { resume: rec });
   },
 
   abandonCase: () => {
-    if (aiTimer !== null) {
-      clearTimeout(aiTimer);
-      aiTimer = null;
-    }
+    cancelAiTimer();
     clearRecord();
     set({
       screen: 'setup',
@@ -238,11 +319,35 @@ export const useDD = create<DDState>((set, get) => ({
       selected: null,
       mode: 'inspect',
       aiThinking: false,
+      tutorial: null,
     });
   },
 
-  select: (n) => set({ selected: n }),
-  setMode: (m) => set({ mode: m }),
+  select: (n) => {
+    const { tutorial, config } = get();
+    if (tutorial && n !== null) {
+      if (tutorial.beat === 'tap-drop') {
+        const node = VM.map.nodes.find((x) => x.id === n);
+        if (!node?.is_drop_candidate) return; // tutorial focus: drops first
+        get().advanceTutorial();
+      } else if (tutorial.beat === 'probe-sh' && n !== config?.safehouse) {
+        return;
+      } else if (tutorial.beat === 'stakeout-drop' && n !== config?.drops[0]) {
+        return;
+      }
+    }
+    set({ selected: n });
+  },
+
+  setMode: (m) => {
+    const { tutorial, config } = get();
+    if (tutorial && config) {
+      if (tutorial.beat === 'probe-sh' && m !== 'probe') return;
+      if (tutorial.beat === 'stakeout-drop' && m !== 'stakeout') return;
+    }
+    set({ mode: m });
+  },
+
   setMarker: (n, kind) => {
     const markers = { ...get().markers };
     if (kind === undefined) delete markers[n];
@@ -252,11 +357,17 @@ export const useDD = create<DDState>((set, get) => ({
   toggleHalo: () => set({ beliefHalo: !get().beliefHalo }),
 
   probe: (n) => {
-    const { session, config, record } = get();
+    const { session, config, record, tutorial } = get();
     if (!session || !config || !record || session.state.verdict !== null) return;
     if (session.state.phase !== 'INVESTIGATOR_ACTIONS') {
       toast.warning('The Fugitive is moving — probes open in your phase.');
       return;
+    }
+    if (tutorial) {
+      if (tutorial.beat !== 'probe-sh' || n !== config.safehouse) {
+        toast.info('Follow the spotlight — probe the safehouse.');
+        return;
+      }
     }
     const leg = investigatorLegality(session.state, session.p);
     if (!leg.probe) {
@@ -276,6 +387,7 @@ export const useDD = create<DDState>((set, get) => ({
         if (last.result === 'HIT') toast.success(`Probe HIT — they ended today on ${n}.`);
         else toast.info(`Probe MISS at ${n} — not there today.`);
       }
+      if (tutorial && tutorial.beat === 'probe-sh') get().advanceTutorial();
       set({ view: session.investigatorView() });
     } catch (err) {
       toast.error(`Engine rejected probe: ${errText(err)}`);
@@ -283,11 +395,17 @@ export const useDD = create<DDState>((set, get) => ({
   },
 
   stakeout: (n) => {
-    const { session, config, record } = get();
+    const { session, config, record, tutorial } = get();
     if (!session || !config || !record || session.state.verdict !== null) return;
     if (session.state.phase !== 'INVESTIGATOR_ACTIONS') {
       toast.warning('The Fugitive is moving — stakeouts open in your phase.');
       return;
+    }
+    if (tutorial) {
+      if (tutorial.beat !== 'stakeout-drop' || n !== config.drops[0]) {
+        toast.info('Follow the spotlight — stake out the first drop site.');
+        return;
+      }
     }
     const leg = investigatorLegality(session.state, session.p);
     if (!leg.stakeout) {
@@ -310,6 +428,7 @@ export const useDD = create<DDState>((set, get) => ({
         `Stakeout armed on ${n} — resolves tomorrow at step 2. The Fugitive will not be notified.`,
         { duration: 5000 },
       );
+      if (tutorial && tutorial.beat === 'stakeout-drop') get().advanceTutorial();
       set({ view: session.investigatorView() });
     } catch (err) {
       toast.error(`Engine rejected stakeout: ${errText(err)}`);
@@ -317,9 +436,13 @@ export const useDD = create<DDState>((set, get) => ({
   },
 
   endPhase: () => {
-    const { session, config, record } = get();
+    const { session, config, record, tutorial } = get();
     if (!session || !config || !record || session.state.verdict !== null) return;
     if (session.state.phase !== 'INVESTIGATOR_ACTIONS') return;
+    if (tutorial && tutorial.beat !== 'end-phase') {
+      toast.info('Follow the spotlight — finish the current step first.');
+      return;
+    }
     const env: ActionEnvelope<InvestigatorSubmission> = {
       idempotency_key: `i-${session.state.day}-wait-${record.investigator.length}`,
       action: { kind: 'WAIT' },
@@ -332,10 +455,11 @@ export const useDD = create<DDState>((set, get) => ({
       toast.error(`Engine rejected end-phase: ${errText(err)}`);
       return;
     }
+    if (tutorial) get().advanceTutorial(); // end-phase → next beat lands after resolution
     set({ view: session.investigatorView() });
 
     if (session.state.verdict !== null) {
-      finalizeOver(set, session, record);
+      finalizeOver(set, get, session, record);
       return;
     }
     // Brief UX beat so the day transition reads — determinism unaffected.
@@ -344,32 +468,86 @@ export const useDD = create<DDState>((set, get) => ({
       aiTimer = null;
       const s = get().session;
       const c = get().config;
-      if (!s || !c) return;
+      const rec = get().record;
+      if (!s || !c || !rec) return;
       try {
-        runAiDay(s, c);
+        aiDay(s, c, rec.archetype, rec.source === 'tutorial');
       } catch (err) {
         toast.error(`AI day failed: ${errText(err)}`);
       }
-      const rec = get().record!;
       set({ aiThinking: false, view: s.investigatorView() });
-      if (s.state.verdict !== null) finalizeOver(set, s, rec);
+      if (s.state.verdict !== null) finalizeOver(set, get, s, rec);
     }, 700);
+  },
+
+  startTutorial: () => {
+    get().startCase(TUTORIAL_SEED, { archetype: 'baseline', source: 'tutorial' });
+  },
+
+  advanceTutorial: () => {
+    const { tutorial, record } = get();
+    if (!tutorial) return;
+    const i = TUTORIAL_SEQUENCE.indexOf(tutorial.beat);
+    const next = TUTORIAL_SEQUENCE[Math.min(i + 1, TUTORIAL_SEQUENCE.length - 1)]!;
+    tutorial.beat = next;
+    if (record) {
+      record.tutorialBeat = next;
+      saveRecord(record);
+    }
+    set({ tutorial: { ...tutorial } });
+  },
+
+  finishTutorial: () => {
+    markTutorialDone();
+    get().abandonCase();
+    set({ tutorialDone: true });
   },
 }));
 
 function finalizeOver(
   set: (partial: Partial<DDState>) => void,
+  get: () => DDState,
   session: CaseSession,
   record: CaseRecord,
 ): void {
   record.verdict = session.state.verdict;
   record.closedAt = Date.now();
   saveRecord(record);
-  const d = session.state.verdict;
+
+  const v = session.state.verdict;
+  if (v === null) return; // caller only finalizes over a resolved session
+  const verdict: Verdict = v;
+  const intelLeft = session.investigatorView().investigator.intel;
+  const stars = starsFor(verdict, intelLeft);
+
+  // Archive the closed case (IndexedDB, best-effort) — the replay viewer's source.
+  const rec: HistoryRecord = {
+    id: `${record.seed}-${record.archetype}-${record.closedAt}`,
+    seed: record.seed,
+    archetype: record.archetype,
+    journal: [...record.investigator],
+    verdict,
+    stars,
+    source: record.source,
+    ladderIndex: record.ladderIndex ?? null,
+    startedAt: record.startedAt,
+    closedAt: record.closedAt,
+  };
+  void saveCaseRecord(rec).catch(() => undefined);
+
+  if (record.source === 'ladder' && record.ladderIndex !== null && record.ladderIndex !== undefined) {
+    saveLadderResult(record.ladderIndex, { verdict, stars, closedAt: record.closedAt });
+  }
+
   set({ disclosure: session.disclosure(), aiThinking: false, view: session.investigatorView() });
-  if (d === 'CAPTURE' || d === 'EXPIRY') toast.success(`Case closed — ${d}. You win.`);
-  else if (d === 'ESCAPE') toast.error(`Case closed — ESCAPE. The Fugitive is gone.`);
-  else toast.info(`Case closed — ${d}.`);
+
+  if (record.source === 'tutorial') {
+    set({ tutorial: { beat: 'replay' } });
+    return;
+  }
+  if (verdict === 'CAPTURE' || verdict === 'EXPIRY') toast.success(`Case closed — ${verdict}. You win.`);
+  else if (verdict === 'ESCAPE') toast.error('Case closed — ESCAPE. The Fugitive is gone.');
+  else toast.info(`Case closed — ${verdict}.`);
 }
 
 function errText(err: unknown): string {

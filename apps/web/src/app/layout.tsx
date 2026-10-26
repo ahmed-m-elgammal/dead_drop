@@ -14,13 +14,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dead Drop — Solo Prototype (M3 W1)",
+  title: "Dead Drop — Solo Prototype (M3)",
   description:
-    "Playable single-player prototype of Dead Drop, the async 1v1 hidden-movement duel. Investigator vs the Stage-1 baseline Fugitive AI, on the real deterministic engine (ruleset 1.0.0-alpha.1).",
+    "Playable single-player prototype of Dead Drop, the async 1v1 hidden-movement duel. Hunt Fugitive archetypes across the 24-case solo ladder, replay every case day by day — on the real deterministic engine (ruleset 1.0.0-alpha.1).",
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
 };
+
+// Stateful, offline-first CLIENT (engine-on-client, IndexedDB, localStorage —
+// 07-architecture Option B): no prerender, no SEO surface. Route segment
+// config lives here (server layout) — client pages cannot export it.
+export const dynamic = 'force-dynamic';
 
 export const viewport: Viewport = {
   width: "device-width",

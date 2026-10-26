@@ -67,7 +67,7 @@ function ringOffset(d: DistrictId): number {
   return HUB_TARGET_ANGLE[d] - 150;
 }
 
-export function buildLayout(vm: import('@/engine').ValidatedMap): {
+export function buildLayout(vm: import('@dead-drop/engine').ValidatedMap): {
   nodes: Map<NodeId, NodeLayout>;
   districts: DistrictLayout[];
 } {

@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # ADR-001 toolchain
+          cache: npm
+
+      - name: Install (workspaces: packages/* + apps/*)
+        run: npm ci
+
+      - name: Build engine + sim (tsc)
+        run: npm run build
+
+      - name: Test engine + sim (vitest)
+        run: npm test
+
+      - name: Lint web
+        run: npm run lint -w @dead-drop/web
+
+      # Build order matters: the web app consumes the BUILT engine dist
+      # (ADR-006) — the tsc build step above must precede this.
+      - name: Build web (next build)
+        run: npm run build -w @dead-drop/web
