@@ -1,15 +1,13 @@
 'use client';
 
 /**
- * Dead Drop — home / case setup (M3 W3). Seed-reproducible solo case, both
- * roles (W3): Investigator vs a Fugitive archetype (05-ai-spec §3), or
- * Fugitive vs the I-GreedyProbe baseline (05-ai-spec §2). Plus the solo
- * ladder, the tutorial (investigator role), the case history, and the
- * Stage-3 skill profile (§4) — no account, no server: everything on-device.
+ * Dead Drop — THE BUREAU (home / case setup, M3 W4 art pass).
+ * Same store contract as W3 (role + archetype/seed + ladder + tutorial +
+ * history + skill profile) — the skin is now a detective's desk at night:
+ * badge cards, mugshot dossiers, a case-number terminal, and paper notes.
  */
 import { useState } from 'react';
-import { BookOpen, Dices, GraduationCap, History, Map as MapIcon, Play, RotateCcw, Trophy, User, VenetianMask } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Archive, Dices, GraduationCap, RotateCcw, Trophy } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useDD, type ArchetypeId } from '@/lib/dd/store';
 import { ARCHETYPES } from '@/lib/dd/archetypes';
@@ -45,59 +43,96 @@ export default function SetupScreen() {
   const resumableForRole = resumable && resumable.role === role ? resumable : null;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f5f1] px-4 py-10">
-      <div className="w-full max-w-md">
-        <div className="mb-6 text-center">
-          <div className="text-[11px] font-bold uppercase tracking-[4px] text-neutral-400">A hidden-movement duel</div>
-          <h1 className="mt-1 text-4xl font-black tracking-tight text-neutral-900">DEAD DROP</h1>
-          <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-            48 locations, two drops in order, one exit gate. One of you moves in secret; the other
-            reads the evidence the rules publish. {role === 'investigator' ? 'You hunt.' : 'You vanish.'}
-          </p>
+    <div className="flex min-h-screen flex-col items-center px-4 pb-14 pt-8">
+      <div className="w-full max-w-lg">
+        {/* ===== title — the neon sign over the desk ===== */}
+        <div className="pixel-frame relative mb-6 overflow-hidden">
+          <img
+            src="/art/title-city.png"
+            alt="The city at night — rain, clock tower, amber windows"
+            className="art h-36 w-full object-cover sm:h-44"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-4 text-center">
+            <div className="font-pixel neon text-xl text-amber sm:text-3xl">DEAD DROP</div>
+            <div className="mt-2 font-type text-[11px] tracking-[0.3em] text-paper/80 sm:text-xs">
+              A NOIR MANHUNT IN EIGHT DAYS
+            </div>
+          </div>
         </div>
 
-        <div className="rounded-2xl border bg-white p-5 shadow-sm">
-          {/* role picker */}
-          <label className="text-xs font-bold uppercase tracking-wider text-neutral-500">Your role this case</label>
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
+        {/* ===== role — pick your badge ===== */}
+        <div className="pixel-frame mb-4 p-4">
+          <div className="mb-3 font-term text-lg uppercase tracking-[0.18em] text-fog">
+            {'// pick your side'}
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setRole('investigator')}
               aria-pressed={role === 'investigator'}
-              className={`flex items-center gap-2 rounded-xl border p-2.5 text-left transition-colors ${
-                role === 'investigator' ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-200 bg-white hover:border-neutral-400'
+              className={`pixel-frame group relative overflow-hidden p-0 text-left transition-transform hover:-translate-y-0.5 ${
+                role === 'investigator' ? 'pixel-frame-amber' : ''
               }`}
             >
-              <User className="h-4 w-4 shrink-0" />
-              <span>
-                <span className="block text-sm font-black">Investigator</span>
-                <span className={`block text-[10px] ${role === 'investigator' ? 'text-white/70' : 'text-neutral-500'}`}>
-                  Read the trail. Probe. Stake out.
+              <img
+                src="/art/portrait-detective.png"
+                alt="The Investigator — trench coat, fedora, tired eyes"
+                className="art h-24 w-full object-cover object-top opacity-90 sm:h-28"
+              />
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-panel via-transparent to-transparent sm:h-28" />
+              <div className="relative p-2.5">
+                <div className={`font-pixel text-[10px] ${role === 'investigator' ? 'text-amber' : 'text-paper'}`}>
+                  INVESTIGATOR
+                </div>
+                <div className="mt-1 font-type text-[11px] leading-snug text-fog">
+                  Read the trail. Probe the dark. Stake out the gate.
+                </div>
+              </div>
+              {role === 'investigator' && (
+                <span className="stamp absolute right-2 top-2 border-mint text-mint" style={{ fontSize: '0.55rem' }}>
+                  on duty
                 </span>
-              </span>
+              )}
             </button>
+
             <button
               onClick={() => setRole('fugitive')}
               aria-pressed={role === 'fugitive'}
-              className={`flex items-center gap-2 rounded-xl border p-2.5 text-left transition-colors ${
-                role === 'fugitive' ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-200 bg-white hover:border-neutral-400'
+              className={`pixel-frame group relative overflow-hidden p-0 text-left transition-transform hover:-translate-y-0.5 ${
+                role === 'fugitive' ? 'pixel-frame-amber' : ''
               }`}
             >
-              <VenetianMask className="h-4 w-4 shrink-0" />
-              <span>
-                <span className="block text-sm font-black">Fugitive</span>
-                <span className={`block text-[10px] ${role === 'fugitive' ? 'text-white/70' : 'text-neutral-500'}`}>
-                  Move in secret. Dodge the net.
+              <img
+                src="/art/portrait-courier.png"
+                alt="The Courier — hood up, face in shadow"
+                className="art h-24 w-full object-cover object-top opacity-90 sm:h-28"
+              />
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-panel via-transparent to-transparent sm:h-28" />
+              <div className="relative p-2.5">
+                <div className={`font-pixel text-[10px] ${role === 'fugitive' ? 'text-amber' : 'text-paper'}`}>
+                  FUGITIVE
+                </div>
+                <div className="mt-1 font-type text-[11px] leading-snug text-fog">
+                  Move in secret. Dodge the net. Vanish by Day 8.
+                </div>
+              </div>
+              {role === 'fugitive' && (
+                <span className="stamp absolute right-2 top-2 border-blood-2 text-blood-2" style={{ fontSize: '0.55rem' }}>
+                  wanted
                 </span>
-              </span>
+              )}
             </button>
           </div>
 
           {role === 'investigator' ? (
             <>
-              <label className="mt-4 block text-xs font-bold uppercase tracking-wider text-neutral-500" htmlFor="archetype">
-                Fugitive archetype — same seed, same case, same fugitive
-              </label>
-              <div className="mt-2 grid grid-cols-2 gap-1.5">
+              <div className="mb-2 mt-4 flex items-baseline justify-between">
+                <span className="font-term text-lg uppercase tracking-[0.18em] text-fog">
+                  {'// known associates'}
+                </span>
+                <span className="font-type text-[10px] text-fog-2">same seed — same courier</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
                 {ORDER.map((id) => {
                   const a = ARCHETYPES[id];
                   const on = archetype === id;
@@ -106,131 +141,139 @@ export default function SetupScreen() {
                       key={id}
                       onClick={() => setArchetype(id)}
                       aria-pressed={on}
-                      className={`rounded-xl border p-2.5 text-left transition-colors ${
-                        on ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-200 bg-white hover:border-neutral-400'
-                      }`}
+                      className={`paper-card p-2.5 text-left transition-transform hover:-translate-y-0.5 ${on ? 'tilt-r' : 'opacity-85'}`}
                     >
                       <div className="flex items-baseline justify-between gap-1">
-                        <span className="text-sm font-black">{a.label}</span>
-                        <span
-                          className={`rounded px-1 text-[9px] font-bold uppercase tracking-wide ${
-                            on ? 'bg-white/20 text-white/80' : 'bg-neutral-100 text-neutral-500'
-                          }`}
-                        >
+                        <span className="font-pixel text-[9px] text-[#241d10]">{a.label.toUpperCase()}</span>
+                        <span className="stamp border-[#7a2d2d] text-[#7a2d2d]" style={{ fontSize: '0.5rem', padding: '0.05em 0.35em' }}>
                           {a.tier}
                         </span>
                       </div>
-                      <p className={`mt-1 text-[10px] leading-snug ${on ? 'text-white/70' : 'text-neutral-500'}`}>
-                        {a.tagline}
-                      </p>
+                      <p className="mt-1.5 font-type text-[10.5px] leading-snug text-[#4a3d27]">{a.tagline}</p>
                     </button>
                   );
                 })}
               </div>
             </>
           ) : (
-            <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
-              <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Your opponent — I-GreedyProbe</div>
-              <p className="mt-1.5 text-[11px] leading-relaxed text-neutral-600">
-                The Stage-1 Investigator baseline (05-ai-spec §2): tracks an exact belief map from the
-                public evidence, probes its most likely node, and stakes out only when convinced —
-                aiming where you&apos;ll BE, not where you are. It plays behind the same information
-                wall you do; it never sees your route.
+            <div className="pin-note paper-card tilt-l mt-4 p-3.5">
+              <div className="font-pixel text-[9px] text-[#241d10]">YOUR OPPONENT — I-GREEDYPROBE</div>
+              <p className="mt-2 font-type text-[11px] leading-relaxed text-[#4a3d27]">
+                The Bureau&apos;s best hound. It keeps an exact map of where you might be — built
+                only from what the rules publish — probes its best guess, and stakes out where
+                you&apos;ll BE, not where you are. It plays behind the same wall you do. It never
+                sees your route.
               </p>
             </div>
           )}
+        </div>
 
-          <label className="mt-4 block text-xs font-bold uppercase tracking-wider text-neutral-500" htmlFor="seed">
-            Case seed
+        {/* ===== case number terminal ===== */}
+        <div className="pixel-frame mb-4 p-4">
+          <label
+            htmlFor="seed"
+            className="mb-2 block font-term text-lg uppercase tracking-[0.18em] text-fog"
+          >
+            {'// case number'}
           </label>
-          <div className="mt-2 flex gap-2">
-            <Input
-              id="seed"
-              value={seedText}
-              onChange={(e) => setSeedText(e.target.value.replace(/[^0-9]/g, ''))}
-              inputMode="numeric"
-              className="font-mono"
-              aria-label="Case seed"
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-10 w-10 shrink-0"
+          <div className="flex gap-2">
+            <div className="flex-1 border border-line-2 bg-ink-2 px-3 py-2 shadow-[inset_0_2px_6px_rgba(0,0,0,.6)]">
+              <Input
+                id="seed"
+                value={seedText}
+                onChange={(e) => setSeedText(e.target.value.replace(/[^0-9]/g, ''))}
+                inputMode="numeric"
+                aria-label="Case seed"
+                className="h-7 border-0 bg-transparent p-0 font-term text-2xl tracking-[0.12em] text-amber-2 shadow-none focus-visible:ring-0"
+                placeholder="000000"
+              />
+            </div>
+            <button
               onClick={() => setSeedText(String(randomSeed()))}
               aria-label="Random seed"
+              className="btn-pixel-ghost flex h-auto w-12 items-center justify-center"
             >
-              <Dices className="h-4 w-4" />
-            </Button>
+              <Dices className="h-5 w-5" />
+            </button>
           </div>
 
-          <Button
-            className="mt-4 h-11 w-full gap-2 text-base"
+          <button
+            className="btn-pixel mt-4 h-12 w-full text-xl uppercase"
             disabled={!valid}
-            onClick={() => startCase(seed, role === 'investigator' ? { archetype, source: 'solo' } : { role, source: 'solo' })}
+            onClick={() =>
+              startCase(seed, role === 'investigator' ? { archetype, source: 'solo' } : { role, source: 'solo' })
+            }
           >
-            <Play className="h-4 w-4" /> Open the case
-          </Button>
+            {role === 'investigator' ? '▸ open the case' : '▸ vanish into the city'}
+          </button>
 
           {resumableForRole && (
-            <Button className="mt-2 h-10 w-full gap-2" variant="outline" onClick={resumeCase}>
+            <button className="btn-pixel-ghost mt-2.5 flex w-full items-center justify-center gap-2 py-2.5 uppercase" onClick={resumeCase}>
               <RotateCcw className="h-4 w-4" />
-              {resumableForRole.source === 'tutorial' ? 'Resume tutorial' : 'Resume case'} (seed {resumableForRole.seed}
-              , {resumableForRole.investigator.length + resumableForRole.fugitive.length} moves in)
-            </Button>
+              resume {resumableForRole.source === 'tutorial' ? 'tutorial' : 'case'} — №{String(resumableForRole.seed % 100000).padStart(5, '0')} ·{' '}
+              {resumableForRole.investigator.length + resumableForRole.fugitive.length} moves in
+            </button>
           )}
         </div>
 
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={goLadder}>
-            <Trophy className="h-4 w-4" /> Solo ladder
-          </Button>
-          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={startTutorial} disabled={role === 'fugitive'}>
-            <GraduationCap className="h-4 w-4" />
-            {tutorialDone ? 'Tutorial again' : 'Learn (60s)'}
-          </Button>
-          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={() => setHistoryOpen(true)}>
-            <History className="h-4 w-4" /> History
-          </Button>
+        {/* ===== the drawers ===== */}
+        <div className="mb-4 grid grid-cols-3 gap-2.5">
+          <button onClick={goLadder} className="btn-pixel-ghost flex h-14 flex-col items-center justify-center gap-0.5 uppercase">
+            <Trophy className="h-4 w-4 text-amber" />
+            <span className="text-sm">case wall</span>
+          </button>
+          <button
+            onClick={startTutorial}
+            disabled={role === 'fugitive'}
+            className="btn-pixel-ghost flex h-14 flex-col items-center justify-center gap-0.5 uppercase disabled:opacity-50"
+          >
+            <GraduationCap className="h-4 w-4 text-amber" />
+            <span className="text-sm">{tutorialDone ? 'refresher' : 'the 60s brief'}</span>
+          </button>
+          <button onClick={() => setHistoryOpen(true)} className="btn-pixel-ghost flex h-14 flex-col items-center justify-center gap-0.5 uppercase">
+            <Archive className="h-4 w-4 text-amber" />
+            <span className="text-sm">the archive</span>
+          </button>
         </div>
 
-        <div className="mt-3 grid grid-cols-1 gap-2">
-          <Button variant="outline" className="h-11 flex-col gap-0.5 text-xs" onClick={() => setSkillOpen(true)}>
-            <BookOpen className="h-4 w-4" /> Skill profile — rolling last 10 cases per role
-          </Button>
-        </div>
+        <button onClick={() => setSkillOpen(true)} className="btn-pixel-ghost flex h-12 w-full items-center justify-center gap-2 uppercase">
+          <span className="font-type text-xs normal-case tracking-normal">Skill profile — rolling last 10 cases per role</span>
+        </button>
 
-        <div className="mt-3 rounded-2xl border bg-white p-4 text-xs leading-relaxed text-neutral-600 shadow-sm">
-          <div className="mb-1.5 flex items-center gap-1.5 font-bold text-neutral-800">
-            <MapIcon className="h-3.5 w-3.5" /> The 60-second rules — {role === 'investigator' ? 'hunting' : 'running'}
+        {/* ===== the 60-second rules — a pinned note ===== */}
+        <div className="pin-note paper-card tilt-l mt-6 p-4">
+          <div className="font-pixel text-[9px] text-[#241d10]">
+            THE 60-SECOND RULES — {role === 'investigator' ? 'HUNTING' : 'RUNNING'}
           </div>
-          {role === 'investigator' ? (
-            <>
-              8 days. They move in secret (Foot 1 SP · Tram 2 · Metro 3, one edge per day). Your phase: up to 2{' '}
-              <b>probes</b> (1 IP — &quot;were you here today?&quot;) and 1 <b>stakeout</b> (3 IP — catches them
-              tomorrow if they end that day on your node, silently miss otherwise). Public evidence: their{' '}
-              <b>district</b> at the end of Days 3 &amp; 6, their <b>transit class</b> on Day 4, drop completions.
-              They win by reaching the gate with both drops; you win by capture or by Day 8 expiry.
-            </>
-          ) : (
-            <>
-              8 days. You move in secret (Foot 1 SP · Tram 2 · Metro 3, one edge per day — or Hold 1 SP, ≤2
-              per case, collects a pending drop). The Investigator probes and stakes out; <b>stakeouts are
-              silent</b> — you learn you were caught only when you are. The rules publish <b>your district</b>{' '}
-              after Days 3 &amp; 6 and your <b>transit class</b> after Day 4 — plan around the leak calendar.
-              Reach the gate with both drops before Day 8 ends.
-            </>
-          )}{' '}
-          Full rules: <span className="font-mono text-[10px]">ruleset 1.0.0-alpha.1</span>.
+          <p className="mt-2 font-type text-[11.5px] leading-relaxed text-[#33291a]">
+            {role === 'investigator' ? (
+              <>
+                8 days. They move in secret (Foot 1 SP · Tram 2 · Metro 3, one edge per day). Your phase: up to 2{' '}
+                <b>probes</b> (1 IP — &quot;were you here today?&quot;) and 1 <b>stakeout</b> (3 IP — catches them
+                tomorrow if they end that day on your node, silently misses otherwise). Public evidence: their{' '}
+                <b>district</b> at the end of Days 3 &amp; 6, their <b>transit class</b> on Day 4, drop completions.
+                They win by reaching the gate with both drops; you win by capture or by Day 8 expiry.
+              </>
+            ) : (
+              <>
+                8 days. You move in secret (Foot 1 SP · Tram 2 · Metro 3, one edge per day — or Hold 1 SP, ≤2
+                per case, collects a pending drop). The Investigator probes and stakes out; <b>stakeouts are
+                silent</b> — you learn you were caught only when you are. The rules publish <b>your district</b>{' '}
+                after Days 3 &amp; 6 and your <b>transit class</b> after Day 4 — plan around the leak calendar.
+                Reach the gate with both drops before Day 8 ends.
+              </>
+            )}
+          </p>
+          <div className="mt-2 text-right font-mono text-[9px] text-[#8a7a58]">ruleset 1.0.0-alpha.1</div>
         </div>
 
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-[10px] text-neutral-400">
-          <BookOpen className="h-3 w-3" />
-          The AI plays by the same information wall you do — public evidence only, never your private log.
+        <p className="mt-5 text-center font-type text-[10.5px] leading-relaxed text-fog-2">
+          The AI plays behind the same information wall you do — public evidence only, never your private log.
         </p>
 
         {resumableForRole?.verdict && (
-          <p className="mt-2 text-center text-xs text-neutral-400">
-            Last case closed: {resumableForRole.verdict} ({VERDICT_WINNER[resumableForRole.verdict]}).
+          <p className="mt-2 text-center font-term text-base text-fog">
+            last file closed: {resumableForRole.verdict} · {VERDICT_WINNER[resumableForRole.verdict]}
           </p>
         )}
       </div>

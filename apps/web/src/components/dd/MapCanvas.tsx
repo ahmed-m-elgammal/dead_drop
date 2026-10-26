@@ -18,9 +18,9 @@ import { useDD, type MarkerKind } from '@/lib/dd/store';
 
 const MARKER_GLYPH: Record<MarkerKind, string> = { possible: '?', pinned: '!', cleared: '✕' };
 const MARKER_FILL: Record<MarkerKind, string> = {
-  possible: '#274e8f',
-  pinned: '#8a1c1c',
-  cleared: '#555555',
+  possible: '#e8a33d',
+  pinned: '#e05252',
+  cleared: '#5d6d88',
 };
 
 interface Props {
@@ -108,7 +108,15 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
     mode === 'inspect' ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer';
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-xl border bg-[#faf9f6]">
+    <div className="pixel-frame relative h-full w-full overflow-hidden bg-[#0e1524]">
+      {/* night-city vignette + faint street grid (decorative) */}
+      <div
+        className="pointer-events-none absolute inset-0 z-10"
+        style={{
+          background:
+            'radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,8,16,.55) 100%)',
+        }}
+      />
       <svg
         viewBox={`0 0 760 1000`}
         className={`h-full w-full touch-none select-none ${cursor}`}
@@ -141,8 +149,8 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cx={d.x}
                   cy={d.y}
                   r={d.plateR}
-                  fill={revealedDay !== undefined ? '#e8edf6' : '#f4f4f2'}
-                  stroke={revealedDay !== undefined ? '#274e8f' : '#c9c9c4'}
+                  fill={revealedDay !== undefined ? '#15273a' : '#121b2d'}
+                  stroke={revealedDay !== undefined ? '#e8a33d' : '#2a3850'}
                   strokeWidth={revealedDay !== undefined ? 2 : 1.2}
                 />
                 <text
@@ -151,14 +159,14 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   textAnchor="middle"
                   fontSize={15}
                   fontWeight={700}
-                  fill={revealedDay !== undefined ? '#274e8f' : '#8a8a84'}
+                  fill={revealedDay !== undefined ? '#f4c86a' : '#5d6d88'}
                   className="uppercase"
                   style={{ letterSpacing: 1.5 }}
                 >
                   {d.name}
                 </text>
                 {revealedDay !== undefined && (
-                  <text x={d.labelX} y={d.labelY + 15} textAnchor="middle" fontSize={10} fill="#274e8f">
+                  <text x={d.labelX} y={d.labelY + 15} textAnchor="middle" fontSize={10} fill="#e8a33d">
                     revealed day {revealedDay}
                   </text>
                 )}
@@ -199,8 +207,8 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cx={p.x}
                   cy={p.y}
                   r={20}
-                  fill="rgba(39,78,143,0.14)"
-                  stroke="rgba(39,78,143,0.45)"
+                  fill="rgba(61,112,104,0.22)"
+                  stroke="rgba(79,143,133,0.6)"
                   strokeWidth={1}
                   pointerEvents="none"
                 />
@@ -218,10 +226,10 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   cy={p.y}
                   r={24}
                   fill="none"
-                  stroke="#8a1c1c"
+                  stroke="#e05252"
                   strokeWidth={2.4}
                   strokeDasharray="6,4"
-                  className="animate-pulse"
+                  className="ring-pulse"
                   pointerEvents="none"
                 />
               );
@@ -258,7 +266,11 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
                   ? 700
                   : 400
               }
-              fill="#333"
+              fill={
+                vm.map.gates.includes(p.id) || vm.map.safehouses.includes(p.id) || vm.map.drop_candidates.includes(p.id)
+                  ? '#e8ddc7'
+                  : '#8b9bb4'
+              }
               pointerEvents="none"
             >
               {p.id}
@@ -267,18 +279,18 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
         </g>
       </svg>
 
-      {/* zoom controls */}
-      <div className="absolute right-3 top-3 flex flex-col gap-1.5">
+      {/* zoom controls — desk brass */}
+      <div className="absolute right-3 top-3 z-20 flex flex-col gap-1.5">
         <button
           onClick={() => zoomBy(1.35)}
-          className="h-9 w-9 rounded-md border bg-white text-lg font-bold shadow-sm hover:bg-neutral-50"
+          className="btn-pixel-ghost h-9 w-9 text-lg font-bold"
           aria-label="Zoom in"
         >
           +
         </button>
         <button
           onClick={() => zoomBy(1 / 1.35)}
-          className="h-9 w-9 rounded-md border bg-white text-lg font-bold shadow-sm hover:bg-neutral-50"
+          className="btn-pixel-ghost h-9 w-9 text-lg font-bold"
           aria-label="Zoom out"
         >
           −
@@ -289,17 +301,17 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
             setTx(0);
             setTy(0);
           }}
-          className="h-9 w-9 rounded-md border bg-white text-[10px] font-bold shadow-sm hover:bg-neutral-50"
+          className="btn-pixel-ghost h-9 w-9 text-[10px] font-bold"
           aria-label="Reset view"
         >
           FIT
         </button>
       </div>
 
-      {/* legend */}
-      <div className="absolute bottom-2.5 left-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border bg-white/95 px-2.5 py-1.5 text-[10px] text-neutral-700 shadow-sm">
+      {/* legend — a taped paper strip */}
+      <div className="paper-card absolute bottom-2.5 left-3 z-20 flex flex-wrap items-center gap-x-3 gap-y-1 px-2.5 py-1.5 text-[10px] font-semibold text-[#33291a] tilt-l">
         <span className="flex items-center gap-1">
-          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1a1a1a" strokeWidth="1.6" /></svg>
+          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#8a94a8" strokeWidth="1.6" /></svg>
           Foot 1 SP
         </span>
         <span className="flex items-center gap-1">
@@ -307,12 +319,12 @@ export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Pr
           Tram 2
         </span>
         <span className="flex items-center gap-1">
-          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#274e8f" strokeWidth="4" /></svg>
+          <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#3d7068" strokeWidth="4" /></svg>
           Metro 3
         </span>
-        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 border-[1.5px] border-neutral-800 bg-white" /> drop site</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rotate-45 border-[1.5px] border-neutral-900 bg-neutral-900" /> gate</span>
-        <span className="flex items-center gap-1"><span className="inline-block h-0 w-0 border-x-[5px] border-b-[9px] border-x-transparent border-b-neutral-900" /> safehouse</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 border-[1.5px] border-[#33291a] bg-[#e8ddc7]" /> drop site</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rotate-45 border-[1.5px] border-[#a62f2f] bg-[#a62f2f]" /> gate</span>
+        <span className="flex items-center gap-1"><span className="inline-block h-0 w-0 border-x-[5px] border-b-[9px] border-x-transparent border-b-[#3d7068]" /> safehouse</span>
       </div>
     </div>
   );
@@ -347,13 +359,13 @@ function NodeGlyph(props: {
           node hit targets grow toward 44px with zoom; also shields clicks from
           the district plate circle underneath) */}
       <circle cx={p.x} cy={p.y} r={16} fill="transparent" stroke="none" />
-      {isSelected && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#111" strokeWidth={2} />}
-      {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#b8860b" strokeWidth={2} />}
+      {isSelected && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#e8a33d" strokeWidth={2.2} />}
+      {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#f4c86a" strokeWidth={2.2} />}
       {meHere && (
         <g pointerEvents="none">
-          <circle cx={p.x} cy={p.y} r={15} fill="#1a7a3a" opacity={0.25} />
-          <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="#1a7a3a" strokeWidth={2.2} />
-          <text x={p.x} y={p.y - 20} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#1a7a3a">
+          <circle cx={p.x} cy={p.y} r={15} fill="#58b98a" opacity={0.22} />
+          <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="#58b98a" strokeWidth={2.2} />
+          <text x={p.x} y={p.y - 20} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#58b98a">
             YOU
           </text>
         </g>
@@ -361,14 +373,16 @@ function NodeGlyph(props: {
       {isGate ? (
         <polygon
           points={`${p.x},${p.y - 11} ${p.x + 11},${p.y} ${p.x},${p.y + 11} ${p.x - 11},${p.y}`}
-          fill="#111"
-          stroke="#111"
-          strokeWidth={2}
+          fill="#a62f2f"
+          stroke="#e8ddc7"
+          strokeWidth={1.6}
         />
       ) : isSafehouse ? (
         <polygon
           points={`${p.x},${p.y - 11} ${p.x + 10},${p.y + 7} ${p.x - 10},${p.y + 7}`}
-          fill="#111"
+          fill="#3d7068"
+          stroke="#e8ddc7"
+          strokeWidth={1}
         />
       ) : isDropSite ? (
         <rect
@@ -376,17 +390,17 @@ function NodeGlyph(props: {
           y={p.y - 8.5}
           width={17}
           height={17}
-          fill="#fff"
-          stroke="#111"
+          fill="#e8ddc7"
+          stroke="#0b101b"
           strokeWidth={1.8}
         />
       ) : (
-        <circle cx={p.x} cy={p.y} r={10} fill="#fff" stroke="#111" strokeWidth={1.6} />
+        <circle cx={p.x} cy={p.y} r={10} fill="#d7deeb" stroke="#0b101b" strokeWidth={1.6} />
       )}
       {dropSlot !== undefined && (
         <>
-          <circle cx={p.x} cy={p.y} r={5.5} fill="#111" />
-          <text x={p.x} y={p.y + 2.5} textAnchor="middle" fontSize={7.5} fill="#fff" fontWeight={700}>
+          <circle cx={p.x} cy={p.y} r={5.5} fill="#0b101b" />
+          <text x={p.x} y={p.y + 2.5} textAnchor="middle" fontSize={7.5} fill="#f4c86a" fontWeight={700}>
             {dropSlot}
           </text>
         </>

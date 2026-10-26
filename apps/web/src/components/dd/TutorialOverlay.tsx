@@ -9,8 +9,6 @@
  * fixed by lib/dd/tutorial.ts; the player cannot derail the script.
  */
 import { useEffect, useState } from 'react';
-import { GraduationCap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useDD } from '@/lib/dd/store';
 import { TUTORIAL_STEPS, type TutorialBeat } from '@/lib/dd/tutorial';
 import ReplayViewer, { type ReplayMeta } from '@/components/dd/ReplayViewer';
@@ -50,17 +48,15 @@ export default function TutorialOverlay() {
 
   if (beat === 'welcome') {
     return (
-      <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4" role="dialog" aria-modal>
-        <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[3px] text-neutral-400">
-            <GraduationCap className="h-3.5 w-3.5" /> Tutorial · 3 beats
-          </div>
-          <h2 className="mt-2 text-2xl font-black text-neutral-900">{step.title}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-neutral-600">{step.body}</p>
-          <Button className="mt-4 h-11 w-full" onClick={advanceTutorial}>
+      <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink/92 p-4" role="dialog" aria-modal>
+        <div className="paper-card pin-note pin-pop w-full max-w-sm p-6">
+          <div className="font-pixel text-[9px] tracking-[0.2em] text-[#8a7a58]">THE 60-SECOND BRIEF</div>
+          <h2 className="mt-2 font-pixel text-sm leading-relaxed text-[#241d10]">{step.title}</h2>
+          <p className="mt-3 font-type text-sm leading-relaxed text-[#33291a]">{step.body}</p>
+          <button className="btn-pixel mt-5 h-11 w-full uppercase" onClick={advanceTutorial}>
             Begin the hunt
-          </Button>
-          <p className="mt-2 text-center text-[10px] text-neutral-400">
+          </button>
+          <p className="mt-2.5 text-center font-type text-[10px] text-[#8a7a58]">
             Fixed script — you cannot lose this one. Deadlines: none here.
           </p>
         </div>
@@ -78,20 +74,20 @@ export default function TutorialOverlay() {
         {/* The beat modal yields while its replay overlay is open — a nested
             fixed layer can never out-rank this z-70 backdrop otherwise. */}
         {!replayOpen && (
-          <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/70 p-4 sm:items-center" role="dialog" aria-modal>
-            <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-              <div className="text-[10px] font-bold uppercase tracking-[3px] text-emerald-700">Beat 3 complete</div>
-              <h2 className="mt-2 text-2xl font-black text-neutral-900">{step.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-600">{step.body}</p>
+          <div className="fixed inset-0 z-[70] flex items-end justify-center bg-ink/92 p-4 sm:items-center" role="dialog" aria-modal>
+            <div className="paper-card pin-note pin-pop w-full max-w-sm p-6">
+              <div className="stamp border-[#3e6b4f] text-[#3e6b4f]" style={{ fontSize: '0.6rem' }}>beat 3 complete</div>
+              <h2 className="mt-2.5 font-pixel text-sm leading-relaxed text-[#241d10]">{step.title}</h2>
+              <p className="mt-3 font-type text-sm leading-relaxed text-[#33291a]">{step.body}</p>
               <div className="mt-4 flex gap-2">
                 {replayMeta && (
-                  <Button className="h-11 flex-1" onClick={() => setReplayOpen(true)}>
+                  <button className="btn-pixel h-11 flex-1 uppercase" onClick={() => setReplayOpen(true)}>
                     Watch the replay
-                  </Button>
+                  </button>
                 )}
-                <Button className="h-11" variant="outline" onClick={finishTutorial}>
+                <button className="btn-pixel-ghost h-11 uppercase" onClick={finishTutorial}>
                   Finish
-                </Button>
+                </button>
               </div>
             </div>
           </div>
@@ -120,15 +116,15 @@ export default function TutorialOverlay() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center p-3">
-      <div className="pointer-events-auto w-full max-w-md rounded-xl border border-blue-900/20 bg-blue-950/95 px-4 py-3 text-white shadow-xl">
-        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[2px] text-blue-200">
-          <span>Tutorial · {beat === 'tap-drop' ? 'beat 1 of 3' : beat === 'probe-sh' ? 'beat 2 of 3' : beat === 'stakeout-drop' ? 'beat 3 of 3' : 'final step'}</span>
-          <span>{view ? `Day ${view.day}` : ''} · IP {view?.investigator.intel ?? '—'}</span>
+      <div className="pointer-events-auto w-full max-w-md border border-amber/70 bg-[#1c1710]/97 px-4 py-3 shadow-[0_0_0_2px_#0b101b,4px_5px_0_rgba(4,8,16,.6)]">
+        <div className="flex items-center justify-between font-term text-sm uppercase tracking-[0.14em] text-amber">
+          <span>Brief · {beat === 'tap-drop' ? 'beat 1 of 3' : beat === 'probe-sh' ? 'beat 2 of 3' : beat === 'stakeout-drop' ? 'beat 3 of 3' : 'final step'}</span>
+          <span>{view ? `Day ${view.day} · IP ${view.investigator.intel}` : ''}</span>
         </div>
-        <div className="mt-1 text-sm font-black">{step.title}</div>
-        <p className="mt-1 text-xs leading-relaxed text-blue-100">{step.body}</p>
-        <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wide text-blue-300">
-          Target: {target}
+        <div className="mt-1 font-pixel text-[10px] leading-relaxed text-paper">{step.title}</div>
+        <p className="mt-1.5 font-type text-xs leading-relaxed text-[#d8cba8]">{step.body}</p>
+        <p className="mt-1.5 font-term text-sm uppercase tracking-wide text-amber-2">
+          ▸ target: {target}
         </p>
       </div>
     </div>

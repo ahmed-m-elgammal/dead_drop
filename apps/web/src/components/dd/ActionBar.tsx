@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Dead Drop — Investigator action bar (M3 W1, 06-uiux §2 S3).
+ * Dead Drop — Investigator action bar (M3 W1 logic, W4 noir skin).
  *
  * One decision at a time, bottom-docked, one-handed reach: mode chips →
  * target comes from the selected map node → Probe commits instantly (1 IP),
@@ -12,7 +12,6 @@ import { useRef, useState } from 'react';
 import { Crosshair, EyeOff, Hand, Radar, ShieldAlert } from 'lucide-react';
 import { investigatorLegality } from '@dead-drop/engine';
 import { useDD } from '@/lib/dd/store';
-import { Button } from '@/components/ui/button';
 
 const HOLD_MS = 700;
 
@@ -60,8 +59,9 @@ export default function ActionBar() {
   const chip = (m: typeof mode, label: string, icon: React.ReactNode) => (
     <button
       onClick={() => setMode(m)}
-      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
-        mode === m ? 'border-neutral-900 bg-neutral-900 text-white' : 'border-neutral-300 bg-white text-neutral-700 hover:border-neutral-500'
+      data-on={mode === m}
+      className={`chip-pixel flex items-center gap-1.5 px-3 py-1.5 ${
+        mode === m ? '' : ''
       }`}
       aria-pressed={mode === m}
     >
@@ -71,31 +71,32 @@ export default function ActionBar() {
   );
 
   return (
-    <div className="rounded-xl border bg-white p-3 shadow-sm">
+    <div className="pixel-frame relative p-3">
       {/* phase strip */}
-      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs">
-        <span className="whitespace-nowrap font-semibold">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <span className="whitespace-nowrap font-term text-lg leading-none">
           {aiThinking || view.phase === 'FUGITIVE_MOVE' ? (
-            <span className="flex items-center gap-1.5 text-amber-700">
-              <span className="inline-block h-2 w-2 animate-ping rounded-full bg-amber-500" />
-              The Fugitive is moving…
+            <span className="flex items-center gap-1.5 text-amber-2">
+              <span className="inline-block h-2 w-2 animate-ping rounded-full bg-amber-2" />
+              THE FUGITIVE IS MOVING…
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-emerald-700">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-              Your phase — Day {Math.min(day, totalDays)} step 6
+            <span className="flex items-center gap-1.5 text-mint">
+              <span className="inline-block h-2 w-2 rounded-full bg-mint" />
+              YOUR PHASE — DAY {Math.min(day, totalDays)} · STEP 6
             </span>
           )}
         </span>
-        <span className="text-neutral-500">
-          IP <b className="text-neutral-900">{intel}</b> · probes today {view.investigator.probes_today}/2 ·{' '}
+        <span className="font-term text-base text-fog">
+          IP <b className="text-amber-2">{intel}</b> · probes today {view.investigator.probes_today}/2 ·{' '}
           {view.investigator.stakeout_armed ? (
-            <span className="font-semibold text-red-800">armed @ {view.investigator.stakeout_armed}</span>
+            <span className="font-bold text-blood-2">armed @ {view.investigator.stakeout_armed}</span>
           ) : (
             'no stakeout armed'
           )}
         </span>
       </div>
+      {aiThinking && <div className="thinking-strip absolute inset-x-0 top-0 h-1" aria-hidden />}
 
       {/* mode chips */}
       <div className="mb-2 flex flex-wrap gap-1.5">
@@ -105,30 +106,35 @@ export default function ActionBar() {
       </div>
 
       {/* selected-node panel */}
-      <div className="flex flex-wrap items-center gap-2 rounded-lg bg-neutral-50 px-3 py-2 text-xs">
-        <span className="font-mono text-sm font-bold">{selected ?? '—'}</span>
+      <div className="flex flex-wrap items-center gap-2 border border-line bg-ink-2 px-3 py-2">
+        <span className="font-term text-xl tracking-wide text-amber-2">{selected ?? '—'}</span>
         {selected ? (
           mode === 'probe' ? (
-            <Button
-              size="sm"
-              className="h-8 gap-1.5"
+            <button
+              className="btn-pixel h-8 px-4 text-base"
               disabled={!myPhase || !leg.probe}
               onClick={() => probe(selected)}
               title={leg.probe ? 'Ask: is their end position today this node?' : 'Probe cap reached or out of IP'}
             >
-              <Radar className="h-3.5 w-3.5" /> Probe {selected}
-            </Button>
+              <span className="flex items-center gap-1.5">
+                <Radar className="h-3.5 w-3.5" /> Probe {selected}
+              </span>
+            </button>
           ) : mode === 'stakeout' ? (
             <button
               onPointerDown={startHold}
               onPointerUp={cancelHold}
               onPointerLeave={cancelHold}
               disabled={!myPhase || !leg.stakeout}
-              className="relative h-8 overflow-hidden rounded-md bg-red-800 px-4 text-xs font-bold text-white disabled:opacity-40"
+              className="relative h-8 overflow-hidden px-4 font-term text-base uppercase tracking-wide text-paper disabled:opacity-40"
+              style={{
+                background: '#5e1f1f',
+                boxShadow: 'inset 0 0 0 1px #e05252, 0 3px 0 0 #200a0a, 0 3px 0 2px #0b101b',
+              }}
               aria-label="Hold to confirm stakeout"
             >
               <span
-                className="absolute inset-y-0 left-0 bg-red-600"
+                className="absolute inset-y-0 left-0 bg-blood-2"
                 style={{ width: `${holdPct}%` }}
                 aria-hidden
               />
@@ -138,24 +144,23 @@ export default function ActionBar() {
               </span>
             </button>
           ) : (
-            <span className="text-neutral-500">Switch to Probe / Stakeout to act on this node.</span>
+            <span className="font-type text-xs text-fog">Switch to Probe / Stakeout to act on this node.</span>
           )
         ) : (
-          <span className="text-neutral-500">Tap a node on the map to target it.</span>
+          <span className="font-type text-xs text-fog">Tap a node on the map to target it.</span>
         )}
-        <span className="ml-auto flex items-center gap-1 text-neutral-500">
+        <span className="ml-auto flex items-center gap-1 font-type text-[11px] text-fog-2">
           <EyeOff className="h-3.5 w-3.5" /> {mode === 'stakeout' ? 'The Fugitive will not be notified.' : 'Placements stay private.'}
         </span>
       </div>
 
-      <Button
-        className="mt-2 w-full"
-        variant="outline"
+      <button
+        className="btn-pixel-ghost mt-2 w-full py-2.5 uppercase"
         disabled={!myPhase}
         onClick={endPhase}
       >
         End phase — advance to Day {Math.min(day + 1, totalDays)}
-      </Button>
+      </button>
     </div>
   );
 }

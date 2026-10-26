@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Press_Start_2P, Special_Elite, VT323 } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -13,12 +13,34 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Noir pixel trio: logo sign / case-file typewriter / terminal HUD.
+const pressStart = Press_Start_2P({
+  variable: "--font-press-start",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const specialElite = Special_Elite({
+  variable: "--font-special-elite",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const vt323 = VT323({
+  variable: "--font-vt323",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Dead Drop — Solo Prototype (M3)",
+  title: "DEAD DROP — a noir manhunt",
   description:
-    "Playable single-player prototype of Dead Drop, the async 1v1 hidden-movement duel. Hunt Fugitive archetypes across the 24-case solo ladder, replay every case day by day — on the real deterministic engine (ruleset 1.0.0-alpha.1).",
+    "Eight days. One city. A courier you never see. Read the evidence the rules publish, probe the dark, and close the case — or vanish trying. Play both sides of the async 1v1 hidden-movement duel on a deterministic engine.",
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/art/portrait-courier.png",
   },
 };
 
@@ -30,7 +52,7 @@ export const dynamic = 'force-dynamic';
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1a1a1a",
+  themeColor: "#0b101b",
 };
 
 export default function RootLayout({
@@ -39,12 +61,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} ${specialElite.variable} ${vt323.variable} antialiased bg-background text-foreground`}
       >
         {children}
-        <Toaster position="bottom-center" richColors />
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );

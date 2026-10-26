@@ -1,17 +1,20 @@
 'use client';
 
 /**
- * Dead Drop — M3 W3 (single route per sandbox contract).
+ * Dead Drop — M3 W4 (single route per sandbox contract).
  *
- * Screen flow (06-uiux): SetupScreen (home: role + archetype/seed + ladder +
- * tutorial + history + skill profile) → case screen — EITHER the
+ * Screen flow (06-uiux): SetupScreen (the Bureau: role + archetype/seed +
+ * ladder + tutorial + history + skill profile) → case screen — EITHER the
  * investigator layout (MapCanvas + ActionBar + Sidebar, W1) or the fugitive
  * layout (MapCanvas in fugitive mode + FugitivePanel + FugitiveLog, W3) —
  * then VerdictCard (§8.6 disclosure) with the ReplayViewer overlay.
- * All rules authority lives in @dead-drop/engine (CaseSession); this page only
- * composes role-scoped views.
+ *
+ * W4 art pass adds the presentation layer around it: a once-per-device
+ * cold-open intro, a case-briefing dossier when a new file opens, and
+ * "DAY N" transition slams. All rules authority lives in @dead-drop/engine
+ * (CaseSession); this page only composes role-scoped views + flavor.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDD } from '@/lib/dd/store';
 import SetupScreen from '@/components/dd/SetupScreen';
 import LadderScreen from '@/components/dd/LadderScreen';
@@ -22,6 +25,9 @@ import FugitivePanel from '@/components/dd/FugitivePanel';
 import FugitiveLog from '@/components/dd/FugitiveLog';
 import VerdictCard from '@/components/dd/VerdictCard';
 import TutorialOverlay from '@/components/dd/TutorialOverlay';
+import IntroCinematic from '@/components/dd/IntroCinematic';
+import CaseBriefing from '@/components/dd/CaseBriefing';
+import DayTransition from '@/components/dd/DayTransition';
 import { VM } from '@/lib/dd/vm';
 
 // The app is a stateful, offline-first CLIENT (engine-on-client, IndexedDB,
@@ -29,31 +35,79 @@ import { VM } from '@/lib/dd/vm';
 // Static prerender would also evaluate the map module during build.
 export const dynamic = 'force-dynamic';
 
+const BRIEF_FLAG = 'dd.m3w4.brief';
+
 export default function Home() {
   const screen = useDD((s) => s.screen);
   const role = useDD((s) => s.role);
   const view = useDD((s) => s.view);
   const fview = useDD((s) => s.fview);
   const config = useDD((s) => s.config);
+  const record = useDD((s) => s.record);
   const tutorial = useDD((s) => s.tutorial);
   const hydrate = useDD((s) => s.hydrate);
+
+  // Briefing dossier: fires when a NEW case opens (no moves yet this file)
+  // and this exact (seed, role, startedAt) hasn't been briefed this session.
+  // setState is deferred (never synchronous in the effect body).
+  const [briefKey, setBriefKey] = useState<string | null>(null);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (!config || !record) {
+        setBriefKey(null);
+        return;
+      }
+      const key = `${config.seed}-${role}-${record.startedAt}`;
+      const fresh = record.investigator.length === 0 && record.fugitive.length === 0;
+      let seen = false;
+      try {
+        seen = window.sessionStorage.getItem(`${BRIEF_FLAG}.${key}`) === '1';
+      } catch {
+        seen = false;
+      }
+      setBriefKey(fresh && !seen ? key : null);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [config?.seed, record?.startedAt, role, config, record]);
+
+  const closeBriefing = () => {
+    if (briefKey) {
+      try {
+        window.sessionStorage.setItem(`${BRIEF_FLAG}.${briefKey}`, '1');
+      } catch {
+        /* ignore */
+      }
+    }
+    setBriefKey(null);
+  };
 
   useEffect(() => {
     hydrate();
   }, [hydrate]);
 
+  const showBriefing = screen === 'case' && briefKey !== null && !tutorial && !disclosureUp(useDD.getState().disclosure);
+
   if (screen === 'ladder') {
-    return <LadderScreen />;
+    return (
+      <div className="desk fx-grain min-h-screen">
+        <LadderScreen />
+      </div>
+    );
   }
 
   if (screen === 'setup' || !config) {
-    return <SetupScreen />;
+    return (
+      <div className="desk fx-grain min-h-screen">
+        <IntroCinematic />
+        <SetupScreen />
+      </div>
+    );
   }
 
   if (role === 'fugitive') {
     if (!fview) return <SetupScreen />;
     return (
-      <div className="flex h-screen flex-col bg-[#f6f5f1]">
+      <div className="desk fx-grain flex h-screen flex-col">
         <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row">
           <div className="h-[54vh] min-h-0 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
             <MapCanvas vm={VM} view={fview} config={config} fugitiveRole />
@@ -63,7 +117,11 @@ export default function Home() {
             <FugitiveLog fview={fview} />
           </div>
         </main>
+        <DayTransition />
         <VerdictCard />
+        {showBriefing && config && role && (
+          <CaseBriefing key={briefKey} config={config} role={role} openKey={briefKey!} onClose={closeBriefing} />
+        )}
       </div>
     );
   }
@@ -71,7 +129,7 @@ export default function Home() {
   if (!view) return <SetupScreen />;
 
   return (
-    <div className="flex h-screen flex-col bg-[#f6f5f1]">
+    <div className="desk fx-grain flex h-screen flex-col">
       <main className="flex min-h-0 flex-1 flex-col gap-3 p-3 lg:flex-row">
         <div className="h-[54vh] min-h-0 shrink-0 lg:h-auto lg:min-w-0 lg:flex-1">
           <MapCanvas vm={VM} view={view} config={config} />
@@ -83,8 +141,17 @@ export default function Home() {
           </div>
         </div>
       </main>
+      <DayTransition />
       <VerdictCard />
       {tutorial && <TutorialOverlay />}
+      {showBriefing && config && role && (
+        <CaseBriefing key={briefKey} config={config} role={role} openKey={briefKey!} onClose={closeBriefing} />
+      )}
     </div>
   );
+}
+
+/** Never brief over a closed case — the verdict owns the screen. */
+function disclosureUp(d: unknown): boolean {
+  return d !== null && d !== undefined;
 }

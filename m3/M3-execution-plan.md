@@ -28,12 +28,21 @@
 - Skill measurement stage 3 (on-device rolling windows, 05-ai-spec §4). DONE — per-case facts from live engine state + §8.6 disclosure at finalize, persisted on the history record; last-10 windows per role, four axes each, Novice/Analyst/Detective/Ghost-hunter tiers (formulas + weights registered in ADR-007 D3; thresholds recalibrated at M4).
 - Found + fixed in E2E: role views project MUTABLE engine arrays → store clones at the boundary (`projectI/projectF`); covers the same latent W1 hazard in map reveal tints/HIT pins (ADR-007 D6).
 
-### W4 — Hardening + dogfood
+### W4 — Art & immersion sprint 1 "NOIR PIXEL" (DONE — [ADR-008](adr-008-m3-w4-noir-art-pass.md))
+- Re-scoped on player feedback ("dashboard-looking UI"): the player-facing goal moved from hardening to juice — real-game presentation, generated art, story shell. Original W4 hardening scope (PWA shell, settings S9, telemetry, dogfood) shifts to W5; G2 pre-flight becomes W6 (buffer).
+- Art pipeline: locked noir palette + three-font system (Press Start 2P / Special Elite / VT323); 7 AI-generated pixel-art assets (title city, 2 portraits, lineup, 3 verdict vignettes) run through a PIL chunkify/quantize post-processor; 2 procedural seamless textures (cork, paper); total 389 KB in `apps/web/public/art/`.
+- Story layer (presentation-only): once-per-device cold-open intro cinematic; case-briefing dossier per case-open (public-config facts only — §1.3 audited); "DAY N" slam transitions with flavor lines; typewriter component honoring prefers-reduced-motion.
+- Full reskin of every surface on the noir design system (CSS-only, zero new deps): night-city map, Bureau setup desk, evidence corkboard + pinned notes, fugitive Courier card, case-folder verdict slam with verdict art, case-wall ladder, archive/service-record dialogs, noir toasts.
+- Zero rules churn: store/engine/AI untouched (150/150 incl. parity gate); briefing content audit — drops/gate/safehouse/reveal calendar only, all public config.
+- E2E found + fixed: procedural paper texture generated black (Image.new default base never painted), fugitive Hold-button text wrap, briefing effect setState-in-effect (repo lint stricter than sandbox — sandbox eslint now ignores the embedded repo tree).
+
+### W5 — Hardening + dogfood (re-scoped from W4)
 - PWA install/offline shell, settings S9, reduced-motion pass, text-scale pass.
+- Audio pass (Web Audio SFX/ambience — deferred from W4 art sprint to keep one sprint one theme).
 - Analytics events + Sentry (roadmap task 7).
 - Internal dogfood round 1 (roadmap task 8) → fix list.
 
-### W5 (buffer) — G2 pre-flight
+### W6 (buffer) — G2 pre-flight
 - L5 suite from 09-testing mapped onto the app; zero known rule bugs line; crash-free instrumentation honest.
 - Exit: G2 sign-off into 14-readiness.
 

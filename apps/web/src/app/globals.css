@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   DEAD DROP — NOIR PIXEL design system (M3 W4)
+   One city. One lamp. One manhunt.
+   Palette: ink navy desk / paper cream / brass amber / blood red.
+   Fonts: Press Start 2P (titles) · Special Elite (case files)
+          VT323 (terminal HUD) · Geist Sans (body).
+   ============================================================ */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,79 +45,86 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+
+  /* noir tokens (usable as Tailwind colors: bg-ink, text-fog, border-line…) */
+  --color-ink: var(--nk-ink);
+  --color-ink-2: var(--nk-ink-2);
+  --color-panel: var(--nk-panel);
+  --color-panel-2: var(--nk-panel-2);
+  --color-line: var(--nk-line);
+  --color-line-2: var(--nk-line-2);
+  --color-paper: var(--nk-paper);
+  --color-paper-2: var(--nk-paper-2);
+  --color-amber: var(--nk-amber);
+  --color-amber-2: var(--nk-amber-2);
+  --color-blood: var(--nk-blood);
+  --color-blood-2: var(--nk-blood-2);
+  --color-teal: var(--nk-teal);
+  --color-fog: var(--nk-fog);
+  --color-fog-2: var(--nk-fog-2);
+  --color-mint: var(--nk-mint);
+
+  --font-pixel: var(--font-press-start);
+  --font-type: var(--font-special-elite);
+  --font-term: var(--font-vt323);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+  /* ---- noir palette ---- */
+  --nk-ink: #0b101b;        /* page — deep ink navy        */
+  --nk-ink-2: #0e1524;      /* page raised                 */
+  --nk-panel: #141d30;      /* card                        */
+  --nk-panel-2: #1a2438;    /* card raised                 */
+  --nk-line: #2a3850;       /* hairline                    */
+  --nk-line-2: #3a4c6b;     /* strong hairline             */
+  --nk-paper: #e8ddc7;      /* paper cream                 */
+  --nk-paper-2: #d9cbae;    /* aged paper                  */
+  --nk-amber: #e8a33d;      /* brass lamp — primary        */
+  --nk-amber-2: #f4c86a;    /* amber highlight             */
+  --nk-blood: #a62f2f;      /* danger — stakeout red       */
+  --nk-blood-2: #c85050;    /* red highlight               */
+  --nk-teal: #3d7068;       /* muted teal — reveals        */
+  --nk-fog: #8b9bb4;        /* muted text                  */
+  --nk-fog-2: #5d6d88;      /* deep muted text             */
+  --nk-mint: #58b98a;       /* success — your phase        */
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* ---- shadcn token mapping (always-dark noir) ---- */
+  --radius: 0rem;
+  --background: var(--nk-ink);
+  --foreground: #d7deeb;
+  --card: var(--nk-panel);
+  --card-foreground: #d7deeb;
+  --popover: var(--nk-panel-2);
+  --popover-foreground: #d7deeb;
+  --primary: var(--nk-amber);
+  --primary-foreground: #141005;
+  --secondary: var(--nk-panel-2);
+  --secondary-foreground: #d7deeb;
+  --muted: var(--nk-panel-2);
+  --muted-foreground: var(--nk-fog);
+  --accent: var(--nk-panel-2);
+  --accent-foreground: #d7deeb;
+  --destructive: var(--nk-blood-2);
+  --border: var(--nk-line);
+  --input: var(--nk-line);
+  --ring: var(--nk-amber);
+  --chart-1: var(--nk-amber);
+  --chart-2: var(--nk-teal);
+  --chart-3: var(--nk-blood);
+  --chart-4: var(--nk-mint);
+  --chart-5: var(--nk-fog);
+  --sidebar: var(--nk-panel);
+  --sidebar-foreground: #d7deeb;
+  --sidebar-primary: var(--nk-amber);
+  --sidebar-primary-foreground: #141005;
+  --sidebar-accent: var(--nk-panel-2);
+  --sidebar-accent-foreground: #d7deeb;
+  --sidebar-border: var(--nk-line);
+  --sidebar-ring: var(--nk-amber);
 }
 
 @layer base {
@@ -118,5 +133,335 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "tnum" 1;
   }
+  ::selection {
+    background: var(--nk-amber);
+    color: #141005;
+  }
+}
+
+/* ============================================================
+   TEXTURES & SURFACES
+   ============================================================ */
+
+/* the detective's desk — page backdrop: ink + lamp pool + vignette */
+.desk {
+  background:
+    radial-gradient(1100px 520px at 50% -8%, rgba(232, 163, 61, 0.09), transparent 60%),
+    radial-gradient(900px 700px at 85% 110%, rgba(61, 112, 104, 0.07), transparent 55%),
+    var(--nk-ink);
+}
+
+/* film grain + scanlines overlays (decorative, pointer-transparent) */
+.fx-grain::after,
+.fx-scan::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+.fx-grain::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+.fx-scan::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0 2px,
+    rgba(0, 0, 0, 0.14) 2px 3px
+  );
+  opacity: 0.35;
+}
+
+/* pixel bevel panel — hard shadows, square corners, two-tone frame */
+.pixel-frame {
+  background: var(--nk-panel);
+  box-shadow:
+    0 0 0 1px var(--nk-line-2),
+    0 0 0 2px var(--nk-ink),
+    0 0 0 3px var(--nk-line),
+    5px 7px 0 0 rgba(4, 8, 16, 0.55);
+}
+.pixel-frame-amber {
+  background: var(--nk-panel);
+  box-shadow:
+    0 0 0 1px var(--nk-amber),
+    0 0 0 2px var(--nk-ink),
+    0 0 0 3px var(--nk-line-2),
+    5px 7px 0 0 rgba(4, 8, 16, 0.55);
+}
+
+/* corkboard surface (ladder wall, evidence boards) */
+.cork {
+  background:
+    linear-gradient(rgba(11, 16, 27, 0.62), rgba(11, 16, 27, 0.78)),
+    url("/art/cork.png");
+  background-size: 220px 220px, 256px 256px;
+}
+
+/* manila paper card — evidence notes, briefing sheets */
+.paper-card {
+  background:
+    linear-gradient(rgba(20, 16, 5, 0.045), rgba(20, 16, 5, 0.045)),
+    url("/art/paper.png");
+  background-size: 256px 256px;
+  background-color: var(--nk-paper);
+  color: #241d10;
+  box-shadow:
+    0 0 0 1px rgba(20, 16, 5, 0.35),
+    3px 5px 0 0 rgba(4, 8, 16, 0.5);
+}
+/* pinned note variant: red-head pin + slight tilt */
+.pin-note {
+  position: relative;
+}
+.pin-note::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 35% 30%, #f0e6d2 0 18%, var(--nk-blood) 45%, #6d1d1d 100%);
+  border-radius: 50%;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.55);
+}
+.tilt-l { transform: rotate(-1.1deg); }
+.tilt-r { transform: rotate(1.2deg); }
+
+/* rubber stamp (briefings, verdicts, case numbers) */
+.stamp {
+  font-family: var(--font-type);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border: 3px solid currentColor;
+  padding: 0.25em 0.7em;
+  display: inline-block;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  opacity: 0.92;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='2.2' intercept='-0.25'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23r)'/%3E%3C/svg%3E");
+  mask-size: 120px 120px;
+}
+
+/* red string between pinned cards (decorative) */
+.string {
+  position: absolute;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #7d2a2a 0 6px, #5e1f1f 6px 8px);
+  transform-origin: 0 50%;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   PIXEL CONTROLS
+   ============================================================ */
+
+.btn-pixel {
+  font-family: var(--font-term);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  background: var(--nk-amber);
+  color: #141005;
+  border: 0;
+  box-shadow:
+    inset -2px -2px 0 0 rgba(20, 16, 5, 0.35),
+    inset 2px 2px 0 0 rgba(255, 240, 200, 0.5),
+    0 4px 0 0 #8a5f1c,
+    0 4px 0 2px var(--nk-ink);
+  transition: transform 60ms steps(2, end), box-shadow 60ms steps(2, end), filter 120ms;
+}
+.btn-pixel:hover { filter: brightness(1.07); }
+.btn-pixel:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset -2px -2px 0 0 rgba(20, 16, 5, 0.35),
+    inset 2px 2px 0 0 rgba(255, 240, 200, 0.5),
+    0 1px 0 0 #8a5f1c,
+    0 1px 0 2px var(--nk-ink);
+}
+.btn-pixel:disabled {
+  filter: grayscale(0.7) brightness(0.75);
+  cursor: not-allowed;
+}
+
+.btn-pixel-ghost {
+  font-family: var(--font-term);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  background: var(--nk-panel-2);
+  color: var(--nk-paper);
+  border: 0;
+  box-shadow:
+    inset 0 0 0 1px var(--nk-line-2),
+    0 4px 0 0 #10192b,
+    0 4px 0 2px var(--nk-ink);
+  transition: transform 60ms steps(2, end), box-shadow 60ms steps(2, end), filter 120ms;
+}
+.btn-pixel-ghost:hover { filter: brightness(1.12); }
+.btn-pixel-ghost:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 0 0 1px var(--nk-line-2),
+    0 1px 0 0 #10192b,
+    0 1px 0 2px var(--nk-ink);
+}
+
+/* mode chip — action bar tools */
+.chip-pixel {
+  font-family: var(--font-term);
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: var(--nk-fog);
+  background: var(--nk-panel-2);
+  box-shadow: inset 0 0 0 1px var(--nk-line);
+  transition: all 80ms steps(2, end);
+}
+.chip-pixel:hover { color: var(--nk-paper); box-shadow: inset 0 0 0 1px var(--nk-line-2); }
+.chip-pixel[data-on="true"] {
+  color: #141005;
+  background: var(--nk-amber);
+  box-shadow:
+    inset -2px -2px 0 0 rgba(20, 16, 5, 0.3),
+    inset 2px 2px 0 0 rgba(255, 240, 200, 0.45);
+}
+
+/* neon flicker for the title sign */
+@keyframes neon-flicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 6px rgba(232,163,61,.85), 0 0 22px rgba(232,163,61,.35), 3px 3px 0 rgba(0,0,0,.8); }
+  3% { opacity: 0.55; text-shadow: none; }
+  5% { opacity: 1; }
+  42% { opacity: 1; }
+  44% { opacity: 0.4; text-shadow: none; }
+  46% { opacity: 1; }
+  78% { opacity: 0.85; }
+  80% { opacity: 1; }
+}
+.neon {
+  animation: neon-flicker 4.2s infinite;
+}
+
+/* day-slam transition */
+@keyframes slam-in {
+  0% { transform: translateY(-46%) scaleY(2.4); opacity: 0; }
+  55% { transform: translateY(0) scaleY(1); opacity: 1; }
+  62% { transform: translateY(2px) scaleY(0.94); }
+  70%, 100% { transform: translateY(0) scaleY(1); opacity: 1; }
+}
+.slam {
+  animation: slam-in 0.42s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+
+/* stamp slam for verdicts */
+@keyframes stamp-in {
+  0% { transform: scale(2.4) rotate(-18deg); opacity: 0; }
+  60% { transform: scale(0.94) rotate(-8deg); opacity: 1; }
+  75% { transform: scale(1.04) rotate(-9deg); }
+  100% { transform: scale(1) rotate(-9deg); opacity: 1; }
+}
+.stamp-in {
+  animation: stamp-in 0.5s cubic-bezier(0.25, 1.1, 0.3, 1) both;
+}
+
+/* evidence card pop */
+@keyframes pin-pop {
+  0% { transform: translateY(-10px) scale(1.06); opacity: 0; }
+  70% { transform: translateY(1px) scale(0.99); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.pin-pop { animation: pin-pop 0.28s ease-out both; }
+
+/* panel fade-up */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.35s ease-out both; }
+
+/* typewriter caret */
+@keyframes caret-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.caret::after {
+  content: "▌";
+  margin-left: 2px;
+  color: var(--nk-amber);
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+
+/* rain streaks overlay for the title screen */
+@keyframes rain-fall {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: -80px 640px, 120px 800px; }
+}
+.rain {
+  background-image:
+    repeating-linear-gradient(112deg, rgba(180, 200, 230, 0.10) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(100deg, rgba(180, 200, 230, 0.07) 0 1px, transparent 1px 13px);
+  animation: rain-fall 1.6s linear infinite;
+}
+
+/* armed stakeout ring pulse (SVG) */
+@keyframes ring-pulse {
+  0%, 100% { stroke-opacity: 1; }
+  50% { stroke-opacity: 0.35; }
+}
+.ring-pulse { animation: ring-pulse 1.5s ease-in-out infinite; }
+
+/* AI thinking strip */
+@keyframes stripe-slide {
+  from { background-position: 0 0; }
+  to { background-position: 28px 0; }
+}
+.thinking-strip {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(232, 163, 61, 0.25) 0 8px,
+    rgba(232, 163, 61, 0.08) 8px 16px
+  );
+  background-size: 28px 28px;
+  animation: stripe-slide 0.7s linear infinite;
+}
+
+/* pixelated images everywhere in the art layer */
+img.art {
+  image-rendering: pixelated;
+}
+
+/* thin noir scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nk-line-2) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.25); }
+*::-webkit-scrollbar-thumb {
+  background: var(--nk-line-2);
+  border: 2px solid var(--nk-ink);
+}
+
+/* sonner toasts — noir case notes */
+[data-sonner-toast] {
+  font-family: var(--font-type) !important;
+  background: var(--nk-panel-2) !important;
+  color: var(--nk-paper) !important;
+  border: 1px solid var(--nk-line-2) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 0 2px var(--nk-ink), 4px 5px 0 rgba(4, 8, 16, 0.6) !important;
+}
+[data-sonner-toast] [data-title] { letter-spacing: 0.02em; }
+[data-sonner-toast][data-type="success"] { border-left: 4px solid var(--nk-mint) !important; }
+[data-sonner-toast][data-type="error"] { border-left: 4px solid var(--nk-blood-2) !important; }
+[data-sonner-toast][data-type="warning"] { border-left: 4px solid var(--nk-amber) !important; }
+[data-sonner-toast][data-type="info"] { border-left: 4px solid var(--nk-teal) !important; }
+
+/* reduced motion — honor the player */
+@media (prefers-reduced-motion: reduce) {
+  .neon, .slam, .stamp-in, .pin-pop, .fade-up, .rain,
+  .thinking-strip, .ring-pulse, .caret::after {
+    animation: none !important;
+  }
+  .rain { background-image: none; }
 }

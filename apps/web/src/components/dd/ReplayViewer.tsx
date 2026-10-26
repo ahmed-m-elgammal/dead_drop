@@ -42,7 +42,7 @@ interface Props {
   onClose: () => void;
 }
 
-const CLASS_COLOR: Record<string, string> = { F: '#1a1a1a', T: '#b0722c', M: '#274e8f' };
+const CLASS_COLOR: Record<string, string> = { F: '#c9d3e4', T: '#e8a33d', M: '#4f8f85' };
 
 export default function ReplayViewer({ config, disclosure, meta, onClose }: Props) {
   const layout = useMemo(() => buildLayout(VM), []);
@@ -149,24 +149,24 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
   const won = winner === 'INVESTIGATOR';
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-stretch justify-center bg-black/70 p-3 sm:items-center" role="dialog" aria-modal aria-label="Case replay">
-      <div className="flex h-full max-h-[95vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:h-auto">
+    <div className="fixed inset-0 z-[60] flex items-stretch justify-center bg-ink/92 p-3 sm:items-center" role="dialog" aria-modal aria-label="Case replay">
+      <div className="pixel-frame flex h-full max-h-[95vh] w-full max-w-3xl flex-col overflow-hidden bg-panel sm:h-auto">
         {/* header */}
-        <div className={`flex items-center justify-between px-4 py-3 text-white ${won ? 'bg-emerald-800' : 'bg-red-900'}`}>
+        <div className={`flex items-center justify-between border-b border-line px-4 py-3 ${won ? 'bg-[#14251f]' : 'bg-[#241114]'}`}>
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[2px] opacity-70">
-              Replay · {meta.role === 'fugitive' ? 'you as fugitive vs I-GreedyProbe' : `${ARCHETYPES[meta.archetype].label} fugitive`} · seed {meta.seed}
+            <div className="font-term text-base uppercase tracking-[0.14em] text-fog">
+              Replay · {meta.role === 'fugitive' ? 'you as the Courier vs I-GreedyProbe' : `${ARCHETYPES[meta.archetype].label} courier`} · №{String(meta.seed % 100000).padStart(5, '0')}
               {meta.stars !== null ? ` · ${meta.stars}★` : ''}
             </div>
-            <div className="text-xl font-black">{disclosure.verdict}</div>
+            <div className={`font-pixel text-lg ${won ? 'text-mint' : 'text-blood-2'}`}>{disclosure.verdict}</div>
           </div>
-          <button onClick={onClose} className="rounded-full p-1.5 hover:bg-white/20" aria-label="Close replay">
+          <button onClick={onClose} className="btn-pixel-ghost p-1.5" aria-label="Close replay">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* map */}
-        <div className="min-h-0 flex-1 overflow-hidden bg-[#faf9f6]">
+        <div className="min-h-0 flex-1 overflow-hidden bg-[#0e1524]">
           <svg viewBox="0 0 760 1000" className="h-full w-full" role="img" aria-label="Replay map — true route by day">
             {layout.districts.map((d) => {
               const rev = revealed.get(d.id);
@@ -176,8 +176,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                     cx={d.x}
                     cy={d.y}
                     r={d.plateR}
-                    fill={rev !== undefined ? '#e8edf6' : '#f4f4f2'}
-                    stroke={rev !== undefined ? '#274e8f' : '#c9c9c4'}
+                    fill={rev !== undefined ? '#15273a' : '#121b2d'}
+                    stroke={rev !== undefined ? '#e8a33d' : '#2a3850'}
                     strokeWidth={rev !== undefined ? 2 : 1.2}
                   />
                   <text
@@ -186,7 +186,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                     textAnchor="middle"
                     fontSize={15}
                     fontWeight={700}
-                    fill={rev !== undefined ? '#274e8f' : '#8a8a84'}
+                    fill={rev !== undefined ? '#f4c86a' : '#5d6d88'}
                     className="uppercase"
                     style={{ letterSpacing: 1.5 }}
                   >
@@ -231,7 +231,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                     y1={a.y}
                     x2={b.x}
                     y2={b.y}
-                    stroke={CLASS_COLOR[r.edge_class ?? 'F'] ?? '#1a1a1a'}
+                    stroke={CLASS_COLOR[r.edge_class ?? 'F'] ?? '#c9d3e4'}
                     strokeWidth={4}
                     strokeLinecap="round"
                     opacity={r.day === day ? 0.95 : 0.55}
@@ -263,7 +263,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                   cy={pos.y}
                   r={24}
                   fill="none"
-                  stroke={p.missDay !== null ? '#9a9a94' : '#8a1c1c'}
+                  stroke={p.missDay !== null ? '#5d6d88' : '#e05252'}
                   strokeWidth={2.6}
                   strokeDasharray="6,4"
                 />
@@ -276,8 +276,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
               if (!pos) return null;
               return (
                 <g key={`p-${i}`} pointerEvents="none">
-                  <circle cx={pos.x} cy={pos.y} r={10} fill={p.hit ? '#1d7a3a' : '#777771'} />
-                  <text x={pos.x} y={pos.y + 4} textAnchor="middle" fontSize={12} fontWeight={900} fill="#fff">
+                  <circle cx={pos.x} cy={pos.y} r={10} fill={p.hit ? '#58b98a' : '#5d6d88'} />
+                  <text x={pos.x} y={pos.y + 4} textAnchor="middle" fontSize={12} fontWeight={900} fill="#0b101b">
                     {p.hit ? '✓' : '✕'}
                   </text>
                 </g>
@@ -294,8 +294,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                   <polygon
                     key="sh"
                     points={`${sh.x},${sh.y - 13} ${sh.x - 12},${sh.y + 9} ${sh.x + 12},${sh.y + 9}`}
-                    fill="#6b5b2a"
-                    stroke="#fff"
+                    fill="#3d7068"
+                    stroke="#e8ddc7"
                     strokeWidth={1.6}
                   />,
                 );
@@ -304,8 +304,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                   <polygon
                     key="g"
                     points={`${g.x},${g.y - 14} ${g.x + 14},${g.y} ${g.x},${g.y + 14} ${g.x - 14},${g.y}`}
-                    fill="#1d5c3a"
-                    stroke="#fff"
+                    fill="#a62f2f"
+                    stroke="#e8ddc7"
                     strokeWidth={1.6}
                   />,
                 );
@@ -320,15 +320,15 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                     width={20}
                     height={20}
                     rx={3}
-                    fill={dropsDone.has(d) ? '#8a1c1c' : '#b3b3ad'}
-                    stroke="#fff"
+                    fill={dropsDone.has(d) ? '#a62f2f' : '#e8ddc7'}
+                    stroke="#0b101b"
                     strokeWidth={1.6}
                   />,
                 );
                 const slot = dropsDone.get(d);
                 if (slot !== undefined)
                   parts.push(
-                    <text key={`dt-${d}`} x={pos.x} y={pos.y + 4} textAnchor="middle" fontSize={11} fontWeight={900} fill="#fff">
+                    <text key={`dt-${d}`} x={pos.x} y={pos.y + 4} textAnchor="middle" fontSize={11} fontWeight={900} fill="#0b101b">
                       {slot}
                     </text>,
                   );
@@ -342,8 +342,8 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
               if (!pos) return null;
               return (
                 <g pointerEvents="none">
-                  <circle cx={pos.x} cy={pos.y} r={9} fill="#8a1c1c" stroke="#fff" strokeWidth={2.2} />
-                  <text x={pos.x} y={pos.y + 3.5} textAnchor="middle" fontSize={10} fontWeight={900} fill="#fff">
+                  <circle cx={pos.x} cy={pos.y} r={9} fill="#e05252" stroke="#0b101b" strokeWidth={2.2} />
+                  <text x={pos.x} y={pos.y + 3.5} textAnchor="middle" fontSize={10} fontWeight={900} fill="#0b101b">
                     F
                   </text>
                 </g>
@@ -362,7 +362,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={700}
-                  fill="#42423e"
+                  fill="#8b9bb4"
                   pointerEvents="none"
                 >
                   {n}
@@ -373,14 +373,14 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
         </div>
 
         {/* scrubber + day detail */}
-        <div className="border-t bg-white px-4 py-3">
+        <div className="border-t border-line bg-panel px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => {
                 if (day >= maxDay) setDay(1);
                 setPlaying((p) => !p);
               }}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white"
+              className="btn-pixel flex h-9 w-9 shrink-0 items-center justify-center"
               aria-label={playing ? 'Pause replay' : 'Play replay'}
             >
               {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -394,26 +394,26 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
                 setPlaying(false);
                 setDay(Number(e.target.value));
               }}
-              className="w-full accent-neutral-900"
+              className="w-full accent-[#e8a33d]"
               aria-label="Replay day"
             />
-            <span className="w-12 shrink-0 text-right font-mono text-xs font-bold">
+            <span className="w-12 shrink-0 text-right font-term text-lg text-amber-2">
               D{day}/{maxDay}
             </span>
           </div>
 
-          <div className="mt-2 rounded-lg bg-neutral-50 px-3 py-2 text-[11px] leading-relaxed text-neutral-700">
-            <b>Day {day}:</b>{' '}
+          <div className="mt-2 border border-line bg-ink-2 px-3 py-2 font-type text-[11px] leading-relaxed text-fog">
+            <b className="text-paper">Day {day}:</b>{' '}
             <DayRouteLine r={dayEvents.route} />{' '}
             {dayEvents.pub.length === 0 && dayEvents.priv.length === 0 ? (
-              <span className="text-neutral-400">— quiet night.</span>
+              <span className="text-fog-2">— quiet night.</span>
             ) : (
               <ul className="mt-1 space-y-0.5">
                 {dayEvents.pub.map((e, i) => (
                   <li key={`pub-${i}`}>· {publicLine(e)}</li>
                 ))}
                 {dayEvents.priv.map((e, i) => (
-                  <li key={`priv-${i}`} className="text-neutral-500">
+                  <li key={`priv-${i}`} className="text-fog-2">
                     · private: {privateLine(e)}
                   </li>
                 ))}
@@ -427,7 +427,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
 }
 
 function DayRouteLine({ r }: { r: FugitiveRouteEntry | null }) {
-  if (!r) return <span className="text-neutral-400">no route entry.</span>;
+  if (!r) return <span className="text-fog-2">no route entry.</span>;
   if (r.action.kind === 'FORCED_HOLD') return <span>Stranded at {r.from} (§9.13, 0 SP).</span>;
   if (r.action.kind === 'HOLD') return <span>Held at {r.from} ({r.sp_cost} SP).</span>;
   return (

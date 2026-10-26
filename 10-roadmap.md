@@ -48,7 +48,7 @@
 | Risks | Reveal schedule wrong → S2 readout; sim policies too weak to expose dominance → add `I-Calendar` variants |
 | **Exit** | G1 signed off in 14-readiness |
 
-### M3 — Playable single-player prototype (4–5 wks; W1–W3 executed 2026-10-26 — W1 apps/web scaffold + playable Investigator loop (ADR-005); W2 archetypes + 24-case ladder + IndexedDB replay viewer + tutorial + CI on dist-resolved engine (ADR-006); W3 fugitive-side playable + measured I-GreedyProbe (sim-port, parity-gated) + Stage-3 skill windows (ADR-007); next: W4 hardening/dogfood)
+### M3 — Playable single-player prototype (4–5 wks; W1–W4 executed 2026-10-26 — W1 apps/web scaffold + playable Investigator loop (ADR-005); W2 archetypes + 24-case ladder + IndexedDB replay viewer + tutorial + CI on dist-resolved engine (ADR-006); W3 fugitive-side playable + measured I-GreedyProbe (sim-port, parity-gated) + Stage-3 skill windows (ADR-007); W4 "NOIR PIXEL" art & immersion sprint — generated pixel-art assets, story shell, full reskin, presentation-layer-only (ADR-008); next: W5 hardening/audio/dogfood)
 
 | Field | Detail |
 |---|---|

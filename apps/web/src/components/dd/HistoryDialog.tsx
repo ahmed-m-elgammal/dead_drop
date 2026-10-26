@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * Dead Drop — case history (M3 W2). Closed cases archived in IndexedDB; the
- * §8.6 replay is REBUILT from (seed + archetype + journal) through the real
- * engine, so every listed case replays exactly as it happened.
+ * Dead Drop — case history (M3 W2 logic, W4 skin): THE ARCHIVE drawer.
+ * Closed cases archived in IndexedDB; the §8.6 replay is REBUILT from
+ * (seed + archetype + journal) through the real engine, so every listed
+ * case replays exactly as it happened.
  */
 import { useEffect, useState } from 'react';
 import { Play, Trash2, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ARCHETYPES } from '@/lib/dd/archetypes';
 import {
   deleteCaseRecord,
@@ -56,61 +56,67 @@ export default function HistoryDialog({ onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal aria-label="Case history">
-      <div className="max-h-[86vh] w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b px-5 py-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/88 p-4" role="dialog" aria-modal aria-label="Case history">
+      <div className="pixel-frame max-h-[86vh] w-full max-w-lg overflow-hidden">
+        <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div>
-            <div className="text-[10px] font-bold uppercase tracking-[2px] text-neutral-400">Case history</div>
-            <div className="text-lg font-black">How you’ve read them</div>
+            <div className="font-pixel text-[9px] tracking-[0.2em] text-amber">THE ARCHIVE</div>
+            <div className="mt-1.5 font-type text-sm text-paper">How you’ve read them</div>
           </div>
-          <button onClick={onClose} className="rounded-full p-1.5 hover:bg-neutral-100" aria-label="Close history">
+          <button onClick={onClose} className="btn-pixel-ghost p-1.5" aria-label="Close history">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="max-h-[64vh] overflow-y-auto px-4 py-3">
-          {records === null && <p className="py-8 text-center text-xs text-neutral-400">Opening the archive…</p>}
+          {records === null && (
+            <p className="py-8 text-center font-type text-xs text-fog-2">Opening the archive…</p>
+          )}
           {records !== null && records.length === 0 && (
-            <p className="py-8 text-center text-xs leading-relaxed text-neutral-400">
+            <p className="py-8 text-center font-type text-xs leading-relaxed text-fog-2">
               No closed cases yet. Every case you finish lands here — replay it day by day and see how the read went.
             </p>
           )}
           {records !== null && records.length > 0 && (
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {records.map((rec) => (
-                <li key={rec.id} className="flex items-center gap-3 rounded-xl border bg-white px-3 py-2.5 shadow-sm">
+                <li
+                  key={rec.id}
+                  className={`paper-card pin-note pin-pop flex items-center gap-3 px-3 py-2.5 ${rec.id.length % 2 ? 'tilt-l' : 'tilt-r'}`}
+                >
                   <span
-                    className={`rounded px-1.5 py-0.5 text-[10px] font-black ${
-                      rec.verdict === 'CAPTURE' || rec.verdict === 'EXPIRY'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}
+                    className={`stamp ${rec.verdict === 'CAPTURE' || rec.verdict === 'EXPIRY' ? 'border-[#3e6b4f] text-[#3e6b4f]' : 'border-[#7a2d2d] text-[#7a2d2d]'}`}
+                    style={{ fontSize: '0.55rem', padding: '0.1em 0.4em' }}
                   >
                     {rec.verdict}
                   </span>
-                  <span className="flex-1 text-xs text-neutral-600">
+                  <span className="flex-1 font-type text-[11px] leading-snug text-[#33291a]">
                     {(rec.role ?? 'investigator') === 'fugitive' && (
-                      <b className="mr-1 rounded bg-neutral-900 px-1 py-0.5 text-[9px] font-black uppercase text-white">as fugitive</b>
+                      <b className="mr-1 bg-[#241d10] px-1 py-0.5 font-term text-[10px] uppercase text-paper">as courier</b>
                     )}
                     {(rec.role ?? 'investigator') === 'investigator' && (
-                      <b className="text-neutral-900">{ARCHETYPES[rec.archetype].label}</b>
+                      <b className="text-[#241d10]">{ARCHETYPES[rec.archetype].label}</b>
                     )}{' '}
-                    · seed <span className="font-mono">{rec.seed}</span> ·{' '}
+                    · №{String(rec.seed % 100000).padStart(5, '0')} ·{' '}
                     {(rec.role ?? 'investigator') === 'fugitive'
                       ? (rec.fugitiveJournal?.filter((a) => a.action.kind !== 'HOLD').length ?? 0)
                       : rec.journal.filter((a) => a.action.kind !== 'WAIT').length}{' '}
                     actions · {new Date(rec.closedAt).toLocaleDateString()}
-                    {rec.source === 'ladder' ? ' · ladder' : rec.source === 'tutorial' ? ' · tutorial' : ''}
+                    {rec.source === 'ladder' ? ' · wall' : rec.source === 'tutorial' ? ' · brief' : ''}
                   </span>
-                  {rec.stars !== null && <span className="text-xs font-bold text-amber-600">{rec.stars}★</span>}
-                  <Button size="sm" variant="outline" className="h-7 gap-1 px-2 text-xs" onClick={() => open(rec)}>
-                    <Play className="h-3 w-3" /> Replay
-                  </Button>
+                  {rec.stars !== null && <span className="font-term text-base text-[#c9962e]">{rec.stars}★</span>}
+                  <button
+                    onClick={() => open(rec)}
+                    className="btn-pixel-ghost flex h-7 items-center gap-1 px-2 text-sm"
+                    aria-label={`Replay case ${rec.id}`}
+                  >
+                    <Play className="h-3 w-3" /> replay
+                  </button>
                   <button
                     onClick={() => {
                       void deleteCaseRecord(rec.id).then(refresh);
                     }}
-                    className="rounded p-1 text-neutral-300 hover:text-red-700"
+                    className="rounded p-1 text-[#b3a37f] hover:text-[#7a2d2d]"
                     aria-label={`Delete case seed ${rec.seed}`}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -119,7 +125,9 @@ export default function HistoryDialog({ onClose }: Props) {
               ))}
             </ul>
           )}
-          {error && <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-800">{error}</p>}
+          {error && (
+            <p className="mt-3 border border-blood-2/60 bg-blood/15 px-3 py-2 font-type text-xs text-blood-2">{error}</p>
+          )}
         </div>
       </div>
 

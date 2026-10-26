@@ -1,11 +1,12 @@
 'use client';
 
 /**
- * Dead Drop — fugitive-side public evidence digest (M3 W3).
+ * Dead Drop — fugitive-side public evidence digest (M3 W3 logic, W4 skin).
  *
- * The PUBLIC log from the fugitive's seat: what the rules published about
- * THEM (reveals, drops, stranding) plus day markers. Investigator-private
- * events do not exist here — §1.3/§5.2 (stakeouts are silent).
+ * The PUBLIC log from the fugitive's seat, styled as surveillance reports
+ * sliding under the door: what the rules published about THEM (reveals,
+ * drops, stranding) plus day markers. Investigator-private events do not
+ * exist here — §1.3/§5.2 (stakeouts are silent).
  */
 import { useEffect, useMemo, useRef } from 'react';
 import type { FugitiveView, PublicEvent } from '@dead-drop/engine';
@@ -26,21 +27,29 @@ export default function FugitiveLog({ fview }: { fview: FugitiveView }) {
   }, [entries.length]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col rounded-xl border bg-white shadow-sm">
-      <div className="border-b px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
-        What the rules published about you
+    <div className="cork pixel-frame flex min-h-0 flex-1 flex-col">
+      <div className="border-b border-line/70 px-3 py-2 font-term text-base uppercase tracking-[0.14em] text-blood-2">
+        what the paper published about you
       </div>
-      <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-2">
+      <div ref={logRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
         {entries.length === 0 && (
-          <p className="py-6 text-center text-xs text-neutral-400">The case opens. Plan your first move.</p>
+          <p className="py-6 text-center font-type text-xs text-fog-2">
+            The case opens. Plan your first move.
+          </p>
         )}
-        <ul className="space-y-1.5 text-xs">
+        <ul className="space-y-2">
           {entries.map((e, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span className="mt-0.5 w-7 shrink-0 rounded bg-neutral-100 text-center font-mono text-[10px] leading-4 text-neutral-500">
-                D{e.day}
-              </span>
-              <span className={e.leak ? 'text-red-800' : 'text-neutral-800'}>{e.text}</span>
+            <li key={i} className="pin-pop" style={{ animationDelay: `${Math.min(i * 20, 200)}ms` }}>
+              <div className={`px-2.5 py-1.5 ${e.leak ? 'border border-blood-2/60 bg-blood/15' : 'border border-line bg-ink-2'}`}>
+                <div className="flex items-start gap-2">
+                  <span className={`mt-0.5 shrink-0 px-1 text-center font-term text-sm leading-4 ${e.leak ? 'text-blood-2' : 'text-fog-2'}`}>
+                    D{e.day}
+                  </span>
+                  <span className={`font-type text-[11.5px] leading-snug ${e.leak ? 'text-blood-2' : 'text-fog'}`}>
+                    {e.text}
+                  </span>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
