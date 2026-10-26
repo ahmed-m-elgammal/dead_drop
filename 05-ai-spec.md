@@ -23,6 +23,8 @@ Rationale: the solo *Investigator* experience (hunt an AI Fugitive) is the MVP's
 
 Both are pure functions of the public case state — same inputs, same outputs, no hidden reads of the opponent's state (anti-cheat parity: the AI must obey the same information walls as humans).
 
+> **Implemented (M3 W3, ADR-007):** the web app runs a verbatim port of the sim's measured `I-GreedyProbe` (mass-only stakeout gate + predictive argmax — the recorded policy; the ≤4-days clause above was never in the measured code and is deferred to the M4 AI-spec reconciliation). Parity is enforced by `packages/sim/test/w3-webport-parity.test.ts`.
+
 ## 3. Stage 2 — Fugitive archetypes (solo ladder)
 
 All archetypes share the movement legality rules and are parameterized blends over four knobs:
@@ -51,6 +53,8 @@ Measured per rolling window (last 10 cases), stored **on-device** in MVP (privac
 **Fugitive skill axes:** escape rate vs. archetype tier; reveal-days-exposure (how much truth each reveal carried); stamina discipline (unspent SP at escape); deception success (Investigator stakeout miss rate).
 
 Output: a scalar tier per role (Novice / Analyst / Detective / Ghost-hunter) used for: solo ladder gating, archetype blend selection, and (post-M4) the adaptive director. No cross-player comparison, no server transmission — the ranked ladder is the only comparative surface, and it is purely match-based.
+
+> **Implemented (M3 W3, ADR-007 D3):** per-case facts are collected from live engine state + the §8.6 disclosure at close and persisted on the history record; windows are the rolling last-10 closed cases per role, computed on-device. The four axes' MVP formulas, composite weights, and the 40/55/70 tier thresholds are registered in ADR-007 D3 (thresholds recalibrated at M4). The fugitive "escape rate vs. archetype tier" axis is implemented as plain escape rate while the fugitive seat has a single AI opponent (I-GreedyProbe); the per-opposition-tier breakdown slots in at M5+.
 
 ## 5. Stage 4 — Adaptive difficulty director (solo-only; post-MVP)
 

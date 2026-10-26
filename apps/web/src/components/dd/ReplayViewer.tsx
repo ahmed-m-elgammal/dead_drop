@@ -28,6 +28,9 @@ import type { CaseSource } from '@/lib/dd/history';
 export interface ReplayMeta {
   seed: number;
   archetype: ArchetypeId;
+  /** Which role the human played — fugitive-role replays came through the
+   *  I-GreedyProbe investigator (W3), not an archetype fugitive. */
+  role?: 'investigator' | 'fugitive';
   stars: 0 | 1 | 2 | 3 | null;
   source: CaseSource;
 }
@@ -152,7 +155,7 @@ export default function ReplayViewer({ config, disclosure, meta, onClose }: Prop
         <div className={`flex items-center justify-between px-4 py-3 text-white ${won ? 'bg-emerald-800' : 'bg-red-900'}`}>
           <div>
             <div className="text-[10px] font-bold uppercase tracking-[2px] opacity-70">
-              Replay · {ARCHETYPES[meta.archetype].label} fugitive · seed {meta.seed}
+              Replay · {meta.role === 'fugitive' ? 'you as fugitive vs I-GreedyProbe' : `${ARCHETYPES[meta.archetype].label} fugitive`} · seed {meta.seed}
               {meta.stars !== null ? ` · ${meta.stars}★` : ''}
             </div>
             <div className="text-xl font-black">{disclosure.verdict}</div>

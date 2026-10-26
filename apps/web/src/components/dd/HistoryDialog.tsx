@@ -42,7 +42,13 @@ export default function HistoryDialog({ onClose }: Props) {
       setReplaying({
         config,
         disclosure,
-        meta: { seed: rec.seed, archetype: rec.archetype, stars: rec.stars, source: rec.source },
+        meta: {
+          seed: rec.seed,
+          archetype: rec.archetype,
+          role: rec.role ?? 'investigator',
+          stars: rec.stars,
+          source: rec.source,
+        },
       });
     } catch (err) {
       setError(`Replay failed for seed ${rec.seed}: ${String(err)}`);
@@ -83,8 +89,16 @@ export default function HistoryDialog({ onClose }: Props) {
                     {rec.verdict}
                   </span>
                   <span className="flex-1 text-xs text-neutral-600">
-                    <b className="text-neutral-900">{ARCHETYPES[rec.archetype].label}</b> · seed{' '}
-                    <span className="font-mono">{rec.seed}</span> · {rec.journal.filter((a) => a.action.kind !== 'WAIT').length}{' '}
+                    {(rec.role ?? 'investigator') === 'fugitive' && (
+                      <b className="mr-1 rounded bg-neutral-900 px-1 py-0.5 text-[9px] font-black uppercase text-white">as fugitive</b>
+                    )}
+                    {(rec.role ?? 'investigator') === 'investigator' && (
+                      <b className="text-neutral-900">{ARCHETYPES[rec.archetype].label}</b>
+                    )}{' '}
+                    · seed <span className="font-mono">{rec.seed}</span> ·{' '}
+                    {(rec.role ?? 'investigator') === 'fugitive'
+                      ? (rec.fugitiveJournal?.filter((a) => a.action.kind !== 'HOLD').length ?? 0)
+                      : rec.journal.filter((a) => a.action.kind !== 'WAIT').length}{' '}
                     actions · {new Date(rec.closedAt).toLocaleDateString()}
                     {rec.source === 'ladder' ? ' · ladder' : rec.source === 'tutorial' ? ' · tutorial' : ''}
                   </span>

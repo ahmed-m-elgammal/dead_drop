@@ -1,6 +1,6 @@
 # M3 — Playable Single-Player Prototype (execution plan)
 
-**Status:** W2 done (2026-10-26) · **Dependencies:** M2 closed (`engine@1.0.0-alpha.0`, G1 signed off) · **Exit gate:** G2 (10-roadmap M3 — L5 pass, tutorial completion ≥70% internal, zero known rule bugs, crash-free ≥99%) · **W1 decisions:** [ADR-005](adr-005-m3-w1-web.md) · **W2 decisions:** [ADR-006](adr-006-m3-w2-content-ai-replay.md)
+**Status:** W3 done (2026-10-26) — both roles solo-playable · **Dependencies:** M2 closed (`engine@1.0.0-alpha.0`, G1 signed off) · **Exit gate:** G2 (10-roadmap M3 — L5 pass, tutorial completion ≥70% internal, zero known rule bugs, crash-free ≥99%) · **W1 decisions:** [ADR-005](adr-005-m3-w1-web.md) · **W2:** [ADR-006](adr-006-m3-w2-content-ai-replay.md) · **W3:** [ADR-007](adr-007-m3-w3-fugitive-side.md)
 
 ## Week-by-week plan (4–5 wks; W1 executed)
 
@@ -22,10 +22,11 @@
 - Tutorial beats 1–3 (fixed seed 6, scripted Fugitive: HOLD day 1 → walk onto drop[0] day 2 → day-2 step-2 stakeout CAPTURE), beat gating in the store, coach-bar spotlight, completion flag.
 - CI: `.github/workflows/web-ci.yml` — npm ci → engine+sim tsc → vitest → web lint → `next build` for apps/web against the BUILT engine dist (repo is the buildable source of truth; sandbox lift's build role retired).
 
-### W3 — Fugitive-side playable + polish
-- Case screen S2 (Fugitive view): route ribbon, stamina bar, leak calendar, commit-move bottom sheet.
-- Baseline Investigator AI `I-GreedyProbe` (05-ai-spec §2) so both roles are playable solo.
-- Skill measurement stage 3 (on-device rolling windows, 05-ai-spec §4).
+### W3 — Fugitive-side playable + polish (DONE — [ADR-007](adr-007-m3-w3-fugitive-side.md))
+- Case screen S2 (Fugitive view): route ribbon, stamina bar, leak calendar (scheduled + what actually leaked), commit-move bottom sheet with T15-cheapest edge, reveal warnings, §9.13 stranded handling. DONE.
+- Baseline Investigator AI `I-GreedyProbe` (05-ai-spec §2) so both roles are playable solo. DONE — verbatim sim port (`packages/sim` belief + policy), parity-gated by `packages/sim/test/w3-webport-parity.test.ts` (posteriors bit-close across 55 randomized engine-driven cases, canonical + T16 overrides); deterministic from public state, so fugitive-role case identity = (seed + role + human journal).
+- Skill measurement stage 3 (on-device rolling windows, 05-ai-spec §4). DONE — per-case facts from live engine state + §8.6 disclosure at finalize, persisted on the history record; last-10 windows per role, four axes each, Novice/Analyst/Detective/Ghost-hunter tiers (formulas + weights registered in ADR-007 D3; thresholds recalibrated at M4).
+- Found + fixed in E2E: role views project MUTABLE engine arrays → store clones at the boundary (`projectI/projectF`); covers the same latent W1 hazard in map reveal tints/HIT pins (ADR-007 D6).
 
 ### W4 — Hardening + dogfood
 - PWA install/offline shell, settings S9, reduced-motion pass, text-scale pass.

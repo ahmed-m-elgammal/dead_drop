@@ -22,22 +22,26 @@ export default function VerdictCard() {
   const config = useDD((s) => s.config);
   const record = useDD((s) => s.record);
   const view = useDD((s) => s.view);
+  const role = useDD((s) => s.role);
   const tutorial = useDD((s) => s.tutorial);
   const startCase = useDD((s) => s.startCase);
   const abandonCase = useDD((s) => s.abandonCase);
   const [tab, setTab] = useState<'route' | 'evidence'>('route');
   const [replayOpen, setReplayOpen] = useState(false);
 
-  if (!disclosure || !config || !record || !view || disclosure.verdict === null) return null;
+  if (!disclosure || !config || !record || disclosure.verdict === null) return null;
+  if (role === 'investigator' && !view) return null;
   const verdict: Verdict = disclosure.verdict;
   const winner = VERDICT_WINNER[verdict];
-  const won = winner === 'INVESTIGATOR';
+  // Role-scoped win framing: the same verdict reads differently per seat.
+  const won = role === 'fugitive' ? winner === 'FUGITIVE' : winner === 'INVESTIGATOR';
   const isTutorial = record.source === 'tutorial';
-  const stars = starsFor(verdict, view.investigator.intel);
+  const stars = role === 'investigator' && view ? starsFor(verdict, view.investigator.intel) : null;
   const replayMeta: ReplayMeta = {
     seed: record.seed,
     archetype: record.archetype,
-    stars: record.source === 'ladder' ? stars : null,
+    role,
+    stars: record.source === 'ladder' && stars !== null ? stars : null,
     source: record.source,
   };
 
@@ -54,9 +58,9 @@ export default function VerdictCard() {
           <div className={`px-6 py-5 text-white ${won ? 'bg-emerald-800' : 'bg-red-900'}`}>
             <div className="flex items-center justify-between">
               <div className="text-[11px] font-bold uppercase tracking-[2px] opacity-70">
-                Case closed{record.source === 'ladder' ? ' · ladder' : ''}
+                Case closed{record.source === 'ladder' ? ' · ladder' : ''} · you were the {role === 'fugitive' ? 'Fugitive' : 'Investigator'}
               </div>
-              {record.source === 'ladder' && (
+              {record.source === 'ladder' && stars !== null && (
                 <div className="text-sm font-black text-amber-300" aria-label={`${stars} of 3 stars`}>
                   {'★'.repeat(stars)}
                   <span className="opacity-40">{'★'.repeat(3 - stars)}</span>
@@ -66,8 +70,12 @@ export default function VerdictCard() {
             <div className="text-3xl font-black">{verdict}</div>
             <div className="mt-1 text-sm opacity-90">
               {won
-                ? 'You win — the city keeps its secrets and the fugitive keeps its cell.'
-                : 'The Fugitive wins — the route held, the trail went cold.'}
+                ? role === 'fugitive'
+                  ? 'You win — the route held, the city keeps its secrets.'
+                  : 'You win — the city keeps its secrets and the fugitive keeps its cell.'
+                : role === 'fugitive'
+                  ? 'The Investigator wins — the net closed where you stood.'
+                  : 'The Fugitive wins — the route held, the trail went cold.'}
             </div>
           </div>
 
@@ -126,7 +134,7 @@ export default function VerdictCard() {
                       </li>
                     ))}
                 </ul>
-                <p className="pt-2 font-semibold text-neutral-700">Your private results</p>
+                <p className="pt-2 font-semibold text-neutral-700">{role === 'fugitive' ? 'Their private results (revealed at close, §8.6)' : 'Your private results'}</p>
                 <ul className="space-y-1">
                   {disclosure.private_log_investigator.map((e, i) => (
                     <li key={i} className="flex gap-2 text-neutral-600">
@@ -142,7 +150,7 @@ export default function VerdictCard() {
                   ))}
                 </ul>
                 <p className="rounded-lg bg-neutral-50 p-2.5 text-neutral-600">
-                  <b>What you missed:</b> {misses} silent stakeout{misses === 1 ? '' : 's'} burned {misses * 3} IP ·{' '}
+                  <b>{role === 'fugitive' ? 'The read against you:' : 'What you missed:'}</b> {misses} silent stakeout{misses === 1 ? '' : 's'} burned {misses * 3} IP ·{' '}
                   {probeHits} probe hit{probeHits === 1 ? '' : 's'} · the Fugitive stranded{' '}
                   {stranded} day{stranded === 1 ? '' : 's'} (§9.13) · total route cost{' '}
                   {disclosure.fugitive_route.reduce((a, r) => a + r.sp_cost, 0)} of 12 SP.
@@ -158,7 +166,14 @@ export default function VerdictCard() {
               </Button>
               <Button
                 className="flex-1"
-                onClick={() => startCase(record.seed, { archetype: record.archetype, source: record.source, ladderIndex: record.ladderIndex ?? null })}
+                onClick={() =>
+                  startCase(record.seed, {
+                    role,
+                    archetype: record.archetype,
+                    source: record.source,
+                    ladderIndex: record.ladderIndex ?? null,
+                  })
+                }
               >
                 Rematch — same seed
               </Button>

@@ -11,7 +11,7 @@
  * Belief markers (?/!/✕) are LOCAL-only — never part of engine state.
  */
 import { useMemo, useRef, useState } from 'react';
-import type { CaseConfig, InvestigatorView, NodeId, ValidatedMap } from '@dead-drop/engine';
+import type { CaseConfig, FugitiveView, InvestigatorView, NodeId, ValidatedMap } from '@dead-drop/engine';
 import { candidateSet } from '@/lib/dd/belief';
 import { buildLayout, EDGE_STYLE, sortedEdges, type NodeLayout } from '@/lib/dd/geometry';
 import { useDD, type MarkerKind } from '@/lib/dd/store';
@@ -25,11 +25,17 @@ const MARKER_FILL: Record<MarkerKind, string> = {
 
 interface Props {
   vm: ValidatedMap;
-  view: InvestigatorView;
+  /** Investigator view (investigator role) or Fugitive view (fugitive role,
+   *  W3) — the map renders role-scoped projections only. */
+  view: InvestigatorView | FugitiveView;
   config: CaseConfig;
+  /** Fugitive role: pin the player's OWN position (they always know where
+   *  they are); suppress every investigator-private layer (probe pins,
+   *  armed-stakeout ring, belief halo — §1.3 wall). */
+  fugitiveRole?: boolean;
 }
 
-export default function MapCanvas({ vm, view, config }: Props) {
+export default function MapCanvas({ vm, view, config, fugitiveRole = false }: Props) {
   const { markers, selected, mode, beliefHalo, onNodeClick } = useMapInteractions();
   const layout = useMemo(() => buildLayout(vm), [vm]);
   const edges = useMemo(() => sortedEdges(vm.map.edges), [vm]);
@@ -72,19 +78,31 @@ export default function MapCanvas({ vm, view, config }: Props) {
   }, [view.log]);
 
   const belief = useMemo(
-    () => (beliefHalo ? candidateSet(vm, config, view.log) : null),
-    [beliefHalo, vm, config, view.log],
+    () => (beliefHalo && !fugitiveRole ? candidateSet(vm, config, view.log) : null),
+    [beliefHalo, fugitiveRole, vm, config, view.log],
   );
 
   const hitPins = useMemo(() => {
     const s = new Set<NodeId>();
+    if (fugitiveRole || !('private_log_investigator' in view)) return s;
     for (const ev of view.private_log_investigator) {
       if (ev.kind === 'PROBE_RESULT' && ev.result === 'HIT' && ev.day === view.day) s.add(ev.target);
     }
     return s;
-  }, [view.private_log_investigator, view.day]);
+  }, [view, fugitiveRole]);
 
-  const armed = view.investigator.stakeout_armed;
+  // Armed-stakeout ring is an INVESTIGATOR-private layer: never rendered in
+  // fugitive role (§5.2 — the fugitive is not notified). The role flag (not
+  // structural narrowing) is the authority — both views carry an
+  // `investigator` key, but only the InvestigatorView's is populated.
+  const armed = !fugitiveRole
+    ? (view as InvestigatorView).investigator.stakeout_armed
+    : null;
+
+  // Fugitive role: the player's own position (public to THEMSELVES only).
+  const mePosition: NodeId | null = fugitiveRole
+    ? (view as FugitiveView).fugitive.position
+    : null;
 
   const cursor =
     mode === 'inspect' ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer';
@@ -170,7 +188,7 @@ export default function MapCanvas({ vm, view, config }: Props) {
             );
           })}
 
-          {/* belief halo (optional) */}
+          {/* belief halo (optional, investigator role only) */}
           {belief &&
             [...belief].map((n) => {
               const p = layout.nodes.get(n);
@@ -189,7 +207,7 @@ export default function MapCanvas({ vm, view, config }: Props) {
               );
             })}
 
-          {/* armed stakeout ring */}
+          {/* armed stakeout ring (investigator role only — silent to the fugitive) */}
           {armed &&
             (() => {
               const p = layout.nodes.get(armed);
@@ -222,6 +240,7 @@ export default function MapCanvas({ vm, view, config }: Props) {
               isSelected={selected === p.id}
               marker={markers[p.id]}
               hitPin={hitPins.has(p.id)}
+              meHere={mePosition === p.id}
               onClick={() => onNodeClick(p.id)}
             />
           ))}
@@ -308,9 +327,11 @@ function NodeGlyph(props: {
   isSelected: boolean;
   marker?: MarkerKind;
   hitPin: boolean;
+  /** Fugitive role: the player's current position — "YOU" pin. */
+  meHere?: boolean;
   onClick: () => void;
 }) {
-  const { p, isGate, isSafehouse, isDropSite, dropSlot, isSelected, marker, hitPin, onClick } = props;
+  const { p, isGate, isSafehouse, isDropSite, dropSlot, isSelected, marker, hitPin, meHere, onClick } = props;
 
   return (
     <g
@@ -328,6 +349,15 @@ function NodeGlyph(props: {
       <circle cx={p.x} cy={p.y} r={16} fill="transparent" stroke="none" />
       {isSelected && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#111" strokeWidth={2} />}
       {hitPin && <circle cx={p.x} cy={p.y} r={19} fill="none" stroke="#b8860b" strokeWidth={2} />}
+      {meHere && (
+        <g pointerEvents="none">
+          <circle cx={p.x} cy={p.y} r={15} fill="#1a7a3a" opacity={0.25} />
+          <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="#1a7a3a" strokeWidth={2.2} />
+          <text x={p.x} y={p.y - 20} textAnchor="middle" fontSize={9.5} fontWeight={800} fill="#1a7a3a">
+            YOU
+          </text>
+        </g>
+      )}
       {isGate ? (
         <polygon
           points={`${p.x},${p.y - 11} ${p.x + 11},${p.y} ${p.x},${p.y + 11} ${p.x - 11},${p.y}`}
